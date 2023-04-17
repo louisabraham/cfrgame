@@ -1,0 +1,920 @@
+
+%% 
+%% Copyright 2007-2020 Elsevier Ltd
+%% 
+%% This file is part of the 'Elsarticle Bundle'.
+%% ---------------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'Elsarticle Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+%% Template article for Elsevier's document class `elsarticle'
+%% with harvard style bibliographic references
+
+\documentclass[preprint,12pt,authoryear,doubleblind]{elsarticle}
+%% Use the option review to obtain double line spacing
+%% \documentclass[authoryear,preprint,review,12pt]{elsarticle}
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%% \documentclass[final,1p,times,authoryear]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn,authoryear]{elsarticle}
+%% \documentclass[final,3p,times,authoryear]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn,authoryear]{elsarticle}
+%% \documentclass[final,5p,times,authoryear]{elsarticle}
+%% \documentclass[final,5p,times,twocolumn,authoryear]{elsarticle}
+
+%% For including figures, graphicx.sty has been loaded in
+%% elsarticle.cls. If you prefer to use the old commands
+%% please give \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{remark}{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+
+\newtheorem{result}[theorem]{Experimental result}
+
+\usepackage{thmtools}
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator\erf{erf}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\usepackage{hyperref}
+\usepackage{svg}
+\usepackage{float}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers.
+%% \usepackage{lineno}
+
+\usepackage{censor}
+\ifdoubleblind
+    \newcommand{\identifier}{\censor}
+\else
+    \newcommand{\identifier}{}
+\fi
+
+
+
+
+\journal{Games and Economic Behaviour}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Title, authors and addresses
+
+%% use the tnoteref command within \title for footnotes;
+%% use the tnotetext command for theassociated footnote;
+%% use the fnref command within \author or \affiliation for footnotes;
+%% use the fntext command for theassociated footnote;
+%% use the corref command within \author for corresponding author footnotes;
+%% use the cortext command for theassociated footnote;
+%% use the ead command for the email address,
+%% and the form \ead[url] for the home page:
+%% \title{Title\tnoteref{label1}}
+%% \tnotetext[label1]{}
+%% \author{Name\corref{cor1}\fnref{label2}}
+%% \ead{email address}
+%% \ead[url]{home page}
+%% \fntext[label2]{}
+%% \cortext[cor1]{}
+%% \affiliation{organization={},
+%%            addressline={}, 
+%%            city={},
+%%            postcode={}, 
+%%            state={},
+%%            country={}}
+%% \fntext[label3]{}
+
+\title{A game of competition over risk}
+
+%% use optional labels to link authors explicitly to addresses:
+%% \author[label1,label2]{}
+%% \affiliation[label1]{organization={},
+%%             addressline={},
+%%             city={},
+%%             postcode={},
+%%             state={},
+%%             country={}}
+%%
+%% \affiliation[label2]{organization={},
+%%             addressline={},
+%%             city={},
+%%             postcode={},
+%%             state={},
+%%             country={}}
+
+\author[inst1,inst2]{Louis Abraham}
+\ead{louis.abraham@yahoo.fr}
+
+\address[inst1]{Université Paris 1 Panthéon--Sorbonne}
+
+\address[inst2]{Association Française d'Épargne et de Retraite (AFER)}
+
+% \affiliation[inst1]{organization={Université Paris 1 Panthéon--Sorbonne}}%Department and Organization
+            % addressline={Address One}, 
+            % city={City One},
+            % postcode={00000}, 
+            % state={State One},
+            % country={Country One}
+            
+
+% \author[inst2]{Author Two}
+% \author[inst1,inst2]{Author Three}
+
+% \affiliation[inst2]{organization={Department Two},%Department and Organization
+%             addressline={Address Two}, 
+%             city={City Two},
+%             postcode={22222}, 
+%             state={State Two},
+%             country={Country Two}}
+
+\begin{abstract}
+%% Text of abstract
+This article investigates models of competition where actors choose their level of risk and are rewarded for taking on more risk than the others. These models are highly relevant to real-life situations of competition over prices, such as between firms, banks, and insurance companies seeking to acquire more customers.
+
+Starting from a simple normal form game with two players on a continuous action space, we prove the existence and uniqueness of a Nash equilibrium with an analytical solution. This serves as a foundation to incorporate more realistic features such as multiple players, market frictions and correlations between firm risks. We verify experimentally that the Nash equilibrium is a correlated equilibrium. Finally, we show that variants of regret matching offer performant algorithms to approximate the Nash equilibrium in our game. Our code is open-source \footnote{available at \identifier{\url{https://github.com/louisabraham/corgame}}} and can be applied to many different games.
+
+Our contribution is also methodological and promotes the use of algorithms in economics. Most models are overly simplified so that they admit an analytical solution. However, general algorithmic solvers could handle much more complex models, not having closed form solutions or taking data as input. While the literature has been focused on finite games, we aim to provide the reader with such algorithms in the context of games with a continuous action set.
+Overall, our approach provides a rigorous framework for modeling and analyzing strategic interactions in continuous action games, with wide-ranging applications in economics, finance, and policy-making.
+
+\end{abstract}
+
+%%Graphical abstract
+% \begin{graphicalabstract}
+% \includegraphics{grabs}
+% \end{graphicalabstract}
+
+%%Research highlights
+% \begin{highlights}
+% \item Research highlight 1
+% \item Research highlight 2
+% \end{highlights}
+
+% \begin{keyword}
+% %% keywords here, in the form: keyword \sep keyword
+% % keyword one \sep keyword two
+% %% PACS codes here, in the form: \PACS code \sep code
+% % \PACS 0000 \sep 1111
+% %% MSC codes here, in the form: \MSC code \sep code
+% %% or \MSC[2008] code \sep code (2000 is the default)
+% % \MSC 0000 \sep 1111
+% \end{keyword}
+
+\end{frontmatter}
+
+%% \linenumbers
+\section{Introduction}
+\label{sec:introduction}
+
+Competition over risk is a ubiquitous feature of many real-life situations, ranging from financial markets to environmental policy. In these situations, actors face a trade-off between the potential rewards of taking on more risk and the possibility of negative outcomes, such as bankruptcy or environmental disaster. Understanding the behavior of actors in these situations and predicting outcomes is crucial for policymakers, regulators, and investors.
+
+Game theory provides a powerful framework for analyzing these situations, as it models the strategic interactions between actors and their incentives to take certain actions. In particular, we focus on normal form games, which represent situations where each player chooses a strategy and receives a payoff based on the joint actions of all players. In this article, we study continuous models of competition, where actors can choose the level of risk and are rewarded for taking more risk.
+
+A key concept in game theory is that of a Nash equilibrium, which represents a stable point of the game where no player has an incentive to deviate from their chosen strategy. In a normal form game, a Nash equilibrium is a set of strategies where each player's strategy is a best response to the other players' strategies. Nash equilibria are a fundamental concept in game theory and have been widely used in economics, political science, and other fields to model strategic behavior.
+
+In this article, we start by examining a simple normal form game with two players and prove the existence and uniqueness of a Nash equilibrium with an analytical solution. This simplistic game serves as a backbone that we can improve on by incorporating more realistic features, such as market frictions and correlations between firm risks. We then study several methods that can be used to approximate Nash equilibria in continuous action games and compare their running time and solution quality.
+
+Finally, we apply our findings to the setting of competition between financial actors providing saving products to the public, where risk-taking plays a crucial role in the decision-making process. By studying these models of competition over risk, we hope to provide insights into the behavior of actors in these situations and develop tools for predicting outcomes and improving decision-making.
+
+
+\section{A simple model for competition over risk}
+\label{sec:simplemodel}
+\subsection{Description}
+
+In this section, we introduce a simple model of competition over risk that serves as a backbone for our study. We consider a situation where two actors, denoted as Player 1 and Player 2, engage in competition by taking actions that make them more attractive to customers but also increase their risk of failure. For example, firms may choose to lower their prices to attract more customers but in doing so, they increase the likelihood of not being able to repay their loans. Similarly, insurance companies may lower their premiums to attract more customers but this comes at the cost of a higher risk of failure. Banks may increase their deposit rates to attract more customers but this also increases their vulnerability to liquidity crises.
+
+In our model, each player directly sets their failure probability, denoted as $r_p$. While this assumption may not be realistic in practice, we note that in many situations, firms use models that map real-world actions, such as setting prices or premiums, to failure probabilities. This mapping is often a monotonous function that can be inverted to yield real-world actions from failure probabilities, making our model practical.
+Based on the failure probabilities set by each player, the players can randomly ``lose'' the game. In our simple model, this translates into being applied a penalty, denoted as $P$. We assume $P>0$. We assume that the failure events are independent, meaning that each player draws a uniform random variable $f_p$ from the interval $[0,1]$ and fails if $f_p < r_p$. We will later introduce correlations between the variables $f_p$ to model real-life situations where correlations may be positive or negative.
+
+After the failure events are determined, the players that did not fail compare their risk levels, and the player that played the highest risk level is rewarded with a payoff, denoted as $R$. We assume that $R > 0$. In the case of ties between risk levels, we consider several ways of resolving them, such as none of the players receiving the reward, the reward being shared equally between them, or the reward being randomly given to one of them.
+
+We note that, as shown later, the optimal strategies in our model are modeled by real distributions, which means that the probability of ties is zero. However, when we use discrete action sets to compute approximate Nash equilibria, the action sets can overlap, and we implement the first two variations of resolving ties (the last two are equivalent in expectation). This simple model serves as a foundation for our study, and we will extend it by introducing correlations between the players' failure probabilities and market frictions in subsequent sections.
+For two players, assuming $r_1 > r_2$, the outcome matrix will be:
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\cline{2-3}
+\multicolumn{1}{c|}{} & $f_1\ge r_1$ & $f_1<r_1$ \\
+\hline
+$f_2\ge r_2$ & $R, 0$ & $-P, R$ \\
+\hline
+$f_2<r_2$ & $R, -P$ &  $-P, -P$ \\
+\hline
+\end{tabular}
+\end{center}
+
+
+Each cell contains the rewards to each player. For example, in the upper left cell, no failure happens. Since we assumed $r_1 > r_2$, player 1 gets $R$ and player 2 gets $0$.
+
+\subsection{Equivalence to a normal-form game}
+
+We can represent the game described above in the framework of extensive-form games by modeling the drawing of the random variables $f_p$ using Chance nodes. Since the outcomes are subject to randomness, it is natural to assume that the actors operate under the expected utility hypothesis, which implies that they possess a von Neumann–Morgenstern utility function. Consequently, we can define a normal-form game with payoffs equal to the expected payoffs of the corresponding extensive-form game. By doing so, we can leverage the theory of normal-form games and apply various solution concepts, such as Nash equilibria, to analyze the competition between the actors.
+\begin{proposition}
+The expected utilities $u_p$ are computed as follows in the 2-player game:
+\begin{align*}
+    u_2(r_1, r_2) &= u_1(r_2, r_1) \text{~(symmetry)}\\
+    u_1(r_1, r_2) &= r_2 (1-r_1) R - r_1 P + [ r_1 > r_2 ] (1-r_1)(1-r_2) R
+\end{align*}
+where $[ \cdot ]$ is the Iverson bracket.
+\end{proposition}
+\begin{proof}
+Player 1 can fail with probability $r_1$, in which case they lose $P$. If Player 2 loses and Player 1 does not, which happens with probability $r_2(1-r_1)$, Player 1 wins $R$. Finally, if none of the players fails, when $r_1 > r_2$, Player 1 can win $R$.
+\end{proof}
+
+It is possible to encompass the shared payoff in case of ties by defining the Iverson bracket to be $\frac{1}{2}$ when $r_1 = r_2$.
+Figure \ref{fig:reward} shows what the reward function of Player 1 looks like when Player 2 adopts the fixed strategy $r_2=0.2$.
+
+\begin{figure}[htbp]
+    \centering
+    \includesvg[width=0.8\linewidth]{plots/reward}
+    \caption{Reward function}
+    \label{fig:reward}
+\end{figure}
+
+
+The discontinuity of our game is similar to two games: the War of Attrition game from \cite{smith1974theory} and the visibility game from \cite{Lotker2008-tx}. In the War of Attrition game, each player independently chooses a time to quit the game. The player who stays in the game for the longest time wins a prize. However, both players incur a cost that increases over time while they are still in the game. In the visibility game, the payoff of each player is the difference with the next player, or 1 for the player that plays the largest move. A major difference between our game and those two games is that we model the probability of failure. This means, for example, that the player taking less risk can still win the reward if the first player fails.
+
+However, the structure of our problem and the analytical solution of the Nash equilibrium are similar to \cite{Lotker2008-tx}. We name our game the Competition over Risk game and will write it CoR in the rest of the article.
+
+\subsection{Nash equilibrium}
+
+A Nash equilibrium is a set of strategies, one for each player, such that no player can improve their payoff by unilaterally changing their strategy, given the strategies of the other players. In other words, each player's strategy is the best response to the strategies chosen by the other players. Nash equilibria are important because they provide a way to predict the outcome of a game if each player acts rationally and selfishly. They can also help explain why certain outcomes occur in real-world situations.
+
+In our model of competition over risk, finding Nash equilibria can help us understand how firms, banks, and insurance companies behave when they compete over prices and take different levels of risk. By analyzing the Nash equilibria of our model, we can predict how different players will act and what the resulting outcomes will be. Moreover, we can compare the efficiency of different equilibria and use them as a benchmark to evaluate the performance of different strategies.
+
+As in the game of \cite{Lotker2008-tx}, we can prove that there is no pure Nash equilibrium, that is, a deterministic optimal strategy.
+
+\begin{theorem}
+The CoR game does not admit any pure Nash equilibrium.
+\end{theorem}
+\begin{proof}
+Suppose the existence of an equilibrium $s_1, s_2$. Suppose that $s_1 > s_2$. Then Player 1 can improve their payoff by playing $s_1 - \varepsilon$ since they still get the reward and take less risk. By symmetry, this implies that $s_1 = s_2$. If $s_1 < 1$, then player 1 can improve their situation by playing $s_1 + \varepsilon$ since they get $R$ (or $\frac{R}{2}$ if the reward is shared). If $s_1 = 1$ then the payoff is $-P < 0$ with probability $1$ so it is better to play $0$ which gives payoff $0$ with probability $1$.
+\end{proof}
+
+\begin{definition}A strategy $s$ (a couple of strategies) is Pareto optimal if there is no other strategy $s'$ such that $\forall p, u_p(s) \le u_p(s')$ and $\exists p, u_p(s) < u_p(s')$. It is $\varepsilon$-Pareto optimal if there is no strategy $s'$ such that $\forall p, u_p(s) \le u_p(s')$ and $\exists p, u_p(s) + \varepsilon < u_p(s')$.
+\end{definition}
+\begin{remark} If the reward is shared in case of tie, the pure strategy $(0,0)$ gives reward $\frac{R}{2}$ to each player. This strategy is Pareto-optimal.
+\end{remark}
+\begin{theorem}
+\label{thm:pareto}
+For every $\varepsilon$, there is a $\varepsilon$-Pareto optimal strategy that gives $\frac{R - \varepsilon}{2}$ to each player.
+\end{theorem}
+\begin{proof}
+Let us consider the joint mixed strategy where each player plays uniformly at random in the interval $[0, 2 \varepsilon]$. The payoff is
+\begin{align*} \mathbb{E}[u_1] &= \mathbb{E}\left[ r_2 (1-r_1) R - r_1 P + [ r_1 > r_2 ](1-r_1)(1-r_2) R\right] \\ &= \varepsilon (1-\varepsilon) R - \varepsilon P + \frac{(1-\varepsilon)^2}{2} R \\
+&\rightarrow_{\varepsilon \rightarrow 0} \frac{R}{2} \end{align*}
+so by taking $\varepsilon$ small enough we can get as close to $\frac{R}{2}$ as we want.
+
+If each player gets payoff $\frac{R - \varepsilon}{2}$then no player can get $\varepsilon$ without degrading the other’s performance else the total payoff would be more than $R$.
+\end{proof}
+
+However, the $\varepsilon$-Pareto strategy is highly concentrated around $0$, incentivizing players to deviate and increase their chances of winning $R$ without taking on additional risk. Thus, this strategy fails to form a Nash equilibrium.
+
+Fortunately, the CoR game possesses a unique Nash equilibrium, a powerful property that showcases the strength of our approach. Moreover, this equilibrium is symmetric.
+
+For finite games, Nash himself proved the existence of mixed Nash equilibria \citep{Nash1950-jp}, while Glicksberg's theorem extended this result to continuous reward functions \citep{Glicksberg1951-wp}. Dasgupta and Maskin \citep{Dasgupta1986-gu} established conditions under which discontinuous games can possess Nash equilibria and symmetric games can admit symmetric equilibria.
+
+The uniqueness of the Nash equilibrium is a highly desirable property, with most models using concave reward functions to ensure it. Therefore, it is noteworthy that the CoR game exhibits a unique Nash equilibrium.
+
+We recall \footnote{Our thanks go to \identifier{Jules Pondard} for suggesting to use the well-known discrete version of this theorem.} Theorem 2.1 from \citet{Lotker2008-tx}:
+
+\begin{theorem}
+\label{thm:jules}
+Let $(f_1, \ldots , f_n)$ be a Nash equilibrium point, with expected payoff $u_i^*$ to Player $i$ at the equilibrium point. Let $u_i(x)$ (as an abuse of notation) denote the expected payoff for Player $i$ when he plays the pure strategy $x$ and all other players play their equilibrium mixed strategy. Then $u_i(x) \leq u_i^*$ for all $x \in [0, 1]$, and furthermore, there exists a set $\mathcal{Z}$ of measure $0$ such that $u_i(x) = u_i^*$ for all $x \in support(f_i) \setminus \mathcal{Z}$.
+\end{theorem}
+
+This theorem means that at the Nash equilibrium, almost any move that is in the support of a player's strategy should give them the same (maximal) payoff. This theorem is crucial to find the equilibrium in the CoR game.
+
+\begin{restatable}{theorem}{nashcor}
+\label{thm:nashcor}
+Up to a set of measure zero, the CoR game admits a unique Nash equilibrium. This equilibrium is symmetric and its distribution is $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $C := \frac{P}{R}$ and $k := \sqrt{(C + 1)^2 + 1}$. The the average move is $\bar r = k - (C+1)$ and the utility of each player is $u^* = R \bar r$.
+\end{restatable}
+
+\begin{proof}
+    See \ref{proof:nashcor} for a full proof. For a less rigorous treatment, refer to the proof of the more general Theorem \ref{thm:multiple}.
+\end{proof}
+
+At $C = 1$, the cutoff value is $1 - \sqrt{\frac{\sqrt{5} - 1}{\sqrt{5} + 1}} = 2 - \phi \approx 0.382$ with $\phi$ the Golden ratio. We plot the distribution in Figure \ref{fig:nash}.
+
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/nash-0}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/nash-1}
+  \end{minipage}
+  \caption{Nash equilibrium}
+  \label{fig:nash}  
+\end{figure}
+
+
+\begin{figure}[htbp]
+  \centering
+  \includesvg[width=0.8\linewidth]{plots/cutoff}
+  \caption{The cutoff goes to zero when $C \rightarrow\infty$.}
+  \label{fig:cutoff}  
+\end{figure}
+
+
+ The behavior of the cutoff ${r_{max}}$ is displayed in Figure \ref{fig:cutoff}. Unsurprisingly, when $C \rightarrow \infty$, the penalty $P$ becomes much larger than the reward $R$ and the players play closer to $0$.
+
+The case when $C \rightarrow 0$ is more surprising: the maximal cutoff value at $C=0$ is $h = 1 - \sqrt{\frac{\sqrt{2}}{\sqrt{2} + 2}} \approx 0.356$. This is because even if the penalty is $0$, the players cannot get the reward if they ``lose'', which prevents them from taking too much risk. We plot the distribution in Figure \ref{fig:nash}. See Appendix \ref{more-nash} for more figures.
+
+
+\section{Generalization to multiple players}
+
+Quite naturally, we wonder what the Nash equilibrium looks like for multiple players. The visibility game of \citet{Lotker2008-tx} probably does not admit an analytical solution and they instead give an algorithm to produce approximate solutions. We show that the CoR game for multiple players admits a unique symmetric equilibrium and present a new numerical algorithm to compute it. We finally study the asymptotic behavior of the equilibrium. 
+
+\subsection{Nash equilibrium}
+Interestingly, our Correlation over Risk game admits an analytical solution even for multiple players. More precisely:
+\begin{theorem}\label{thm:multiple}
+    There is a unique symmetric Nash equilibrium for in the CoR game with $n$ players defined by $$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}}$$
+    for some constants $r_{max}$ and $w := \bar r ^ {n-1}$ (the probability of winning when taking no risk) such that 
+    \begin{align*}
+        \int_0^{r_{max}} f(x) dx &= 1 \\
+        \int_0^{r_{max}} x f(x) dx &= \bar r 
+    \end{align*}
+\end{theorem} 
+\begin{proof}
+    
+We adapt the proof of Theorem \ref{thm:nashcor} and start by assuming the existence of a symmetric mixed equilibrium defined by the probability density $f$. First we derive a nice expression for $u(x)$, defined as the utility of one player choosing move $x$ while the others play according to $f$. For all $x \in support(f)$:
+
+$$u(x) = -x P + (1-x) \left( \int_0^x f(y) dy +\int_x^1 y f(y) dy \right)^{n-1} R$$
+
+This equation is quite natural: the player loses $P$ with probability $x$. If they survive, with probability $1-x$, they need the $n-1$ other players to either play a lower value or play a higher value and fail. We can suppose as previously that $0$ is in the support to subtract $u(0)$. We write $\bar r$ for the expectation of the action $r$ under $f$.
+$$\left(\frac{\bar r^{n-1} + x C}{1-x} \right)^\frac{1}{n-1} = \int_0^x f(y) dy + \int_x^1 y f(y) dy$$
+We define $w := \bar r ^ {n-1}$ to be the probability of winning when taking no risk, we derivate and divide by $1-x$ to obtain:
+$$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}}$$
+Finally we can solve $\int_0^{r_{max}} f(x) dx= 1$ and $\int_0^{r_{max}} x f(x) dx = \bar r$. We relegate the description of the numerical estimation of ${r_{max}}$ and $w$ to \ref{estimate}.
+\end{proof}
+
+We display the behavior of the solution for multiple players in Figure \ref{fig:solution-multiple}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/solution-multiple-0}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/solution-multiple-1}
+  \end{minipage}
+  \caption{We observe a clear difference between the cases $C=0$ (no penalty) and $C=1$ (presence of a penalty). In both cases, the cutoff increases. However, the average risk seems to decrease sharply when there is a nonzero penalty with a mode at $r=0$.}
+  \label{fig:solution-multiple}  
+\end{figure}
+
+\subsection{Asymptotic behavior}
+
+We are interested in studying the equilibrium when the number of players goes to infinity. For fixed $C$, we have the following:
+
+\begin{proposition}When $n\rightarrow \infty$,
+    $\lim {r_{max}} = \frac{1}{1+C}$ and $\bar r \sim \frac{1}{n C}$
+\end{proposition}
+
+
+\begin{proof}
+TODO
+\end{proof}
+
+We illustrate this behavior in Figure \ref{fig:cutoff-asymptotic}.
+
+\begin{figure}[htbp]
+    \centering
+    \includesvg[width=0.8\linewidth]{plots/cutoff-asymptotic}
+    \caption{The plot of $r_{max}$ to $\log(C)$ is very similar to the function $\frac{1}{1 + \exp(\cdot)}$. This is because $r_{max} \sim \frac{1}{1+C}$.}
+    \label{fig:cutoff-asymptotic}
+\end{figure}
+
+
+
+A common concept in game theory is the price of anarchy $PoA$ \citep{koutsoupias1999worst}. The price of anarchy is the ratio between the Pareto optimum and the Nash equilibrium. It is easy to generalize Theorem \ref{thm:pareto} for multiple players and show that the reward can be split almost perfectly to obtain a Pareto optimal utility $\frac{R}{n}$. The utility of our symmetric equilibrium is $R \bar r ^ {n-1} = R \bar r ^ {n-1} = R w$. Hence, $PoA = 1 / n w$. We will instead compute the efficiency $E = \frac{1}{PoA} = n w \in [0,1]$.
+
+
+\begin{result}
+\label{res:scaling}
+    When $C = \frac{1}{n^e}$ with $e \ge 0$, the efficiency $E = n w$ of the Nash equilibrium goes to $0$ if $e \le 1$ and it goes to $1$ if $e > 1$. We plot the behavior of $E$ in Figure \ref{fig:efficiency}.
+\end{result}
+
+We interpret Result \ref{res:scaling} as an indication that resources, here modeled by the ratio $\frac{1}{C} = \frac{R}{P}$ of rewards to penalties, need to scale faster than the number of players for them to adopt an efficient behavior. Scarcity of resources creates an inefficient Nash equilibrium.
+
+\begin{figure}[htbp]
+    \centering
+    \includesvg[width=0.8\linewidth]{plots/efficiency}
+    \caption{The efficiency clearly goes to $0$ even when $e = 1$. When $e>1$, it seems that $E \rightarrow 1$. Values for greater values of $n$ suffer of numerical precision issues as $\log w \rightarrow 0$.}
+    \label{fig:efficiency}
+\end{figure}
+
+\section{Extensions of the Competition over Risk Game}
+
+
+\subsection{Market frictions}
+
+One limitation of our model is the assumption that the utility functions are discontinuous at a certain threshold. While this is appropriate for certain scenarios such as call for bids, it may not hold in other real-life situations that involve noisy evaluations or aggregate many individual choices. To address this limitation, we propose replacing the threshold $[r_1 > r_2]$ with a smooth choice model using the logistic function, $\sigma_\lambda(r_1 - r_2)$, where $\sigma_\lambda$ is the scaled sigmoid:
+
+$$\sigma_\lambda(x) := \frac{1}{1+\exp\left(-\frac{x}{\lambda}\right)}$$
+
+
+Recall that the failure events are $f_p < r_p$. For a game between two players, the outcome matrix can be represented as follows:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\cline{2-3}
+\multicolumn{1}{c|}{} & $f_1\ge r_1$ & $f_1<r_1$ \\
+\hline
+$f_2\ge r_2$ & $R~\sigma_\lambda(r_1 - r2_), R~\sigma_\lambda(r_2 - r_1) $ & $-P, R$ \\
+\hline
+$f_2<r_2$ & $R, -P$ &  $-P, -P$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{proposition}
+The expected utilities $u_p$ for the 2-player game with frictions are computed as follows:
+\begin{align*}
+    u_2(r_1, r_2) &= u_1(r_2, r_1) ~\text{(symmetry)}\\
+    u_1(r_1, r_2) &= r_2 (1-r_1) R - r_1 P + (1-r_1)(1-r_2) \sigma_\lambda(r_1 - r_2)
+\end{align*}
+\end{proposition}
+
+As $\lambda \rightarrow 0$, $\sigma_\lambda$ approaches the Heaviside step function and market frictions disappear.
+
+\subsection{Correlation between risks}
+
+In the real world, risks are often correlated, which is not accounted for in our current model. To incorporate correlation between risks, we can introduce joint distributions for the failure events $f_p$, which occur according to latent variables.
+
+In our model, we assume that $f_p$ follows a uniform distribution. To introduce correlation between $f_1$ and $f_2$, we use the well-known NORTA (NORmal To Anything) method \citep{norta1997}. This method allows us to create a joint distribution $(f_1, f_2)$ such that the marginals are uniform distributions and the Pearson correlation between $f_1$ and $f_2$ can be set to any arbitrary value.
+
+Following NORTA, we define $f_p = \Phi(z_p)$, where $\Phi$ is the cumulative distribution function of the Normal distribution, and
+
+$$\begin{pmatrix}z_1\\z_2\end{pmatrix} \sim \mathcal{N}\left(\mu, \Sigma\right)$$
+with $\mu = \begin{pmatrix}0\\0\end{pmatrix}$ and 
+$\Sigma = \begin{pmatrix}
+    1 & \rho(z_1, z_2) \\
+    \rho(z_1, z_2) & 1
+\end{pmatrix}$.
+Here, $\rho$ is the Pearson correlation coefficient between $z_1$ and $z_2$, which determines the correlation between $f_1$ and $f_2$.
+As shown in \citet{norta1997}, specifying a correlation between $z_p$ or $f_p$ is equivalent to specifying $\rho(f_1, f_2)$. Specifically, we have $$\rho(f_1, f_2) = \frac{6}{\pi}\sin^{-1}\left(\frac{\rho(z_1, z_2)}{2}\right)$$ 
+Hence, we use $\rho$ to denote $\rho(z_1, z_2)$ throughout the rest of the document.
+This model is well-suited to real-world scenarios, such as financial portfolios, where $z_p$ can represent the returns on investments. In such cases, joint distributions of portfolios are typically modeled as multivariate normal distributions, and $r_p$ corresponds to the Value at Risk $v_p = \Phi^{-1}(r_p)$ through the bijective function $\Phi$, such that the failure event $z_p < v_p$ is equivalent to $f_p < r_p$.
+
+\section{Computing approximate Nash equilibrium}
+
+\subsection{Approximations to games and equilibria}
+\label{sec:approx}
+
+In this section, we define some key concepts and metrics related to games and equilibria. 
+
+For a given game with $n$ players, we use $u_i(\sigma)$ to denote the reward of player $i$ when all players follow the strategy $\sigma = (\sigma_1, \ldots, \sigma_n)$. A strategy $\sigma$ is said to be a Nash equilibrium if it satisfies the following condition for all players $i$ and all alternative strategies $\sigma_i' \in \Sigma_i$: 
+$$u_i(\sigma) \ge u_i(\sigma_i', \sigma_{-i})$$ 
+where $\sigma_{-i}$ is the strategy of all players but $i$, and $\Sigma_i$ is the set of actions available to player $i$. 
+
+A game is said to be continuous if the action space $\Sigma_i$ is compact and $u_i$ is continuous. In such games, it is possible to approximate the Nash equilibria using a sequence of games over a reduced finite support, which leads to Glicksberg’s theorem, without relying on Kakutani’s theorem \citep{myerson1997game}. 
+
+In our CoR game, which has a few points of discontinuity, it is also possible to approximate the Nash equilibria using a similar method. However, we do not provide a proof of this here, as the introduction of frictions makes our game continuous anyway. 
+
+To measure the closeness of a strategy $\sigma$ to a Nash equilibrium, we use the NashConv metric \citep{Lanctot2017-wc}: 
+$$\textsc{NashConv}(\sigma) = \sum_{i=1}^n \max_{s_i \in \Sigma_i} u_i(s_i, \sigma_{-i}) - u_i(\sigma)$$
+Note that this metric only considers pure strategies $s_i \in \Sigma_i$, due to the linearity of the payoff function for mixed strategies. 
+
+The \textsc{NashConv} metric satisfies $\textsc{NashConv}(\sigma) \ge 0$, with equality holding only for a Nash equilibrium. This implies that $\textsc{NashConv}(\sigma)$ corresponds to the notion of $\varepsilon$-Nash equilibrium, where a $\varepsilon$-Nash equilibrium $\sigma$ has $\textsc{NashConv}(\sigma) = n \varepsilon$. 
+
+For a finite action space, $\textsc{NashConv}$ is easy to compute since $\Sigma_i$ is finite. However, for a continuous action space, no such metric is known. Nonetheless, we can approximate $\textsc{NashConv}$ by taking the maximum over a finite sample of points from $\Sigma_i$. This sample can be chosen randomly, or if $\Sigma_i$ is an interval or a product of intervals of $\mathbb{R}$, we can use a grid. 
+
+In our CoR game, the action space is $[0,1]$. Here, we use quasi-random numbers to measure the closeness to a Nash equilibrium, inspired by the literature on hyperparameter sampling \citep{Bousquet2017-kg} and the efficiency of quasi-Monte-Carlo methods \citep{sobol1990quasi}. Specifically, we define the QuasiNashConv metric as: 
+$$\textsc{QuasiNashConv}(\sigma, m) = \sum_{i=1}^n \max_{s_i \in \textsc{Sobol}(m)} u_i(s_i, \sigma_{-i}) - u_i(\sigma)$$
+
+where $\textsc{Sobol}(m)$ is a set of $m$ quasi random numbers drawn using Sobol’s method \citep{sobol1967distribution}.
+
+\subsection{Correlated Equilibria}
+
+A Nash equilibrium is a set of strategies where no player can improve their payoff by unilaterally changing their strategy, assuming that all other players' strategies remain unchanged. However, in some games, players may benefit from coordinating their actions in ways not captured by traditional Nash equilibrium. This is where the concept of correlated equilibrium comes in.
+
+A correlated Nash equilibrium is a set of correlated strategies where no player can improve their expected payoff by unilaterally changing their strategy, given that they observe the correlation signal. This correlation signal is not necessarily a message or communication between the players, but rather a shared random variable that affects each player's strategy consistently.
+
+\begin{definition}
+\label{def:cor}
+A correlated Nash equilibrium is a joint distribution $\sigma$ over all moves $\Sigma_1 \times \Sigma_2 \times \ldots \times \Sigma_n$ such that for any player $i$ and any strategy modification $\phi: \Sigma_i \rightarrow \Sigma_i$, $$u_i(\sigma_i, \sigma_{-i}) \ge u_i(\phi(\sigma_i), \sigma_{-i})$$
+\end{definition}
+
+Thus, a Nash equilibrium can be viewed as a correlated Nash equilibrium that can be decomposed into independent strategies for each player. It is evident that any Nash equilibrium is a correlated Nash equilibrium.
+
+Correlated equilibria are more suitable for the real world because they allow for a broader range of possible outcomes that can arise through coordination among the players, without necessarily requiring communication or binding agreements between them.
+
+In many real-world scenarios, it is challenging or impossible for players to communicate and make binding agreements, or they may not have complete information about the strategies of the other players. Correlated equilibria provide a way for players to achieve coordination and cooperation without requiring such communication or information, by relying on shared random variables that affect each player's strategies consistently.
+
+Finally, correlated equilibria can also capture situations where players have some degree of trust or social norms that encourage them to coordinate their actions in a specific way. For instance, in a repeated game where players interact with each other over a long period, they may develop a sense of reciprocity or reputation that encourages them to follow a certain coordinated strategy.
+
+\subsection{Finding Correlated Equilibria with Linear Solvers}
+\label{sec:linear}
+Correlated equilibria are of interest because they can be computed more easily for a finite action set.
+
+A joint strategy can be represented by a mapping of probabilities: $$\Pr\nolimits_\sigma(s_1, s_2, \ldots, s_n) := \Pr[\sigma = (s_1, s_2, \ldots, s_n)]$$ for all joint actions $(s_1, s_2, \ldots, s_n)$. Therefore, the equation from Definition \ref{def:cor} is linear in these probabilities. An additional equation is that probabilities must sum to 1, and all probabilities are constrained to be positive. For two players, the equations are:
+
+$$\forall (s_1, s'_1), \sum_{s_2} \Pr\nolimits_\sigma(s_1, s_2) u_1(s_1, s_2) \ge \sum_{s_2} \Pr\nolimits_\sigma(s_1, s_2) u_1(s'_1, s_2)$$
+
+$$\forall (s_2, s'_2), \sum_{s_1} \Pr\nolimits_\sigma(s_1, s_2) u_1(s_1, s_2) \ge \sum_{s_1} \Pr\nolimits_\sigma(s_1, s_2) u_1(s_1, s'_2)$$
+
+$$\forall (s_1, s_2), \Pr\nolimits_\sigma(s_1, s_2) \ge 0$$
+
+$$\sum_{s_1,s_2} \Pr\nolimits_\sigma(s_1, s_2) = 1$$
+
+
+The set of correlated equilibria is thus a convex polytope $P$. It is possible to find the boundary in any direction using a linear programming solver.
+
+It is also possible to check that the correlated equilibrium is unique and is a Nash equilibrium by trying to maximize and minimize each variable over the polytope. If the maximum and minimum are equal for each variable, then the polytope only contains one point. Another method described in \citet{appa2002uniqueness} checks the uniqueness of a solution to a linear program by solving a new linear program. However, that method requires a reformulation of the linear program as $\max cx \text{ s.t. } Ax=b, x \ge 0$, which is cumbersome in our case. We propose a simple randomized method (algorithm \ref{alg:diameters}) that can produce confidence intervals for any confidence level (or p-value).
+
+\begin{restatable}{theorem}{pvalue}
+\label{thm:pvalue}
+Given a polytope $P$ defined by constraints $c_1, \ldots, c_m$
+ $$
+        \Pr\left[\textsc{SumDiamSquared}(K, c_1, \ldots, c_m) < \varepsilon\right] \le F_{\chi^2}\left(\frac{\varepsilon}{diam(P)}, K\right)
+   $$
+
+   with $F_{\chi^2}(\cdot, K)$ the cumulative distribution function of the $\chi^2$ distribution with $K$ degrees of freedom.
+\end{restatable}
+
+\begin{algorithm}
+\label{alg:diameters}
+\caption{Confidence interval on $diam(P)$}
+\begin{algorithmic}
+\Require{Iterations $K$, constraints $c_1, \ldots, c_m$ defining a polytope $P$ in $\mathbb{R}^n$}
+\Function{SumDiamSquared}{$K, c_1, \ldots, c_m$}
+\For{$i\gets 1,\ldots,K$}
+    \State Sample $v_j \sim \mathcal{N}(0, 1)$ for $j=1,\ldots,n$
+    \State $a_i \gets \textsc{LinProg}(v, c)$ \Comment{$\min \limits_{x\in P}v \cdot x$}
+    \State $b_i \gets \textsc{LinProg}(-v, c)$ \Comment{$\max \limits_{x\in P}v \cdot x$}
+    \State $d_i \gets b_i - a_i$
+\EndFor
+\State \Return $\sum_i d_i^2$
+\EndFunction
+\Require{p-value $p$}
+
+\Function{MaxDiameter}{$p, K, c_1, \ldots, c_m$}
+\State $\varepsilon \gets$ \Call{SumDiamSquared}{$K, c_1, \ldots, c_m$}
+\State $q \gets$ \Call{Chi2.ppf}{$p, K$}
+\State $d \gets \varepsilon / q$
+\State \Return $d$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+We used the HiGHS solver \citep{huangfu2018parallelizing} to solve the linear optimization subproblems (calls to \textsc{LinProg}). In numerical experiments, we use $K=5$, confidence $p=0.95$, and report $$d_{max} :=  \textsc{MaxDiameter}(p, K, c_1, \ldots, c_m) = \frac{\textsc{SumDiamSquared}(K, c_1, \ldots, c_m)} {Q_{\chi^2}\left(1-p, K\right)}$$ where $Q_{\chi^2}(\cdot, K)$ is the quantile function of the $\chi^2$ distribution with $K$ degrees of freedom. When the polytope describe probability distributions, we have the bound $d_{max} \leq 2$.
+
+Finally, we make the following trivial remark:
+
+\begin{proposition}
+    A correlated equilibrium $\sigma$ is a Nash equilibrium iff the matrix $(\Pr\nolimits_\sigma(i, j))_{i,j}$ has rank 1.
+\end{proposition}
+
+This gives us another numerical method to check that a correlated equilibrium is a Nash equilibrium: compute the second highest eigenvalue and check that it is $0$. In numerical experiments, we define $\lambda_1$ and $\lambda_2$ as the highest and second highest eigenvalues and report the value $$\lambda := \frac{\lambda_1}{\lambda_2}$$
+
+
+
+\section{Results}
+
+We approximate the game with finite approximations over a grid. Because of the discontinuity of the utility function, we distinguish 2 settings according to a boolean \texttt{shift}. In both settings, the two players are proposed a finite number of actions evenly spaced in $[0, 1]$. If \texttt{shift = false}, the two players get the same action set. If \texttt{shift = true}, the two players get action sets that don't intersect and the actions in $[0, 1]$ are attributed alternatively to each player.
+
+\begin{result}
+In finite approximations of the CoR game, the Nash equilibrium can be obtained by computing a correlated Nash equilibrium. Furthermore, either the correlated equilibrium is unique or the correlated equilibrium maximizing the total reward is a Nash equilibrium.
+\end{result}
+
+We plot $d_{max}$ and $\lambda$ computed according to section \ref{sec:linear} for different values of $C, \sigma, \rho$ and different numbers of actions in Figure \ref{fig:linear-shift}. Those results are obtained with $\texttt{shift = true}$. We plot the results with $\texttt{shift = false}$ in \ref{sec:linear-noshift}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/linear-dmax-shift}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/linear-lambda-shift}
+  \end{minipage}
+  \caption{We observe that for almost all values of the parameters, $d_{max}$ is numerically zero. $\lambda$ is computed for a correlated equilibrium that maximizes the total reward. We cross out cases where the solver failed to find a solution, most probably due to rounding errors which caused the small solution set to disappear. In the few cases where $d_{max}$ was not observed to be zero, $\lambda$ is clearly zero, which shows that the best correlated equilibrium is a Nash equilibrium. We also interpret the nonzero values of $d_{max}$}
+  \label{fig:linear-shift}  
+\end{figure}
+
+This motivates the use of algorithms that find correlated equilibria to study our game. In particular, regret matching is a learning strategy that aims to converge to a correlated equilibrium \citep{Hart1997-nk}. At each step, the algorithm provides a distribution of moves for each player. In contrast, Counterfactual Regret Minimization (CFR) \citep{neller2013introduction} is a deterministic variant that accumulates expected regrets instead of playing the game. Although CFR is typically used in extensive form games, we apply it in our normal form game as a deterministic version of Regret Matching.
+A variant of regret matching called stochastic fictitious play \citep{fudenberg1993learning} involves the softmax function to compute probability distributions. We also test this variant with CFR.
+
+We implement and evaluate all algorithms to solve a discrete version of our game where the action space is reduced to a grid, with and without a shift. We then report the value of $\textsc{NashConv}$ $\textsc{QuasiNashConv}$ as defined in Section \ref{sec:approx}.
+
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/regret_matching_methods_nashconv}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/regret_matching_methods_quasinashconv}
+  \end{minipage}
+  \caption{Evaluation of different algorithms to find Nash equilibrium in the standard setting $P=R=1, \sigma=0, \rho=0$ without sharing. The game was reduced to a grid of $a=2^{12}$ actions and \textsc{QuasiNashConv} was evaluated on $2^{15}$ points. The algorithms ran for $10^4$ iterations. For CFR, an iteration is an update to the strategy. For regret matching, we define an iteration as $a$ steps of the sampling, play and update process, so that both CFR and RM do $\mathcal{O}(a^2)$ operations per iteration. We do not include the computation of the utility matrix in the computation time.}
+  \label{fig:rm-different}  
+\end{figure}
+
+We observe on Figure \ref{fig:rm-different} that all algorithms offer more of less the same performance, although CFR is a bit faster as it does not involve any random sampling. Therefore, we use vanilla Regret Matching in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/regret_matching_sizes_nashconv}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/regret_matching_sizes_quasinashconv}
+  \end{minipage}
+  \caption{Performance of the vanilla regret matching algorithm to find Nash equilibrium in the standard setting $P=R=1, \sigma=0, \rho=0$ without sharing. The quality of the resulting equilibrium depends mainly on the number of actions $a$. For $t$ iterations, the time complexity of the algorithm is $\mathcal{O}(t a^2)$ and the memory complexity is $\mathcal{O}(a^2)$ as it requires to compute the reward matrix. \textsc{QuasiNashConv} was evaluated on $8 a$ points.}
+  \label{fig:rm-size}  
+\end{figure}
+
+
+
+
+\bibliographystyle{elsarticle-harv} 
+\bibliography{refs}
+
+
+
+%% The Appendices part is started with the command \appendix;
+%% appendix sections are then done as normal sections
+\appendix
+
+\section{Proof of Theorem \ref{thm:nashcor}}
+\label{proof:nashcor}
+
+We follow broadly the same scheme as Theorem 3.6 of \citet{Lotker2008-tx}, mutatis mutandis since the equations are different. Their proof proceeds by supposing the existence of a Nash equilibrium and deriving properties to characterize it. Contrary to what they claim, we can prove the existence of a Nash equilibrium without any computation using \citet{Dasgupta1986-gu}. Let $(f_1, f_2)$ be the density functions of Player 1 and 2 in a Nash equilibrium. We note $S_1, S_2$ their support.
+\begin{proposition}
+    
+For almost all $x \in S_1$, $f_2(x) \sim \frac{1}{(1-x)^3}$ and conversely.
+\end{proposition} 
+\begin{proof}
+Let us simplify the notations by noting $a \sim f_1$ and $b \sim f_2$ the random moves of players 1 and 2.  We note $u_1^*$ the utility of Player 1 and $\bar b$ the expectation of $b$. Then, by Theorem \ref{thm:jules}, for almost all $a\in S_1$,
+\begin{align*}u_1^* = u_1(a) &= \mathbb{E}_b[u_1(a, b)]\\
+&= \mathbb{E}_b\left[Rb(1-a) - aP  + [a>b](1-a)(1-b)R\right]\\
+&= R \bar b (1-a) - a P + (1-a) \int_0^a (1-b) R f_2(b) db\end{align*}
+$$\int_0^a (1-b) R f_2(b) db = \frac{u_1^* + aP}{1-a} + R \bar b$$
+
+We derivate to obtain $f_2(a) = \frac{u_1^* + P}{R(1-a)^3} $.
+\end{proof}
+\begin{proposition}
+    With the exception of a set measure zero, $S_1 = S_2$.
+\end{proposition} 
+\begin{proof}We apply the previous result that implies $x \in S_1 \implies f_2(x) \neq 0$.\end{proof}
+\begin{proposition}
+    $\inf S_1 = \inf S_2 = 0$
+\end{proposition}
+\begin{proof}
+Suppose $\inf S_1 = \inf S_2 = l > 0$. By Theorem \ref{thm:jules}, $u_1(l) = u_1^* = \max_x u_1(x)$. But $u_1(0) > u_1(l)$ since playing $0$ decreases the risk of Player 1 without compromising its chances to get the reward. By contradiction, $\inf S_1 = \inf S_2 = 0$.
+ \end{proof}
+\begin{proposition}
+For all intervals $[x_1, x_2]$ with $0 < x_1 < x_2 < \sup S_1$ we have that $\int_{x_1}^{x_2} f_1(x) dx > 0$
+ \end{proposition}
+\begin{proof}
+    
+ Suppose that there is an interval $[x_1, x_2]$ such that $\int_{x_1}^{x_2} f_1(x) dx =0$. Assume that this interval is maximal so that $x_1, x_2 \in S_1$. We also have that $\int_{x_1}^{x_2} f_2(x) dx = 0$ since $S_1 = S_2$. Hence Player 2 never plays between $x_1$ and $x_2$ and this implies that $u_1(x_1) > u_1(x_2)$ since Player 1 can decrease their risk without compromising its chances to get the reward. This contradicts the fact that $u_1(x_1) = u_1(x_2)$ since they are both in the support of the Nash equilibrium.
+\end{proof}
+\begin{proposition}
+There is no point $x$ with positive probability.
+\end{proposition}
+\begin{proof}
+ Suppose the existence of a point $x$ with positive probability (which means that $f_1(x)$ is a Dirac. Since we determined the expression of $f_1(x)$ for almost every $x$, there is a $\varepsilon > 0$ such that there is no other point with positive probability in $[x, x+\varepsilon]$. Hence, there is $0 < \varepsilon' < \varepsilon$ such that $u_2(x + \varepsilon') > u_2(x)$ since any positive $\varepsilon'$ improves the probability of winning the reward by $\mathbb{P}[\text{Player 1 plays } x]$ and the risk increment goes to $0$ with $\varepsilon'$.\
+\end{proof}
+
+\nashcor*
+
+\begin{proof}
+Up to a set of measure 0 and on which the probability is 0, we have determined the expression of $f_1$ and $f_2$ above up to a constant. This means that $f_1 = f_2 = f$.
+We still have to find the constant and the upper limit of the support.
+Let us reiterate the calculations, this time using the fact that $0 \in S$ with $S$ the support of $f$. This means that for any $a\in S$:
+
+\begin{align*}0 &= u_1(a) - u_1(0)\\
+&= \mathbb{E}_b[u_1(a, b) - u_1(0, b)]\\
+&= \mathbb{E}_b\left[Rb(1-a) - aP  + [a>b](1-a)(1-b)R - Rb \right]\\
+&= -a R \bar b - a P + (1-a) \int_0^a R (1-b) f(b) db\end{align*}
+
+$$\int_0^a R (1-b) f(b) db = (R \bar b + P) \frac{a}{1-a}$$
+
+We derivate to obtain:
+$$f(a) = \left(\bar b + \frac{P}{R}\right) \frac{1}{(1-a)^3}$$
+We now have two unknowns and two unknowns:
+$$
+\left\{ \begin{array}{ll}
+h := \sup S  \text{ such that } \int_0^h f(x) dx = 1\\
+\bar b = \int_0^h x f(x) dx
+\end{array} \right.
+$$
+We define $C := \frac{P}{R}$.\\
+$$\int_0^h f(x) dx = \frac{\bar b + C}{2} \left(\frac{1}{(h-1)^2}-1\right) = 1$$\\
+$$\int_0^h x f(x) dx = \bar b = \frac{\bar b + C}{2} \frac{h^2}{(h-1)^2}$$
+
+We get
+$$\bar b = \frac{h^2}{1-(h-1)^2}$$
+$$2 \frac{(h-1)^2}{1 - (h-1)^2} - C = \frac{h^2}{1 - (h-1)^2}$$
+$$2(h-1)^2 - C + C (h-1)^2 - h^2 = 0$$
+$$(C + 1) h^2 - (2 C + 4) h + 2 = 0$$
+Hence, $h = \frac{2 + C \pm \sqrt{C^2 + 2 C + 2}}{1 + C}$\\
+Since $h<1$, we get
+\begin{align*}
+    h &= \frac{2 + C - \sqrt{C^2 + 2 C + 2}}{1 + C}\\
+      &= 1 - \frac{\sqrt{(C + 1)^2 + 1} - 1}{1+C}
+\end{align*}
+We remark that $(\sqrt{(C + 1)^2 + 1} + 1)( \sqrt{(C + 1)^2 + 1} - 1) = (C+1)^2$\\
+Hence $h = 1 - \sqrt{\frac{\sqrt{(C + 1)^2 + 1} - 1}{\sqrt{(C + 1)^2 + 1} + 1}}$
+\begin{align*}\bar b + C &=\frac{2}{\frac{1}{(h-1)^2} - 1}\\
+&= \frac{2}{\frac{\sqrt{(C + 1)^2 + 1} + 1}{\sqrt{(C + 1)^2 + 1} - 1} - 1}\\
+&= \sqrt{(C + 1)^2 + 1} - 1\end{align*}
+Finally, $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $k := \sqrt{(C + 1)^2 + 1}$\\
+From the expressions above, we get $\bar b = k - 1 - C$ and $u^* = R \bar b$.
+\end{proof}
+
+\section{\texorpdfstring{Plots of Nash equilibrium for various values of $C$}{Plots of Nash equilibrium for various values of C}}
+\label{more-nash}
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/nash-0}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/nash-0.5}
+  \end{minipage}
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/nash-1}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/nash-10}
+  \end{minipage}
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/nash-100}
+  \end{minipage}
+  \hfill
+\end{figure}
+
+
+\section{\texorpdfstring{Estimation of ${r_{max}}$ and $w$ in the multiplayer setting}{Estimation of rmax and w in the multiplayer setting}}
+\label{estimate}
+
+We recall the equations:
+
+$$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}}$$
+\begin{align*}
+        \int_0^{r_{max}} f(x) dx &= 1 \\
+        \int_0^{r_{max}} x f(x) dx &= \bar r 
+\end{align*}
+with $$w := \bar r ^ {n-1}$$
+
+We could estimate the integrals by numerical integration. However $\bar r$ becomes smaller when increasing $n$, which causes $f$ to have a peak at $0$ and renders the integral estimates unreliable.
+Computations \footnote{We used Wolfram Alpha with \texttt{ReplaceAll[Integrate[(1/(1 - x)) D[((w + x C)/(1 - x))\^{}(1/(n - 1)), x], x], {n -> 42}]} for various values of $n$, found a pattern and checked that the derivatives match.} give us 
+$$\int f(x) = \frac{w + nC(1-x) + Cx}{n (1 - x)(C+w)} \sqrt[n-1]{\frac{Cx + w}{1-x}}$$
+$$\int x f(x) = \frac{w - n w  (1-x) + Cx}{n (1-x)(C+w)}\sqrt[n-1]{\frac{Cx+w}{1-x}}$$
+Hence
+\begin{equation}
+\label{eq:multi1}
+\frac{w + nC(1-{r_{max}}) + C{r_{max}}}{n (1 - {r_{max}})(C+w)} \sqrt[n-1]{\frac{C{r_{max}} + w}{1-{r_{max}}}} -  \frac{w + nC}{n (C+w)} \sqrt[n-1]{w} = 1
+\end{equation}
+\begin{equation}
+\label{eq:multi2}
+\frac{w - n w  (1-{r_{max}}) + Ch}{n (1-h)(C+w)}\sqrt[n-1]{\frac{Ch+w}{1-{r_{max}}}} - \frac{w - n w}{n (C+w)}\sqrt[n-1]{w} = \sqrt[n-1]{w}
+\end{equation}
+
+The value of integrals are increasing in ${r_{max}}$ since $f(x)$ is positive, hence for any value of $w$ we can find the corresponding value of ${r_{max}}$ by binary search using \eqref{eq:multi1}. Then we are left with finding the value of $w$ using \eqref{eq:multi2} . We observe experimentally that the function $w \rightarrow \int_0^{{r_{max}}(w)}xf(x)dx - \sqrt[n-1]{w}$ seems to have only one root and that it is positive before that root and negative after that root. We therefore use binary search.
+
+Equation \eqref{eq:multi2} also defines $w$ as a fixed point and the iterative algorithm $w \leftarrow \left(\int_0^{{r_{max}}(w)}x f(x)\right)^{n-1}$ also converges, although it seems to sometimes loop between a few close values because of numerical errors.
+
+We remark that $w$ goes very quickly to $0$ as $n$ increases. This causes numeric errors in the computations of the primitives at $0$ that we fix by storing $\log w$ instead of $w$.  For the same reason, we compute the integrals in log space.
+
+Equation \eqref{eq:multi2} is more interesting as the indefinite integral $F({r_{max}})$ can be negative. Depending on the sign, we store either $\log F({r_{max}})$ or $\log -F({r_{max}})$.
+
+Finally, we apply the Log-Sum-Exp Trick to compute the value of the integral in log space. The final algorithm to find $w$ and ${r_{max}}$ takes less than 1 ms on a laptop for any value of the parameters.
+
+%% If you have bibdatabase file and want bibtex to generate the
+%% bibitems, please use
+%%
+\section{Proof of Theorem \ref{thm:pvalue}}
+\pvalue*
+\begin{proof}
+    We suppose that the diameter $d$ is obtained in some unit direction $\vec a$: $$\max \limits_{x\in P}a \cdot x - \min \limits_{x\in P}a \cdot x = d$$
+    We define $D$ the line $\left[\argmin \limits_{x\in P}a \cdot x, \argmax \limits_{x\in P}a \cdot x\right]$.
+    Then, for any $v$, $$\max \limits_{x\in P}v \cdot x - \min \limits_{x\in P}v \cdot x \ge \max \limits_{x\in D}v \cdot x - \min \limits_{x\in D}v \cdot x = d \times |v \cdot a|$$
+
+Hence, $$\Pr\left[ \max \limits_{x\in P}v \cdot x - \min \limits_{x\in P}v \cdot x < \varepsilon \right] \le \Pr\left[ |v \cdot a| < \frac{\varepsilon}{d} \right]$$
+
+
+
+If $v$ is a vector of iid standard Gaussian variables, $v \cdot a \sim \mathcal{N}(0, 1)$ and $(v \cdot a)^2$ follows a $\chi^2$ distribution with 1 degree of freedom.
+The sum of multiple iterations will follow:
+
+$$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i \cdot x)^2 < \varepsilon \right] \le \Pr\left[ \sum_i^K z_i^2 < \frac{\varepsilon}{d} \right]$$
+
+where $z_i \sim \mathcal{N}(0, 1)$ are independent normal variables.
+
+$\sum_i^K z_i^2$ follows a $\chi^2$ distribution with $K$ degrees of freedom. With $F_{\chi^2}(x, K)$ the cumulative distribution function, we get:
+
+$$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i \cdot x)^2 < \varepsilon \right] \le F_{\chi^2}\left(\frac{\varepsilon}{d}, K\right)$$
+\end{proof}
+
+\section{Linear equilibrium in finite approximations with \\ \texttt{shift~=~false}}
+\label{sec:linear-noshift}
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/linear-dmax-no-shift}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{plots/linear-lambda-no-shift}
+  \end{minipage}
+\end{figure}
+
+
+
+\section{Description of Regret Matching}
+\label{sec:regret}
+
+Regret matching was introduced by \citet{Hart1997-nk} as a strategy such that if each player applies it, the observed sequence of plays can converge to a correlated equilibrium. The idea behind regret matching is to adjust the probabilities of playing each action based on the accumulated regrets for each action. We describe the version that was originally named Unconditional Regret Matching.
+
+Regret is defined as the difference between the payoff received from a particular action and the actual historical payoff. The intuition behind regret is that a player may regret not having played a different action that would have resulted in a better payoff.
+In regret matching, a player starts by assigning equal probability to each possible action. After playing the game and receiving a payoff, the player computes the regret for each action based on the difference between the payoff received and the maximum payoff that could have been obtained by playing a different action. The player then updates the probabilities of each action proportional to their positive regrets.
+More formally, let $s \in \Sigma_i$ be an action, $r(s)$ be the regret for playing action $s$, and $\Pr_t(s)$ be the probability of playing action $s$ at time $t$. The regret-matching update rule is as follows:
+$${\Pr}_{t}(s) = \begin{cases} \frac{r^+(s)}{\sum_{s'} r^+(s')} &\text{if}~\sum_{s'} r^+(s') > 0\\
+\frac{1}{|\Sigma_i|} &\text{else} \end{cases}$$
+where $r^+(s) =\max(r(s), 0)$ and $r(s)$ is the cumulative regret for playing action $s$ up to time $t$, defined as:
+$$r(s) = \sum_{k=1}^t u_i(s, s_{-i}[k]) - u_i(s[k])$$
+where $s[t]$ is the history of what was played at time $t$.
+The intuition behind the regret-matching update rule is that actions that have positive regrets are given higher probabilities in the next round, while actions with zero or negative regrets are given zero probability. Over time, as the player continues to play the game and accumulate regrets, the probabilities of playing each action converge to a correlated equilibrium of the game, which is a set of probabilities over actions that maximizes the player's expected payoff, given the strategies of the other players.
+
+A variant named Counterfactual Regret Minimization described by \cite{neller2013introduction} does not actually sample actions and instead maintains a cumulative profile that can be viewed as the expectation of moves under the Regret Matching strategy. This deterministic variant converges faster in practice.
+
+TODO: describe equations of CFR, explain tabular computations
+
+
+%% else use the following coding to input the bibitems directly in the
+%% TeX file.
+
+% \begin{thebibliography}{00}
+
+% %% \bibitem[Author(year)]{label}
+% %% Text of bibliographic item
+
+% \bibitem[ ()]{}
+
+
+% \end{thebibliography}
+\end{document}
+
+\endinput
+%%
+%% End of file `elsarticle-template-harv.tex'.
