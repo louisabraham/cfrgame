@@ -19,7 +19,7 @@ jobs:
       #     name: PDF
       #     path: paper/article.pdf
       - name: Upload pdf
-        uses: EndBug/add-and-commit
+        uses: EndBug/add-and-commit@v9
         with:
           add: paper/article.pdf
           message: 'Update pdf'
