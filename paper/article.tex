@@ -655,7 +655,7 @@ We implement and evaluate all algorithms to solve a discrete version of our game
   \label{fig:rm-different}  
 \end{figure}
 
-We observe on Figure \ref{fig:rm-different} that all algorithms offer more of less the same performance, although CFR is a bit faster as it does not involve any random sampling. Therefore, we use vanilla Regret Matching in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
+We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperforms all methods. In general, Regret Matching performs much better than CFR, even when using less actions, using softmax is detrimental, and shifting the action space does not seem to impact performance. CFR runs faster  as it does not involve any random sampling. Therefore, we use vanilla Regret Matching in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
 
 \begin{figure}[htbp]
   \centering
