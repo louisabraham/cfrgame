@@ -13,11 +13,6 @@ jobs:
           root_file: article.tex
           args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode --shell-escape
           extra_system_packages: inkscape
-      # - name: Upload a build artifact
-      #   uses: actions/upload-artifact@v2.3.1
-      #   with:
-      #     name: PDF
-      #     path: paper/article.pdf
       - name: Upload pdf
         uses: EndBug/add-and-commit@v9
         with:
