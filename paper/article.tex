@@ -64,6 +64,10 @@
 
 \usepackage{hyperref}
 \usepackage{svg}
+
+\svgpath{{../plots/}}
+
+
 \usepackage{float}
 %% The amsthm package provides extended theorem environments
 %% \usepackage{amsthm}
@@ -255,7 +259,7 @@ Figure \ref{fig:reward} shows what the reward function of Player 1 looks like wh
 
 \begin{figure}[htbp]
     \centering
-    \includesvg[width=0.8\linewidth]{plots/reward}
+    \includesvg[width=0.8\linewidth]{reward}
     \caption{Reward function}
     \label{fig:reward}
 \end{figure}
@@ -330,12 +334,12 @@ At $C = 1$, the cutoff value is $1 - \sqrt{\frac{\sqrt{5} - 1}{\sqrt{5} + 1}} = 
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/nash-0}
+    \includesvg[width=1.1\linewidth]{nash-0}
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/nash-1}
+    \includesvg[width=1.1\linewidth]{nash-1}
   \end{minipage}
   \caption{Nash equilibrium}
   \label{fig:nash}  
@@ -344,7 +348,7 @@ At $C = 1$, the cutoff value is $1 - \sqrt{\frac{\sqrt{5} - 1}{\sqrt{5} + 1}} = 
 
 \begin{figure}[htbp]
   \centering
-  \includesvg[width=0.8\linewidth]{plots/cutoff}
+  \includesvg[width=0.8\linewidth]{cutoff}
   \caption{The cutoff goes to zero when $C \rightarrow\infty$.}
   \label{fig:cutoff}  
 \end{figure}
@@ -388,12 +392,12 @@ We display the behavior of the solution for multiple players in Figure \ref{fig:
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/solution-multiple-0}
+    \includesvg[width=1.1\linewidth]{solution-multiple-0}
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/solution-multiple-1}
+    \includesvg[width=1.1\linewidth]{solution-multiple-1}
   \end{minipage}
   \caption{We observe a clear difference between the cases $C=0$ (no penalty) and $C=1$ (presence of a penalty). In both cases, the cutoff increases. However, the average risk seems to decrease sharply when there is a nonzero penalty with a mode at $r=0$.}
   \label{fig:solution-multiple}  
@@ -416,7 +420,7 @@ We illustrate this behavior in Figure \ref{fig:cutoff-asymptotic}.
 
 \begin{figure}[htbp]
     \centering
-    \includesvg[width=0.8\linewidth]{plots/cutoff-asymptotic}
+    \includesvg[width=0.8\linewidth]{cutoff-asymptotic}
     \caption{The plot of $r_{max}$ to $\log(C)$ is very similar to the function $\frac{1}{1 + \exp(\cdot)}$. This is because $r_{max} \sim \frac{1}{1+C}$.}
     \label{fig:cutoff-asymptotic}
 \end{figure}
@@ -435,7 +439,7 @@ We interpret Result \ref{res:scaling} as an indication that resources, here mode
 
 \begin{figure}[htbp]
     \centering
-    \includesvg[width=0.8\linewidth]{plots/efficiency}
+    \includesvg[width=0.8\linewidth]{efficiency}
     \caption{The efficiency clearly goes to $0$ even when $e = 1$. When $e>1$, it seems that $E \rightarrow 1$. Values for greater values of $n$ suffer of numerical precision issues as $\log w \rightarrow 0$.}
     \label{fig:efficiency}
 \end{figure}
@@ -619,12 +623,12 @@ We plot $d_{max}$ and $\lambda$ computed according to section \ref{sec:linear} f
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/linear-dmax-shift}
+    \includesvg[width=1.1\linewidth]{linear-dmax-shift}
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/linear-lambda-shift}
+    \includesvg[width=1.1\linewidth]{linear-lambda-shift}
   \end{minipage}
   \caption{We observe that for almost all values of the parameters, $d_{max}$ is numerically zero. $\lambda$ is computed for a correlated equilibrium that maximizes the total reward. We cross out cases where the solver failed to find a solution, most probably due to rounding errors which caused the small solution set to disappear. In the few cases where $d_{max}$ was not observed to be zero, $\lambda$ is clearly zero, which shows that the best correlated equilibrium is a Nash equilibrium. We also interpret the nonzero values of $d_{max}$}
   \label{fig:linear-shift}  
@@ -640,12 +644,12 @@ We implement and evaluate all algorithms to solve a discrete version of our game
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/regret_matching_methods_nashconv}
+    \includesvg[width=1.1\linewidth]{regret_matching_methods_nashconv}
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/regret_matching_methods_quasinashconv}
+    \includesvg[width=1.1\linewidth]{regret_matching_methods_quasinashconv}
   \end{minipage}
   \caption{Evaluation of different algorithms to find Nash equilibrium in the standard setting $P=R=1, \sigma=0, \rho=0$ without sharing. The game was reduced to a grid of $a=2^{12}$ actions and \textsc{QuasiNashConv} was evaluated on $2^{15}$ points. The algorithms ran for $10^4$ iterations. For CFR, an iteration is an update to the strategy. For regret matching, we define an iteration as $a$ steps of the sampling, play and update process, so that both CFR and RM do $\mathcal{O}(a^2)$ operations per iteration. We do not include the computation of the utility matrix in the computation time.}
   \label{fig:rm-different}  
@@ -657,12 +661,12 @@ We observe on Figure \ref{fig:rm-different} that all algorithms offer more of le
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/regret_matching_sizes_nashconv}
+    \includesvg[width=1.1\linewidth]{regret_matching_sizes_nashconv}
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/regret_matching_sizes_quasinashconv}
+    \includesvg[width=1.1\linewidth]{regret_matching_sizes_quasinashconv}
   \end{minipage}
   \caption{Performance of the vanilla regret matching algorithm to find Nash equilibrium in the standard setting $P=R=1, \sigma=0, \rho=0$ without sharing. The quality of the resulting equilibrium depends mainly on the number of actions $a$. For $t$ iterations, the time complexity of the algorithm is $\mathcal{O}(t a^2)$ and the memory complexity is $\mathcal{O}(a^2)$ as it requires to compute the reward matrix. \textsc{QuasiNashConv} was evaluated on $8 a$ points.}
   \label{fig:rm-size}  
@@ -775,27 +779,27 @@ From the expressions above, we get $\bar b = k - 1 - C$ and $u^* = R \bar b$.
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/nash-0}
+    \includesvg[width=1.1\linewidth]{nash-0}
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/nash-0.5}
+    \includesvg[width=1.1\linewidth]{nash-0.5}
   \end{minipage}
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/nash-1}
+    \includesvg[width=1.1\linewidth]{nash-1}
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/nash-10}
+    \includesvg[width=1.1\linewidth]{nash-10}
   \end{minipage}
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/nash-100}
+    \includesvg[width=1.1\linewidth]{nash-100}
   \end{minipage}
   \hfill
 \end{figure}
@@ -870,12 +874,12 @@ $$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i
   \centering
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/linear-dmax-no-shift}
+    \includesvg[width=1.1\linewidth]{linear-dmax-no-shift}
   \end{minipage}
   \hfill
   \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includesvg[width=1.1\linewidth]{plots/linear-lambda-no-shift}
+    \includesvg[width=1.1\linewidth]{linear-lambda-no-shift}
   \end{minipage}
 \end{figure}
 
