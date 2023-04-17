@@ -23,6 +23,5 @@ jobs:
         with:
           add: paper/article.pdf
           message: 'Update pdf'
-          token: ${{ secrets.GITHUB_TOKEN }}
           author_name: ${{ github.actor }}
           author_email: ${{ github.actor }}@users.noreply.github.com
