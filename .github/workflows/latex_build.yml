@@ -9,7 +9,8 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: paper/article.tex
+          working_directory: paper
+          root_file: article.tex
       - name: Upload a build artifact
         uses: actions/upload-artifact@v2.3.1
         with:
