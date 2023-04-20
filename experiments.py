@@ -661,19 +661,21 @@ def equilibria_plots():
     plt.title("Equilibrium for different values of $C$ at $\\rho=0$")
     plt.savefig("plots/equilibria_rbar_u_C.svg")
 
-    plt.clf()
-    C = 0
-    for noise in all_noise:
-        u = [results_dict[corr, noise, C]["u"] for corr in all_corr]
-        label = f"$\\log_{{10}}\\tau={np.log10(noise)}$"
-        plt.plot(all_corr, u, label=label)
-    legend = plt.legend(loc="lower left", prop={"size": 7})
-    legend.get_frame().set_alpha(None)
-    legend.get_frame().set_facecolor((1, 1, 1, 0.6))
-    plt.xlabel(r"$\rho$")
-    plt.ylabel(r"$u$")
-    plt.title("Equilibrium for different values of $\\tau$ at $C=0$")
-    plt.savefig("plots/equilibria_u_corr_tau.svg")
+    for name in ["rbar", "u"]:
+        for C in [0, 1]:
+            plt.clf()
+            for noise in all_noise:
+                u = [results_dict[corr, noise, C][name] for corr in all_corr]
+                label = f"$\\log_{{10}}\\tau={np.log10(noise)}$"
+                plt.plot(all_corr, u, label=label)
+            legend = plt.legend(loc="lower left", prop={"size": 7})
+            legend.get_frame().set_alpha(None)
+            legend.get_frame().set_facecolor((1, 1, 1, 0.6))
+            plt.xlabel(r"$\rho$")
+            plt.ylabel(r"$u$" if name == "u" else r"$\bar r$")
+            plt.title(f"Equilibrium for different values of $\\tau$ at $C={C}$")
+            plt.savefig(f"plots/equilibria_{name}_corr_C={C}.svg")
+            plt.show()
 
     plt.clf()
     noise = 0
@@ -688,8 +690,12 @@ def equilibria_plots():
     plt.ylabel(r"$u$")
     plt.title("Equilibrium for different values of $C$ at $\\tau=0$")
     plt.savefig("plots/equilibria_u_corr_C.svg")
+    plt.clf()
 
 
+equilibria_plots()
+
+#%%
 def main():
 
     with tqdm() as pbar:
