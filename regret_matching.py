@@ -107,7 +107,7 @@ def _regret_matching_gen(
     game_parameters,
     actions,
     iters,
-    shift=False,
+    shift=True,
     cfr=False,
     sm=False,
     batch_size=100,
@@ -190,22 +190,3 @@ def regret_matching(*args, generator=False, **kwargs):
     for ans in _regret_matching_gen(*args, **kwargs):
         pass
     return ans
-
-
-if __name__ == "__main__":
-    # _, (a1, p1), (a2, p2), *_ = regret_matching({}, 25, 1000)
-    # print(a1, p1)
-    # print(a2, p2)
-
-    start = time.time()
-    times = []
-    for (
-        *_,
-        t,
-    ) in regret_matching({"corr": 0.0}, 2048, 200, cfr=True, generator=True):
-        time.sleep(5)
-        times.append(t)
-    print(time.time() - start)
-
-
-# %%
