@@ -711,6 +711,8 @@ We implement and evaluate all algorithms to solve a discrete version of our game
 
 We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperforms all methods. In general, Regret Matching performs much better than CFR, even when using less actions, using softmax is detrimental, and shifting the action space does not seem to impact performance much. CFR runs faster as it does not involve any random sampling. Therefore, we use vanilla Regret Matching with shifting in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
 
+
+
 \begin{figure}[htbp]
   \centering
   \begin{minipage}[t]{0.48\textwidth}
@@ -726,6 +728,63 @@ We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperf
   \label{fig:rm-size}  
 \end{figure}
 
+\begin{result}
+
+    Penalties $C$ decrease the average risk taken $\bar r$. Market frictions $\tau$ decrease the average risk taken and increase the total reward $u$. Market frictions have more impact on the total reward in high-penalty environments.
+    In particularly inefficient markets with high $\tau$, increasing penalties can counterintuitively improve cooperation and the total reward.
+\end{result}
+
+We illustrate that behavior in Figure \ref{fig:result-noise}.
+
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{equilibria_rbar_u_tau}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{equilibria_rbar_u_C}
+  \end{minipage}
+  \caption{The two figures represent the same points with different level lines: constant $C$ and constant $\tau$. At constant $C$ we observe a linear relationship between $u$ and $\bar r$ when changing $\tau$. We also observed that behavior for all values of $\rho$.}
+  \label{fig:result-noise}  
+\end{figure}
+
+
+\begin{result}
+    Players take more risks in environments of negative correlation. Negative correlation improves their payoff compared to an absence of correlation.
+
+    Players take less risks in environments of positive correlation. The impact on performance is negative in efficient markets but can become positive in noisy markets.
+\end{result}
+
+We illustrate that behavior in Figure \ref{fig:result-corr}.
+
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{equilibria_rbar_corr_C=0}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{equilibria_rbar_corr_C=1}
+  \end{minipage}
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{equilibria_u_corr_C=0}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includesvg[width=1.1\linewidth]{equilibria_u_corr_C=1}
+  \end{minipage}
+  \caption{}
+  \label{fig:result-corr}  
+\end{figure}
 
 
 \section*{Acknowledgement}
