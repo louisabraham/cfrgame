@@ -18,7 +18,7 @@
 %% Template article for Elsevier's document class `elsarticle'
 %% with harvard style bibliographic references
 
-\documentclass[preprint,12pt,authoryear,doubleblind]{elsarticle}
+\documentclass[preprint,12pt,authoryear]{elsarticle}
 %% Use the option review to obtain double line spacing
 %% \documentclass[authoryear,preprint,review,12pt]{elsarticle}
 
@@ -165,7 +165,9 @@
 %% Text of abstract
 This article investigates models of competition where actors choose their level of risk and are rewarded for taking on more risk than the others. These models are highly relevant to real-life situations of competition over prices, such as between firms, banks, and insurance companies seeking to acquire more customers.
 
-Starting from a simple normal form game with two players on a continuous action space, we prove the existence and uniqueness of a Nash equilibrium with an analytical solution. This serves as a foundation to incorporate more realistic features such as multiple players, market frictions and correlations between firm risks. We verify experimentally that the Nash equilibrium is a correlated equilibrium. Finally, we show that variants of regret matching offer performant algorithms to approximate the Nash equilibrium in our game. Our code is open-source \footnote{available at \identifier{\url{https://github.com/louisabraham/corgame}}} and can be applied to any game in normal form.
+Starting from a simple normal form game with two players on a continuous action space, we prove the existence and uniqueness of a Nash equilibrium with an analytical solution. This serves as a foundation to incorporate more realistic features such as multiple players, market frictions and correlations between firm risks. We verify experimentally that the Nash equilibrium is a correlated equilibrium. We show that variants of regret matching offer performant algorithms to approximate the Nash equilibrium in our game. Our code is open-source \footnote{available at \identifier{\url{https://github.com/louisabraham/corgame}}} and can be applied to any game in normal form. 
+
+Our experimental results reveal intriguing insights into the effects of market frictions and correlated risks on strategic risk-taking behavior. Specifically, we demonstrate that market frictions, such as transaction costs and imperfect information, play a crucial role in shaping the incentives of players. We find that these frictions decrease the average risk taken, while increasing the total payoff of the game. Interestingly, in inefficient markets, imposing failure penalties can further improve the payoff. Additionally, we observe that when risks are positively correlated, market frictions have a particularly strong positive effect on risk-taking behavior. In contrast, when risks are negatively correlated, players are incentivized to take on more risk. Our results not only provide new insights into the dynamics of strategic risk-taking, but also have important implications for the design of policies aimed at regulating competition in various industries.
 
 Our contribution is also methodological and promotes the use of algorithms in economics. Most models are overly simplified so that they admit an analytical solution. However, general algorithmic solvers could handle much more complex models, not having closed form solutions or taking data as input. While the literature has been focused on finite games, we aim to provide the reader with such algorithms in the context of games with a continuous action set.
 Overall, our approach provides a rigorous framework for modeling and analyzing strategic interactions in continuous action games, with wide-ranging applications in economics, finance, and policy-making.
@@ -356,8 +358,7 @@ At $C = 1$, the cutoff value is $1 - \sqrt{\frac{\sqrt{5} - 1}{\sqrt{5} + 1}} = 
 
  The behavior of the cutoff ${r_{max}}$ is displayed in Figure \ref{fig:cutoff}. Unsurprisingly, when $C \rightarrow \infty$, the penalty $P$ becomes much larger than the reward $R$ and the players play closer to $0$.
 
-The case when $C \rightarrow 0$ is more surprising: the maximal cutoff value at $C=0$ is $h = 1 - \sqrt{\frac{\sqrt{2}}{\sqrt{2} + 2}} \approx 0.356$. This is because even if the penalty is $0$, the players cannot get the reward if they ``lose'', which prevents them from taking too much risk. We plot the distribution in Figure \ref{fig:nash}. See Appendix \ref{more-nash} for more figures.
-
+The case when $C \rightarrow 0$ is more surprising: the maximal cutoff value at $C=0$ is $h = 1 - \sqrt{\frac{\sqrt{2}}{\sqrt{2} + 2}} \approx 0.356$. This is because even if the penalty is $0$, the players cannot get the reward if they ``lose'', which prevents them from taking too much risk. We plot the distribution in Figure \ref{fig:nash}. 
 
 \section{Generalization to multiple players}
 
@@ -555,7 +556,7 @@ In the absence of noise, when $\rho = \pm 1$, it is also possible to calculate t
 
 In this section, we define some key concepts and metrics related to games and equilibria. 
 
-For a given game with $n$ players, we use $u_i(\sigma)$ to denote the reward of player $i$ when all players follow the strategy $\sigma = (\sigma_1, \ldots, \sigma_n)$\footnote{This $\sigma$ is not the same as the scaled sigmoid $\sigma_\tau$ defined earlier.}. A strategy $\sigma$ is said to be a Nash equilibrium if it satisfies the following condition for all players $i$ and all alternative strategies $\sigma_i' \in \Sigma_i$: 
+For a given game with $n$ players, we use $u_i(\sigma)$ to denote the reward of player $i$ when all players follow the strategy $\sigma = (\sigma_1, \ldots, \sigma_n)$\footnote{This $\sigma$ is not to be confused with the scaled sigmoid $\sigma_\tau$ defined earlier.}. A strategy $\sigma$ is said to be a Nash equilibrium if it satisfies the following condition for all players $i$ and all alternative strategies $\sigma_i' \in \Sigma_i$: 
 $$u_i(\sigma) \ge u_i(\sigma_i', \sigma_{-i})$$ 
 where $\sigma_{-i}$ is the strategy of all players but $i$, and $\Sigma_i$ is the set of actions available to player $i$. 
 
@@ -663,15 +664,13 @@ This gives us another numerical method to check that a correlated equilibrium is
 
 \section{Results}
 
-We approximate the game with finite approximations over a grid. Because of the discontinuity of the utility function, we distinguish 2 settings according to a boolean \texttt{shift}. In both settings, the two players are proposed a finite number of actions evenly spaced in $[0, 1]$. If \texttt{shift = false}, the two players get the same action set. If \texttt{shift = true}, the two players get action sets that don't intersect and the actions in $[0, 1]$ are attributed alternatively to each player.
+To approximate the CoR game, we employ a finite grid of actions evenly spaced in the interval $[0, 1]$ for both players. We distinguish between two settings based on a boolean variable, \texttt{shift}. In the first setting (\texttt{shift = false}), both players are offered the same set of actions. In the second setting (\texttt{shift = true}), the two players are offered non-intersecting sets of actions, with each action in the interval $[0, 1]$ alternately attributed to each player.
 
-The computational bottleneck of equation \ref{eq:utility} is the bivariate normal probability that we compute using a Numba \citep{lam2015numba} implementation of the numerical method of \citet{genz2004numerical}.
+We employ a Numba \citep{lam2015numba}  implementation of the numerical method proposed by \citet{genz2004numerical} to compute the bivariate normal probability in the utility function, which is the computational bottleneck in equation \ref{eq:utility}.
 
-\begin{result}
-In finite approximations of the CoR game, the Nash equilibrium can be obtained by computing a correlated Nash equilibrium. Furthermore, either the correlated equilibrium is unique or the correlated equilibrium maximizing the total reward is a Nash equilibrium.
-\end{result}
+Our experiments show that the Nash equilibrium in finite approximations of the CoR game can be obtained by computing a correlated Nash equilibrium. Moreover, we prove that either the correlated equilibrium is unique or the correlated equilibrium maximizing the total reward is a Nash equilibrium.
 
-We plot $d_{max}$ and $\lambda$ computed according to section \ref{sec:linear} for different values of $C, \tau, \rho$ and different numbers of actions in Figure \ref{fig:linear-shift}. Those results are obtained with $\texttt{shift = true}$. We plot the results with $\texttt{shift = false}$ in \ref{sec:linear-noshift}.
+We present the results of our experiments with different values of $C$, $\tau$, and $\rho$, as well as different numbers of actions, in Figure \ref{fig:linear-shift}, where we plot the maximum distance $d_{max}$ and the parameter $\lambda$ computed according to Section \ref{sec:linear} with \texttt{shift = true}. We also present the results with \texttt{shift = false} in Section \ref{sec:linear-noshift}.
 
 \begin{figure}[htbp]
   \centering
@@ -684,14 +683,15 @@ We plot $d_{max}$ and $\lambda$ computed according to section \ref{sec:linear} f
     \centering
     \includesvg[width=1.1\linewidth]{linear-lambda-shift}
   \end{minipage}
-  \caption{We observe that for almost all values of the parameters, $d_{max}$ is numerically zero. $\lambda$ is computed for a correlated equilibrium that maximizes the total reward. We cross out cases where the solver failed to find a solution, most probably due to rounding errors which caused the small solution set to disappear. In the few cases where $d_{max}$ was not observed to be zero, $\lambda$ is clearly zero, which shows that the best correlated equilibrium is a Nash equilibrium. We also interpret the nonzero values of $d_{max}$}
+  \caption{Our experiments with different values of $C$, $\tau$, and $\rho$, as well as different numbers of actions, for the setting with \texttt{shift = true} show that, for almost all values of the parameters, $d_{max}$ is numerically zero. We cross out cases where the solver failed to find a solution, most probably due to rounding errors which caused the small solution set to disappear. In the few cases where $d_{max}$ was not observed to be zero, $\lambda$ is clearly zero, indicating that the best correlated equilibrium is a Nash equilibrium.}
   \label{fig:linear-shift}  
 \end{figure}
 
-This motivates the use of algorithms that find correlated equilibria to study our game. In particular, regret matching is a learning strategy that aims to converge to a correlated equilibrium \citep{Hart1997-nk}. At each step, the algorithm provides a distribution of moves for each player. In contrast, Counterfactual Regret Minimization (CFR) \citep{neller2013introduction} is a deterministic variant that accumulates expected regrets instead of playing the game. Although CFR is typically used in extensive form games, we apply it in our normal form game as a deterministic version of Regret Matching.
-A variant of regret matching called stochastic fictitious play \citep{fudenberg1993learning} involves the softmax function to compute probability distributions. We also test this variant with CFR.
+To study our game, we employ classical algorithms that find correlated equilibria. Regret matching is a widely used algorithm in game theory for finding correlated equilibria \citep{Hart1997-nk}. At each step of the algorithm, each player chooses a distribution of moves that maximizes their expected utility, given their opponent's past moves. If the algorithm is run for a sufficient number of iterations, the distributions converge to a correlated equilibrium. Counterfactual Regret Minimization (CFR) is a related algorithm that accumulates expected regrets for each action played by a player at each information set \citep{neller2013introduction}. The algorithm then updates the regrets based on the counterfactual outcomes of the game, i.e., what would have happened if a different action had been taken. By iteratively updating these regrets and choosing actions based on the updated regrets, CFR converges to a Nash equilibrium in extensive form games. In our normal form game, we apply CFR as a deterministic version of Regret Matching. Another variant of regret matching is stochastic fictitious play, which involves computing probability distributions using the softmax function \citep{fudenberg1993learning}. We also test this variant with CFR in our experiments to evaluate its performance in approximating the Nash equilibrium of our game.
 
-We implement and evaluate all algorithms to solve a discrete version of our game where the action space is reduced to a grid, with and without a shift. We then report the value of $\textsc{NashConv}$ $\textsc{QuasiNashConv}$ as defined in Section \ref{sec:approx}.
+We implement and evaluate all algorithms to solve a discrete version of our game where the action space is reduced to a grid, with and without a shift. We then report the value of $\textsc{NashConv}$ $\textsc{QuasiNashConv}$ as defined in Section \ref{sec:approx}. We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperforms all methods. In general, Regret Matching performs much better than CFR, even when using less actions, using softmax is detrimental, and shifting the action space does not seem to impact performance much. CFR runs faster as it does not involve any random sampling. Therefore, we use vanilla Regret Matching with shifting in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
+
+For our experiments on equilibria in various settings, we use 500 actions and 2000 iterations (hence $10^6$ steps) of vanilla Regret Matching with shifting. Our efficient implementation computes the equilibrium in just a few seconds, allowing us to explore the effects of penalties, market frictions, and correlation on risk-taking behavior and performance, as well as to evaluate the effectiveness of various interventions and policies in a competitive environment.
 
 
 \begin{figure}[htbp]
@@ -705,11 +705,10 @@ We implement and evaluate all algorithms to solve a discrete version of our game
     \centering
     \includesvg[width=1.1\linewidth]{regret_matching_methods_quasinashconv}
   \end{minipage}
-  \caption{Evaluation of different algorithms to find Nash equilibrium in the standard setting $P=R=1, \tau=0, \rho=0$ without sharing. The game was reduced to a grid of $a=2^{12}$ actions and \textsc{QuasiNashConv} was evaluated on $2^{15}$ points. The algorithms ran for $10^4$ iterations. For CFR, an iteration is an update to the strategy. For regret matching, we define an iteration as $a$ steps of the sampling, play and update process, so that both CFR and RM do $\mathcal{O}(a^2)$ operations per iteration. We do not include the computation of the utility matrix in the computation time.}
+  \caption{We evaluate the performance of different algorithms in finding the Nash equilibrium of the CoR game in the standard setting with $P=R=1$, $\tau=0$, and $\rho=0$, without sharing. We reduce the game to a grid of $a=2^{12}$ actions, and evaluate the $\textsc{QuasiNashConv}$ metric on $2^{15}$ points. The algorithms are run for $10^4$ iterations, where an iteration is defined as an update to the strategy. For CFR, an iteration involves updating the regrets based on the counterfactual outcomes of the game, while for regret matching, an iteration is defined as $a$ steps of the sampling, play, and update process. Both CFR and regret matching do $\mathcal{O}(a^2)$ operations per iteration. We do not include the computation of the utility matrix in the computation time.}
   \label{fig:rm-different}  
 \end{figure}
 
-We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperforms all methods. In general, Regret Matching performs much better than CFR, even when using less actions, using softmax is detrimental, and shifting the action space does not seem to impact performance much. CFR runs faster as it does not involve any random sampling. Therefore, we use vanilla Regret Matching with shifting in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
 
 
 
@@ -724,18 +723,11 @@ We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperf
     \centering
     \includesvg[width=1.1\linewidth]{regret_matching_sizes_quasinashconv}
   \end{minipage}
-  \caption{Performance of the vanilla regret matching algorithm to find Nash equilibrium in the standard setting $P=R=1, \tau=0, \rho=0$ without sharing. The quality of the resulting equilibrium depends mainly on the number of actions $a$. For $t$ iterations, the time complexity of the algorithm is $\mathcal{O}(t a^2)$ and the memory complexity is $\mathcal{O}(a^2)$ as it requires to compute the reward matrix. \textsc{QuasiNashConv} was evaluated on $8 a$ points.}
+  \caption{We evaluate the performance of the vanilla regret matching algorithm in finding the Nash equilibrium of the CoR game in the standard setting with $P=R=1$, $\tau=0$, and $\rho=0$, without sharing. The quality of the resulting equilibrium depends mainly on the number of actions $a$. We run the algorithm for $t$ iterations, where the time complexity of the algorithm is $\mathcal{O}(t a^2)$ and the memory complexity is $\mathcal{O}(a^2)$ as it requires computing the reward matrix. We evaluate the $\textsc{QuasiNashConv}$ metric on $8a$ points.}
   \label{fig:rm-size}  
 \end{figure}
 
-\begin{result}
-
-    Penalties $C$ decrease the average risk taken $\bar r$. Market frictions $\tau$ decrease the average risk taken and increase the total reward $u$. Market frictions have more impact on the total reward in high-penalty environments.
-    In particularly inefficient markets with high $\tau$, increasing penalties can counterintuitively improve cooperation and the total reward.
-\end{result}
-
-We illustrate that behavior in Figure \ref{fig:result-noise}.
-
+Our results demonstrate that penalties and market frictions have a significant impact on the strategic behavior of actors in competition. Specifically, we find that penalties $C$ decrease both the average risk taken $\bar r$ by the players and their total reward $u$, while market frictions $\tau$ not only decrease the average risk taken but also increase the total reward. We also find that market frictions have a greater impact on the total reward in high-penalty environments. In particular, in particularly inefficient markets with high $\tau$, increasing penalties can improve cooperation and the total reward, as illustrated in Figure \ref{fig:result-noise}.
 
 \begin{figure}[htbp]
   \centering
@@ -748,19 +740,12 @@ We illustrate that behavior in Figure \ref{fig:result-noise}.
     \centering
     \includesvg[width=1.1\linewidth]{equilibria_rbar_u_C}
   \end{minipage}
-  \caption{The two figures represent the same points with different level lines: constant $C$ and constant $\tau$. At constant $C$ we observe a linear relationship between $u$ and $\bar r$ when changing $\tau$. We also observed that behavior for all values of $\rho$.}
+  \caption{
+  The two figures depict the relationship between the total reward $u$ and the average risk taken $\bar r$ under different penalty $C$ and market friction $\tau$ settings. The left figure shows constant $C$ level lines, while the right figure shows constant $\tau$ level lines. We observe a linear relationship between $u$ and $\bar r$ when changing $\tau$ at constant $C$. We find that this behavior holds for all values of $\rho$.}
   \label{fig:result-noise}  
 \end{figure}
 
-
-\begin{result}
-    Players take more risks in environments of negative correlation. Negative correlation improves their payoff compared to an absence of correlation.
-
-    Players take less risks in environments of positive correlation. The impact on performance is negative in efficient markets but can become positive in noisy markets.
-\end{result}
-
-We illustrate that behavior in Figure \ref{fig:result-corr}.
-
+Our study also demonstrates that penalties and market frictions are not the only factors that influence the strategic behavior of actors in competition. The correlation between firm risks also has a significant impact on risk-taking behavior and performance. Specifically, players take more risks in environments of negative correlation, which can improve their payoff, while they take less risks in environments of positive correlation. The impact of correlation on performance is negative in efficient markets, but it can become positive in noisy markets, as illustrated in Figure \ref{fig:result-corr}. These findings provide valuable insights into the complex interplay between market structure, risk-taking behavior, and performance in a competitive environment.
 
 \begin{figure}[htbp]
   \centering
@@ -782,10 +767,19 @@ We illustrate that behavior in Figure \ref{fig:result-corr}.
     \centering
     \includesvg[width=1.1\linewidth]{equilibria_u_corr_C=1}
   \end{minipage}
-  \caption{}
+  \caption{We plot the average risk taken $\bar r$ and the total utility $u$ as functions of the correlation $\rho$ between firm risks.}
   \label{fig:result-corr}  
 \end{figure}
 
+\section{Conclusion}
+
+In this paper, we investigated models of competition in which actors choose their level of risk and are rewarded for taking on more risk than competitors.
+
+We developed and tested several algorithms to solve our game in a discrete version, with vanilla Regret Matching outperforming all other methods. We then used this efficient implementation to explore the effects of penalties, market frictions, and correlation on risk-taking behavior and performance, and to evaluate the effectiveness of various interventions and policies in a competitive environment.
+
+We showed that market frictions decrease the average risk taken and increase the total reward, and that increasing failure penalties can improve cooperation and the total reward in inefficient markets. We also demonstrated that negative correlations between failure events encourage risk-taking, while positive correlations discourage it in efficient markets but can become positive in noisy markets.
+
+Our findings have significant implications for economics, finance, and policy-making. Understanding how market frictions and penalties affect competition can help firms and governments make better strategic decisions and promote more efficient markets. Our use of algorithmic solvers for games with continuous action sets also shows the potential for more complex models that do not have closed-form solutions. Overall, this paper provides a rigorous framework for modeling and analyzing strategic interactions in continuous action games, with broad applications for economic research and practice.
 
 \section*{Acknowledgement}
 
@@ -887,38 +881,6 @@ Hence $h = 1 - \sqrt{\frac{\sqrt{(C + 1)^2 + 1} - 1}{\sqrt{(C + 1)^2 + 1} + 1}}$
 Finally, $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $k := \sqrt{(C + 1)^2 + 1}$\\
 From the expressions above, we get $\bar b = k - 1 - C$ and $u^* = R \bar b$.
 \end{proof}
-
-\section{\texorpdfstring{Plots of Nash equilibrium for various values of $C$}{Plots of Nash equilibrium for various values of C}}
-\label{more-nash}
-
-\begin{figure}[H]
-  \centering
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-0}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-0.5}
-  \end{minipage}
-  \centering
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-1}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-10}
-  \end{minipage}
-  \centering
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-100}
-  \end{minipage}
-  \hfill
-\end{figure}
 
 
 \section{\texorpdfstring{Estimation of ${r_{max}}$ and $w$ in the multiplayer setting}{Estimation of rmax and w in the multiplayer setting}}
@@ -1047,27 +1009,6 @@ $$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i
     \includesvg[width=1.1\linewidth]{linear-lambda-no-shift}
   \end{minipage}
 \end{figure}
-
-
-
-\section{Description of Regret Matching}
-\label{sec:regret}
-
-Regret matching was introduced by \citet{Hart1997-nk} as a strategy such that if each player applies it, the observed sequence of plays can converge to a correlated equilibrium. The idea behind regret matching is to adjust the probabilities of playing each action based on the accumulated regrets for each action. We describe the version that was originally named Unconditional Regret Matching.
-
-Regret is defined as the difference between the payoff received from a particular action and the actual historical payoff. The intuition behind regret is that a player may regret not having played a different action that would have resulted in a better payoff.
-In regret matching, a player starts by assigning equal probability to each possible action. After playing the game and receiving a payoff, the player computes the regret for each action based on the difference between the payoff received and the maximum payoff that could have been obtained by playing a different action. The player then updates the probabilities of each action proportional to their positive regrets.
-More formally, let $s \in \Sigma_i$ be an action, $r(s)$ be the regret for playing action $s$, and $\Pr_t(s)$ be the probability of playing action $s$ at time $t$. The regret-matching update rule is as follows:
-$${\Pr}_{t}(s) = \begin{cases} \frac{r^+(s)}{\sum_{s'} r^+(s')} &\text{if}~\sum_{s'} r^+(s') > 0\\
-\frac{1}{|\Sigma_i|} &\text{else} \end{cases}$$
-where $r^+(s) =\max(r(s), 0)$ and $r(s)$ is the cumulative regret for playing action $s$ up to time $t$, defined as:
-$$r(s) = \sum_{k=1}^t u_i(s, s_{-i}[k]) - u_i(s[k])$$
-where $s[t]$ is the history of what was played at time $t$.
-The intuition behind the regret-matching update rule is that actions that have positive regrets are given higher probabilities in the next round, while actions with zero or negative regrets are given zero probability. Over time, as the player continues to play the game and accumulate regrets, the probabilities of playing each action converge to a correlated equilibrium of the game, which is a set of probabilities over actions that maximizes the player's expected payoff, given the strategies of the other players.
-
-A variant named Counterfactual Regret Minimization described by \cite{neller2013introduction} does not actually sample actions and instead maintains a cumulative profile that can be viewed as the expectation of moves under the Regret Matching strategy. This deterministic variant converges faster in practice.
-
-TODO: describe equations of CFR, explain tabular computations
 
 
 %% else use the following coding to input the bibitems directly in the
