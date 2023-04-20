@@ -356,8 +356,7 @@ At $C = 1$, the cutoff value is $1 - \sqrt{\frac{\sqrt{5} - 1}{\sqrt{5} + 1}} = 
 
  The behavior of the cutoff ${r_{max}}$ is displayed in Figure \ref{fig:cutoff}. Unsurprisingly, when $C \rightarrow \infty$, the penalty $P$ becomes much larger than the reward $R$ and the players play closer to $0$.
 
-The case when $C \rightarrow 0$ is more surprising: the maximal cutoff value at $C=0$ is $h = 1 - \sqrt{\frac{\sqrt{2}}{\sqrt{2} + 2}} \approx 0.356$. This is because even if the penalty is $0$, the players cannot get the reward if they ``lose'', which prevents them from taking too much risk. We plot the distribution in Figure \ref{fig:nash}. See Appendix \ref{more-nash} for more figures.
-
+The case when $C \rightarrow 0$ is more surprising: the maximal cutoff value at $C=0$ is $h = 1 - \sqrt{\frac{\sqrt{2}}{\sqrt{2} + 2}} \approx 0.356$. This is because even if the penalty is $0$, the players cannot get the reward if they ``lose'', which prevents them from taking too much risk. We plot the distribution in Figure \ref{fig:nash}. 
 
 \section{Generalization to multiple players}
 
@@ -731,10 +730,9 @@ We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperf
 \begin{result}
 
     Penalties $C$ decrease the average risk taken $\bar r$. Market frictions $\tau$ decrease the average risk taken and increase the total reward $u$. Market frictions have more impact on the total reward in high-penalty environments.
-    In particularly inefficient markets with high $\tau$, increasing penalties can counterintuitively improve cooperation and the total reward.
-\end{result}
+    In particularly inefficient markets with high $\tau$, increasing penalties can improve cooperation and the total reward. We illustrate that behavior in Figure \ref{fig:result-noise}.
 
-We illustrate that behavior in Figure \ref{fig:result-noise}.
+\end{result}
 
 
 \begin{figure}[htbp]
@@ -754,12 +752,10 @@ We illustrate that behavior in Figure \ref{fig:result-noise}.
 
 
 \begin{result}
-    Players take more risks in environments of negative correlation. Negative correlation improves their payoff compared to an absence of correlation.
+    Players take more risks in environments of negative correlation. Negative correlation improves their payoff compared to an absence of correlation. Players take less risks in environments of positive correlation. The impact on performance is negative in efficient markets but can become positive in noisy markets. We illustrate that behavior in Figure \ref{fig:result-corr}.
 
-    Players take less risks in environments of positive correlation. The impact on performance is negative in efficient markets but can become positive in noisy markets.
 \end{result}
 
-We illustrate that behavior in Figure \ref{fig:result-corr}.
 
 
 \begin{figure}[htbp]
@@ -782,7 +778,7 @@ We illustrate that behavior in Figure \ref{fig:result-corr}.
     \centering
     \includesvg[width=1.1\linewidth]{equilibria_u_corr_C=1}
   \end{minipage}
-  \caption{}
+  \caption{We plot the average risk taken $\bar r$ and the total utility $u$ as functions of the correlation $\rho$.}
   \label{fig:result-corr}  
 \end{figure}
 
@@ -887,38 +883,6 @@ Hence $h = 1 - \sqrt{\frac{\sqrt{(C + 1)^2 + 1} - 1}{\sqrt{(C + 1)^2 + 1} + 1}}$
 Finally, $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $k := \sqrt{(C + 1)^2 + 1}$\\
 From the expressions above, we get $\bar b = k - 1 - C$ and $u^* = R \bar b$.
 \end{proof}
-
-\section{\texorpdfstring{Plots of Nash equilibrium for various values of $C$}{Plots of Nash equilibrium for various values of C}}
-\label{more-nash}
-
-\begin{figure}[H]
-  \centering
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-0}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-0.5}
-  \end{minipage}
-  \centering
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-1}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-10}
-  \end{minipage}
-  \centering
-  \begin{minipage}[t]{0.48\textwidth}
-    \centering
-    \includesvg[width=1.1\linewidth]{nash-100}
-  \end{minipage}
-  \hfill
-\end{figure}
 
 
 \section{\texorpdfstring{Estimation of ${r_{max}}$ and $w$ in the multiplayer setting}{Estimation of rmax and w in the multiplayer setting}}
@@ -1047,27 +1011,6 @@ $$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i
     \includesvg[width=1.1\linewidth]{linear-lambda-no-shift}
   \end{minipage}
 \end{figure}
-
-
-
-\section{Description of Regret Matching}
-\label{sec:regret}
-
-Regret matching was introduced by \citet{Hart1997-nk} as a strategy such that if each player applies it, the observed sequence of plays can converge to a correlated equilibrium. The idea behind regret matching is to adjust the probabilities of playing each action based on the accumulated regrets for each action. We describe the version that was originally named Unconditional Regret Matching.
-
-Regret is defined as the difference between the payoff received from a particular action and the actual historical payoff. The intuition behind regret is that a player may regret not having played a different action that would have resulted in a better payoff.
-In regret matching, a player starts by assigning equal probability to each possible action. After playing the game and receiving a payoff, the player computes the regret for each action based on the difference between the payoff received and the maximum payoff that could have been obtained by playing a different action. The player then updates the probabilities of each action proportional to their positive regrets.
-More formally, let $s \in \Sigma_i$ be an action, $r(s)$ be the regret for playing action $s$, and $\Pr_t(s)$ be the probability of playing action $s$ at time $t$. The regret-matching update rule is as follows:
-$${\Pr}_{t}(s) = \begin{cases} \frac{r^+(s)}{\sum_{s'} r^+(s')} &\text{if}~\sum_{s'} r^+(s') > 0\\
-\frac{1}{|\Sigma_i|} &\text{else} \end{cases}$$
-where $r^+(s) =\max(r(s), 0)$ and $r(s)$ is the cumulative regret for playing action $s$ up to time $t$, defined as:
-$$r(s) = \sum_{k=1}^t u_i(s, s_{-i}[k]) - u_i(s[k])$$
-where $s[t]$ is the history of what was played at time $t$.
-The intuition behind the regret-matching update rule is that actions that have positive regrets are given higher probabilities in the next round, while actions with zero or negative regrets are given zero probability. Over time, as the player continues to play the game and accumulate regrets, the probabilities of playing each action converge to a correlated equilibrium of the game, which is a set of probabilities over actions that maximizes the player's expected payoff, given the strategies of the other players.
-
-A variant named Counterfactual Regret Minimization described by \cite{neller2013introduction} does not actually sample actions and instead maintains a cumulative profile that can be viewed as the expectation of moves under the Regret Matching strategy. This deterministic variant converges faster in practice.
-
-TODO: describe equations of CFR, explain tabular computations
 
 
 %% else use the following coding to input the bibitems directly in the

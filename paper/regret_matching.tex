@@ -1,0 +1,18 @@
+\section{Description of Regret Matching}
+\label{sec:regret}
+
+Regret matching was introduced by \citet{Hart1997-nk} as a strategy such that if each player applies it, the observed sequence of plays can converge to a correlated equilibrium. The idea behind regret matching is to adjust the probabilities of playing each action based on the accumulated regrets for each action. We describe the version that was originally named Unconditional Regret Matching.
+
+Regret is defined as the difference between the payoff received from a particular action and the actual historical payoff. The intuition behind regret is that a player may regret not having played a different action that would have resulted in a better payoff.
+In regret matching, a player starts by assigning equal probability to each possible action. After playing the game and receiving a payoff, the player computes the regret for each action based on the difference between the payoff received and the maximum payoff that could have been obtained by playing a different action. The player then updates the probabilities of each action proportional to their positive regrets.
+More formally, let $s \in \Sigma_i$ be an action, $r(s)$ be the regret for playing action $s$, and $\Pr_t(s)$ be the probability of playing action $s$ at time $t$. The regret-matching update rule is as follows:
+$${\Pr}_{t}(s) = \begin{cases} \frac{r^+(s)}{\sum_{s'} r^+(s')} &\text{if}~\sum_{s'} r^+(s') > 0\\
+\frac{1}{|\Sigma_i|} &\text{else} \end{cases}$$
+where $r^+(s) =\max(r(s), 0)$ and $r(s)$ is the cumulative regret for playing action $s$ up to time $t$, defined as:
+$$r(s) = \sum_{k=1}^t u_i(s, s_{-i}[k]) - u_i(s[k])$$
+where $s[t]$ is the history of what was played at time $t$.
+The intuition behind the regret-matching update rule is that actions that have positive regrets are given higher probabilities in the next round, while actions with zero or negative regrets are given zero probability. Over time, as the player continues to play the game and accumulate regrets, the probabilities of playing each action converge to a correlated equilibrium of the game, which is a set of probabilities over actions that maximizes the player's expected payoff, given the strategies of the other players.
+
+A variant named Counterfactual Regret Minimization described by \cite{neller2013introduction} does not actually sample actions and instead maintains a cumulative profile that can be viewed as the expectation of moves under the Regret Matching strategy. This deterministic variant converges faster in practice.
+
+TODO: describe equations of CFR, explain tabular computations
