@@ -16,7 +16,7 @@ jobs:
       - name: Upload pdf
         uses: EndBug/add-and-commit@v9
         with:
-          pull: true
+          pull: '--rebase --autostash'
           add: paper/article.pdf
           message: 'Update pdf'
           author_name: ${{ github.actor }}
