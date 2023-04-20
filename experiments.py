@@ -7,6 +7,7 @@ import time
 from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
 from cycler import cycler
+import scipy
 from tqdm_joblib import tqdm_joblib
 import numpy as np
 import joblib
@@ -16,7 +17,7 @@ from game import reward, reward_matrix, gen_actions
 from linear_solver import linear_correlated
 from multiple_players import find_w, find_cutoff, solution, log_efficiency
 from nashconv import nashconv, quasinashconv
-from regret_matching import regret_matching
+from regret_matching import regret_matching, softmax
 
 
 monochrome = (
@@ -295,7 +296,7 @@ def linear_exp_plots():
                 if i % len(corr) == (len(corr) + 1) // 2:
                     plt.text(-4, i, label, ha="center", va="center")
             plt.title(title)
-            plt.xlabel(r"$C$, $\sigma$", labelpad=25)
+            plt.xlabel(r"$C$, $\tau$", labelpad=25)
             plt.ylabel(r"actions, $\rho$", labelpad=25)
             plt.colorbar()
             # scatter plot crosses where there is nan
@@ -306,38 +307,6 @@ def linear_exp_plots():
                 color="k",
             )
             plt.savefig(f"plots/{filename}.svg")
-
-
-def main():
-
-    with tqdm() as pbar:
-        real_savefig = plt.savefig
-
-        def fake_savefig(*args, **kwargs):
-            pbar.update(1)
-            return real_savefig(*args, **kwargs)
-
-        try:
-            plt.savefig = fake_savefig
-
-            plot_reward()
-            for c in [1, 0.5, 0, 10, 100]:
-                plot_nash(c)
-            plot_cutoff()
-            plot_response()
-            for C in 0, 0.1, 1, 2:
-                plot_solutions_multiple(C)
-            # for C in 0, 0.1, 1, 2:
-            #     plt_asymptotic(C)
-            cutoff_asymptotic()
-            efficiency()
-            linear_exp_plots()
-            regret_matching_plots()
-        finally:
-            plt.savefig = real_savefig
-
-
-# main()
 
 
 def compute_rm(cfr, sm, shift, log_actions, log_quasi):
@@ -374,8 +343,6 @@ def compute_rm(cfr, sm, shift, log_actions, log_quasi):
             )
         )
         computation_time.append(t)
-    with open("logs", "a") as f:
-        print(cfr, sm, shift, log_actions, log_quasi, computation_time[-1], file=f)
     return {
         "cfr": cfr,
         "sm": sm,
@@ -395,7 +362,7 @@ def compute_all_rm():
     for cfr in False, True:
         for sm in False, True:
             for shift in False, True:
-                for log_actions in range(7, 13):
+                for log_actions in range(7, 12 + cfr):
                     log_quasi = log_actions + 3
                     # delayed joblib
                     exps.append(
@@ -418,7 +385,7 @@ def regret_matching_plots():
     results_dict = {
         (d["cfr"], d["sm"], d["shift"], d["log_actions"]): d for d in results
     }
-    log_actions = max(d["log_actions"] for d in results)
+    log_actions = max(d["log_actions"] for d in results if not d["cfr"])
     for name, ylabel, file in [
         ("nashconv_values", "NashConv", "nashconv"),
         ("quasinashconv_values", "QuasiNashConv", "quasinashconv"),
@@ -432,8 +399,8 @@ def regret_matching_plots():
                         label += ", softmax"
                     if shift:
                         label += ", shift"
-                    d = results_dict[cfr, sm, shift, log_actions]
-                    print(cfr, d["computation_time"])
+                    label += f", $a=2^{{{log_actions + cfr}}}$"
+                    d = results_dict[cfr, sm, shift, log_actions + cfr]
                     plt.plot(
                         d["computation_time"],
                         d[name],
@@ -441,13 +408,9 @@ def regret_matching_plots():
                         lw=0.5,
                         markersize=1,
                     )
-                    # print(
-                    #     label,
-                    #     d[name][-1],
-                    #     d["computation_time"][-1],
-                    #     sum(d["rewards"][-1]),
-                    # )
-        plt.legend()
+        legend = plt.legend(loc="upper right", prop={"size": 7})
+        legend.get_frame().set_alpha(None)
+        legend.get_frame().set_facecolor((1, 1, 1, 0.6))
         plt.xlabel("time (s)")
         plt.xscale("log")
         plt.ylabel(ylabel)
@@ -463,18 +426,15 @@ def regret_matching_plots():
     ]:
         plt.clf()
         for log_actions in set(d["log_actions"] for d in results):
-            d = results_dict[cfr, sm, shift, log_actions]
-            plt.plot(
-                np.array(d["its"]) / 2**log_actions,
-                d[name],
-                label=f"$2^{{{log_actions}}}$ actions",
-            )
-            # print(
-            #     label,
-            #     d[name][-1],
-            #     d["computation_time"][-1],
-            #     sum(d["rewards"][-1]),
-            # )
+            try:
+                d = results_dict[cfr, sm, shift, log_actions]
+                plt.plot(
+                    np.array(d["its"]) / 2**log_actions,
+                    d[name],
+                    label=f"$2^{{{log_actions}}}$ actions",
+                )
+            except KeyError:
+                pass
         plt.legend()
         plt.xlabel("iterations")
         plt.ylabel(ylabel)
@@ -482,8 +442,284 @@ def regret_matching_plots():
         plt.savefig(f"plots/regret_matching_sizes_{file}.svg")
 
 
-# %%
-regret_matching_plots()
 # plot average r, efficiency (utility for C=0), rmax
 
 # %%
+
+
+def compute_equilibria(corr, noise, C):
+    game_params = dict(corr=corr, noise=noise, R=1, Z=0, P=C)
+    _, (a1, p1), (a2, p2), m1, m2, _ = regret_matching(
+        game_params, actions=500, iters=2000, progress=False
+    )
+
+    u1 = p1 @ m1 @ p2
+    u2 = p2 @ m2 @ p1
+
+    nc1 = nashconv(m1, m2, p1, p2)
+    nc2 = nashconv(m2, m1, p2, p1)
+
+    avg_r1 = p1 @ a1
+    avg_r2 = p2 @ a2
+
+    def softargmax(a, p):
+        return a @ softmax(1000 * p)
+
+    rmax1 = softargmax(a1, p1)
+    rmax2 = softargmax(a2, p2)
+
+    return {
+        "corr": corr,
+        "noise": noise,
+        "C": C,
+        "nc1": nc1,
+        "nc2": nc2,
+        "u1": u1,
+        "u2": u2,
+        "avg_r1": avg_r1,
+        "avg_r2": avg_r2,
+        "rmax1": rmax1,
+        "rmax2": rmax2,
+    }
+
+
+def compute_all_eq():
+    exps = []
+    for corr in np.linspace(-1, 1, 21):
+        for noise in [-1, 0] + list(10 ** np.linspace(-3, -1, 9)):
+            for C in [0] + list(10 ** np.linspace(-2, 1, 7)):
+                exps.append(joblib.delayed(compute_equilibria)(corr, noise, C))
+    with tqdm_joblib(total=len(exps)):
+        results = joblib.Parallel(n_jobs=-2)(exps)
+    with open("plots/equilibria.json", "w") as f:
+        json.dump(results, f)
+
+
+def equilibria_img():
+    if not Path("plots/equilibria.json").exists():
+        compute_all_eq()
+    with open("plots/equilibria.json") as f:
+        results = json.load(f)
+    results_dict = {(d["corr"], d["noise"], d["C"]): d for d in results}
+    all_C = sorted(set(d["C"] for d in results))
+    all_noise = sorted(set(d["noise"] for d in results))[2:]
+    all_corr = sorted(set(d["corr"] for d in results))
+
+    for file, name, f in [
+        ("rbar", r"$\bar r$", lambda d: (d["avg_r1"] + d["avg_r2"]) / 2),
+        # ("rmax", r"$r_{max}$", lambda d: (d["rmax1"] + d["rmax2"]) / 2),
+        ("utility", r"$u$", lambda d: d["u1"] + d["u2"]),
+        (
+            "nashconv",
+            r"$\mathcal{N}$",
+            lambda d: (d["nc1"] + d["nc2"]) / (d["u1"] + d["u2"]),
+        ),
+    ]:
+        vmin = None
+        vmax = None
+        for C in [0, 0.1, 0.31622776601683794, 1, 10]:
+            plt.clf()
+            grid = [
+                [f(results_dict[c, noise, C]) for c in all_corr] for noise in all_noise
+            ]
+            interp = scipy.interpolate.RegularGridInterpolator(
+                (all_noise, all_corr), grid, method="linear"
+            )
+            smooth_corr = np.linspace(-1, 1, 50)
+            smooth_noise = np.logspace(-3, -1, 50)
+            smooth_grid = [
+                [interp([noise, corr])[0] for corr in smooth_corr]
+                for noise in smooth_noise
+            ]
+            # black and white, black is best
+            # plt.pcolormesh(all_corr, all_noise, grid, shading="gouraud", cmap="Greys")
+            plt.pcolormesh(
+                smooth_corr,
+                smooth_noise,
+                smooth_grid,
+                shading="gouraud",
+                rasterized=True,
+                cmap="Greys",
+                vmin=vmin,
+                vmax=vmax,
+            )
+            plt.colorbar()
+            plt.xlabel(r"$\rho$")
+            plt.yscale("log")
+            plt.ylabel(r"$\tau$")
+            plt.title(f"{name} for $C={C}$")
+            plt.savefig(f"plots/equilibria_{file}_grid_C={C}.svg")
+
+        # now do the same for C and noise
+        for corr in [-1, 0, 1]:
+            plt.clf()
+            grid = [
+                [f(results_dict[corr, noise, C]) for C in all_C] for noise in all_noise
+            ]
+            interp = scipy.interpolate.RegularGridInterpolator(
+                (all_noise, all_C), grid, method="linear"
+            )
+            smooth_C = np.logspace(-2, 1, 50)
+            smooth_noise = np.logspace(-3, -1, 50)
+            smooth_grid = [
+                [interp([noise, C])[0] for C in smooth_C] for noise in smooth_noise
+            ]
+            # black and white, black is best
+            # plt.pcolormesh(all_C, all_noise, grid, shading="gouraud", cmap="Greys")
+            plt.pcolormesh(
+                smooth_C,
+                smooth_noise,
+                smooth_grid,
+                shading="gouraud",
+                rasterized=True,
+                cmap="Greys",
+                vmin=vmin,
+                vmax=vmax,
+            )
+            plt.colorbar()
+            plt.xscale("log")
+            plt.xlabel("$C$")
+            plt.yscale("log")
+            plt.ylabel(r"$\tau$")
+            plt.title(f"{name} for $\\rho={corr}$")
+            plt.savefig(f"plots/equilibria_{file}_grid_corr={corr}.svg")
+
+        plt.clf()
+        # now do the same for C and corr
+        noise = 0
+        grid = [[f(results_dict[corr, noise, C]) for corr in all_corr] for C in all_C]
+        interp = scipy.interpolate.RegularGridInterpolator(
+            (all_C, all_corr), grid, method="linear"
+        )
+        smooth_C = np.logspace(-2, 1, 50)
+        smooth_corr = np.linspace(-1, 1, 50)
+        smooth_grid = [[interp([C, corr])[0] for corr in smooth_corr] for C in smooth_C]
+        # black and white, black is best
+        # plt.pcolormesh(all_C, all_corr, grid, shading="gouraud", cmap="Greys")
+        plt.pcolormesh(
+            smooth_corr,
+            smooth_C,
+            smooth_grid,
+            shading="gouraud",
+            rasterized=True,
+            cmap="Greys",
+            vmin=vmin,
+            vmax=vmax,
+        )
+        plt.colorbar()
+        plt.xlabel(r"$\rho$")
+        plt.ylabel("$C$")
+        plt.yscale("log")
+        plt.title(f"{name} for $\\tau={noise}$")
+        plt.savefig(f"plots/equilibria_{file}_grid_noise={noise}.svg")
+
+    plt.clf()
+
+
+def equilibria_plots():
+    if not Path("plots/equilibria.json").exists():
+        compute_all_eq()
+    with open("plots/equilibria.json") as f:
+        results = json.load(f)
+    for d in results:
+        d["rbar"] = (d["avg_r1"] + d["avg_r2"]) / 2
+        d["u"] = d["u1"] + d["u2"]
+
+    results_dict = {(d["corr"], d["noise"], d["C"]): d for d in results}
+    all_C = sorted(set(d["C"] for d in results))
+    all_noise = sorted(set(d["noise"] for d in results))[2:]
+    all_corr = sorted(set(d["corr"] for d in results))
+
+    plt.clf()
+    corr = 0
+    for C in all_C:
+        rbar = [results_dict[corr, noise, C]["rbar"] for noise in all_noise]
+        u = [results_dict[corr, noise, C]["u"] for noise in all_noise]
+        label = f"$\log_{{10}} C={np.log10(C)}$"
+        plt.plot(rbar, u, label=label)
+
+    plt.xlabel(r"$\bar r$")
+    plt.ylabel(r"$u$")
+    legend = plt.legend(loc="lower right", prop={"size": 7})
+    legend.get_frame().set_alpha(None)
+    legend.get_frame().set_facecolor((1, 1, 1, 0.6))
+    plt.title("Equilibrium for different values of $\\tau$ at $\\rho=0$")
+    plt.savefig("plots/equilibria_rbar_u_tau.svg")
+
+    plt.clf()
+    for noise in all_noise:
+        rbar = [results_dict[corr, noise, C]["rbar"] for C in all_C]
+        u = [results_dict[corr, noise, C]["u"] for C in all_C]
+        label = f"$\\log_{{10}}\\tau={np.log10(noise)}$"
+        plt.plot(rbar, u, label=label)
+
+    plt.xlabel(r"$\bar r$")
+    plt.ylabel(r"$u$")
+    legend = plt.legend(loc="lower right", prop={"size": 7})
+    legend.get_frame().set_alpha(None)
+    legend.get_frame().set_facecolor((1, 1, 1, 0.6))
+    plt.title("Equilibrium for different values of $C$ at $\\rho=0$")
+    plt.savefig("plots/equilibria_rbar_u_C.svg")
+
+    plt.clf()
+    C = 0
+    for noise in all_noise:
+        u = [results_dict[corr, noise, C]["u"] for corr in all_corr]
+        label = f"$\\log_{{10}}\\tau={np.log10(noise)}$"
+        plt.plot(all_corr, u, label=label)
+    legend = plt.legend(loc="lower left", prop={"size": 7})
+    legend.get_frame().set_alpha(None)
+    legend.get_frame().set_facecolor((1, 1, 1, 0.6))
+    plt.xlabel(r"$\rho$")
+    plt.ylabel(r"$u$")
+    plt.title("Equilibrium for different values of $\\tau$ at $C=0$")
+    plt.savefig("plots/equilibria_u_corr_tau.svg")
+
+    plt.clf()
+    noise = 0
+    for C in all_C:
+        u = [results_dict[corr, noise, C]["u"] for corr in all_corr]
+        label = f"$\\log_{{10}}C={np.log10(C)}$"
+        plt.plot(all_corr, u, label=label)
+    legend = plt.legend(loc="lower left", prop={"size": 7})
+    legend.get_frame().set_alpha(None)
+    legend.get_frame().set_facecolor((1, 1, 1, 0.6))
+    plt.xlabel(r"$\rho$")
+    plt.ylabel(r"$u$")
+    plt.title("Equilibrium for different values of $C$ at $\\tau=0$")
+    plt.savefig("plots/equilibria_u_corr_C.svg")
+
+
+def main():
+
+    with tqdm() as pbar:
+        real_savefig = plt.savefig
+
+        def fake_savefig(*args, **kwargs):
+            pbar.update(1)
+            return real_savefig(*args, **kwargs)
+
+        try:
+            plt.savefig = fake_savefig
+
+            plot_reward()
+            for c in [1, 0.5, 0, 10, 100]:
+                plot_nash(c)
+            plot_cutoff()
+            plot_response()
+            for C in 0, 0.1, 1, 2:
+                plot_solutions_multiple(C)
+            # for C in 0, 0.1, 1, 2:
+            #     plt_asymptotic(C)
+            cutoff_asymptotic()
+            efficiency()
+            linear_exp_plots()
+            regret_matching_plots()
+            equilibria_plots()
+
+        finally:
+            plt.savefig = real_savefig
+
+
+if __name__ == "__main__":
+    main()
