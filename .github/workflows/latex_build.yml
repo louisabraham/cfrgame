@@ -14,6 +14,7 @@ jobs:
           args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode --shell-escape
           extra_system_packages: inkscape
       - name: Upload pdf
+        continue-on-error: true
         uses: EndBug/add-and-commit@v9
         with:
           add: paper/article.pdf
