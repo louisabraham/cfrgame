@@ -17,6 +17,7 @@ jobs:
         continue-on-error: true
         uses: EndBug/add-and-commit@v9
         with:
+          pull: ' '
           add: paper/article.pdf
           message: 'Update pdf'
           author_name: ${{ github.actor }}
