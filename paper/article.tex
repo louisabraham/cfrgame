@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                    
+
 %% 
 %% Copyright 2007-2020 Elsevier Ltd
 %% 
@@ -118,7 +118,7 @@
 %%            country={}}
 %% \fntext[label3]{}
 
-\title{A game of competition over risk}
+\title{A game of Competition for Risk}
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{}
@@ -163,14 +163,18 @@
 
 \begin{abstract}
 %% Text of abstract
-This article investigates models of competition where actors choose their level of risk and are rewarded for taking on more risk than the others. These models are highly relevant to real-life situations of competition over prices, such as between firms, banks, and insurance companies seeking to acquire more customers.
+In this study, we explore models where participants strategically choose their risk levels and earn rewards in line with their chosen risks, mimicking real-world competition in fields ranging from market-share-seeking firms to banks and insurance companies vying for more customers. 
 
-Starting from a simple normal form game with two players on a continuous action space, we prove the existence and uniqueness of a Nash equilibrium with an analytical solution. This serves as a foundation to incorporate more realistic features such as multiple players, market frictions and correlations between firm risks. We verify experimentally that the Nash equilibrium is a correlated equilibrium. We show that variants of regret matching offer performant algorithms to approximate the Nash equilibrium in our game. Our code is open-source \footnote{available at \identifier{\url{https://github.com/louisabraham/corgame}}} and can be applied to any game in normal form. 
+Our analysis starts with a simple normal form game with two players in a continuous action space. We confirm the existence of a unique Nash equilibrium and provide an analytical solution. We then extend the analysis to multi-player scenarios to explore the Nash equilibrium in more complex settings. Despite challenges, we show that our Competition for Risk (CfR) game model exhibits a unique symmetric equilibrium for multiple players, introducing a new numerical algorithm for its calculation. Additionally, we thoroughly examine the equilibrium's asymptotic behavior. With this foundation, we incorporate additional real-world factors such as market frictions and risk correlations among firms. Our experiments confirm that the Nash equilibrium in our model also serves as a correlated equilibrium. We also introduce the reader to the use of regret matching variants as efficient algorithms for approximating the Nash equilibrium. Our methodology and code are open-source and compatible with any normal form game\footnote{available at \identifier{\url{https://github.com/louisabraham/cfrgame}}}.
 
-Our experimental results reveal intriguing insights into the effects of market frictions and correlated risks on strategic risk-taking behavior. Specifically, we demonstrate that market frictions, such as transaction costs and imperfect information, play a crucial role in shaping the incentives of players. We find that these frictions decrease the average risk taken, while increasing the total payoff of the game. Interestingly, in inefficient markets, imposing failure penalties can further improve the payoff. Additionally, we observe that when risks are positively correlated, market frictions have a particularly strong positive effect on risk-taking behavior. In contrast, when risks are negatively correlated, players are incentivized to take on more risk. Our results not only provide new insights into the dynamics of strategic risk-taking, but also have important implications for the design of policies aimed at regulating competition in various industries.
+Further, we discuss experimental findings on the effects of market frictions and risk correlations on strategic risk-taking. We find that market frictions, like transaction costs and imperfect information, significantly influence player incentives. These frictions typically lower the average risk taken while enhancing the total payoff. In inefficient markets, increasing failure penalties can further optimize payoffs. Additionally, we find that risk correlation significantly affects risk-taking: players take less risk when risks are positively correlated and more risk when negatively correlated.
 
-Our contribution is also methodological and promotes the use of algorithms in economics. Most models are overly simplified so that they admit an analytical solution. However, general algorithmic solvers could handle much more complex models, not having closed form solutions or taking data as input. While the literature has been focused on finite games, we aim to provide the reader with such algorithms in the context of games with a continuous action set.
-Overall, our approach provides a rigorous framework for modeling and analyzing strategic interactions in continuous action games, with wide-ranging applications in economics, finance, and policy-making.
+Our findings extend beyond strategic risk-taking, offering insights for policy design in various sectors. Notably, our model exhibits ties to the Diamond-Dybvig framework, albeit with broader applicability. Using our model, we explore how policy measures, such as increasing transparency or easing contract transferability, can influence risk-taking and its rewards.
+
+Additionally, we contribute methodologically by advocating for algorithm use in economics. While simplified models traditionally favored in economics allow for analytical solutions, algorithmic solvers can handle more complex models without closed-form solutions or requiring data inputs. Thus, we shift focus from finite games to continuous action set games.
+
+In short, our approach provides a solid framework for analyzing continuous action games' strategic interactions, offering potential applications in economics, finance, and policy-making. The study emphasizes the need to consider market frictions, risk correlations, and policy measures in understanding strategic risk-taking dynamics.
+
 
 \end{abstract}
 
@@ -201,26 +205,27 @@ Overall, our approach provides a rigorous framework for modeling and analyzing s
 \section{Introduction}
 \label{sec:introduction}
 
-Competition over risk is a ubiquitous feature of many real-life situations, ranging from financial markets to environmental policy. In these situations, actors face a trade-off between the potential rewards of taking on more risk and the possibility of negative outcomes, such as bankruptcy or environmental disaster. Understanding the behavior of actors in these situations and predicting outcomes is crucial for policymakers, regulators, and investors.
+Risk-taking during competition is an everyday occurrence, spanning numerous scenarios from financial markets to environmental policies. In these settings, individuals and organizations must balance the lure of potential rewards against the potential for negative outcomes such as bankruptcy or ecological disasters. Understanding and predicting behaviors in these contexts is crucial for an array of parties, including policymakers, regulators, and investors.
 
-Game theory provides a powerful framework for analyzing these situations, as it models the strategic interactions between actors and their incentives to take certain actions. In particular, we focus on normal form games, which represent situations where each player chooses a strategy and receives a payoff based on the joint actions of all players. In this article, we study continuous models of competition, where actors can choose the level of risk and are rewarded for taking more risk.
+Game theory provides a compelling lens for analyzing these situations. It helps model strategic interactions among players and outlines the incentives prompting their actions. Our work focuses on normal form games - situations where each player selects a strategy and earns a payoff based on the collective actions of all players. In this article, we explore continuous models of competition, where players can choose their level of risk, receiving higher rewards for taking on more risk.
 
-A key concept in game theory is that of a Nash equilibrium, which represents a stable point of the game where no player has an incentive to deviate from their chosen strategy. In a normal form game, a Nash equilibrium is a set of strategies where each player's strategy is a best response to the other players' strategies. Nash equilibria are a fundamental concept in game theory and have been widely used in economics, political science, and other fields to model strategic behavior.
+Nash equilibrium is a key concept for our study. It's a state of stability in the game, where no player sees an advantage in deviating from their chosen strategy. In a normal form game, a Nash equilibrium consists of strategies where each player's strategy is the best response to the strategies of others. This concept is fundamental to game theory and has been widely used in various fields like economics and political science to model strategic behavior \citep{moulin1986game, varoufakis2008game}.
 
-In this article, we start by examining a simple normal form game with two players and prove the existence and uniqueness of a Nash equilibrium with an analytical solution. This simplistic game serves as a backbone that we can improve on by incorporating more realistic features, such as multiple players, market frictions, and correlations between firm risks. We experimentally demonstrate that correlated equilibria coincide with Nash equilibria, validating the use of correlated equilibria as a tool to model the strategic behavior of actors in our game. To compute the correlated equilibria, we apply several algorithms from the literature, including regret matching and counterfactual regret minimization.
+Our exploration starts with a straightforward normal form game featuring two players. We provide solid proof for the existence and uniqueness of a Nash equilibrium, and present an analytical solution. This simple model serves as a basis that we gradually build upon by incorporating more realistic features, such as multiple players, market frictions, and risk correlations among firms. Our experimental validation demonstrates that the Nash equilibria in our model also serve as correlated equilibria, endorsing the use of correlated equilibria to model strategic behavior in our game. We calculate these equilibria using several algorithms from existing literature, including regret matching and counterfactual regret minimization.
 
-We then investigate the impact of penalties and market frictions on strategic behavior and performance in our continuous model. We find that penalties decrease both the average risk taken by the players and their total reward, while market frictions not only decrease the average risk taken but also increase the total reward. Market frictions have a greater impact on the total reward in high-penalty environments. In particularly inefficient markets with high market frictions, increasing penalties can improve cooperation and the total reward.
+Next, we examine the impact of penalties and market frictions on strategic behavior and results in our continuous model. We find that penalties reduce both the average risk taken by players and their total rewards. Market frictions, on the other hand, lower average risk but increase total rewards. These frictions have a more significant effect on total rewards in high-penalty environments. In especially inefficient markets with high market frictions, raising penalties can promote cooperation and increase total rewards.
 
-Finally, we examine the impact of correlations between firm risks on strategic behavior and performance in our continuous model. We find that players take more risks in environments of negative correlation, which improves their payoff compared to an absence of correlation. Conversely, players take less risk in environments of positive correlation. The impact on performance is negative in efficient markets but can become positive in noisy markets.
+We also assess the effects of risk correlations among firms on strategic behavior and performance. We find that players take more risks in negative correlation situations, which boosts their payoff compared to a no-correlation scenario. On the flip side, in positively correlated settings, risk-taking is reduced. The impact on performance varies, being negative in efficient markets but potentially positive in less predictable markets.
 
-Our findings have important implications for policymakers, regulators, and investors who need to understand the behavior of actors in competitive situations involving risk. Our results show that penalties and market frictions can have a significant impact on strategic behavior and performance. Furthermore, the presence of correlations between risks can also significantly affect strategic behavior and performance in competitive situations. By shedding light on these issues, our study provides valuable insights into how policymakers, regulators, and investors can design effective interventions and policies to encourage cooperation and improve outcomes in competitive situations involving risk.
+Our model interestingly aligns with the Diamond-Dybvig framework, where financial institutions can choose a parameter affecting their utility function and their likelihood of bankruptcy. This parallel allows our model to explore situations such as competition among banks over deposit contract interest rates, akin to the dynamic modeled by Diamond and Dybvig. But our model is distinct and more generalized, focusing not on specific financial metrics, but on a broader notion of failure probability, enabling us to explore strategic competition dynamics in a broader array of scenarios beyond baking.
 
+Our findings offer valuable insights for policymakers, regulators, and investors who need to understand behavior in competitive, risk-laden situations. We highlight the significant influence of penalties and market frictions on strategic behavior and outcomes, and show how risk correlations can considerably alter strategic behavior and performance in competitive dynamics. By clarifying these elements, we contribute to the discussion on how to design effective interventions and policies that encourage cooperation and improve outcomes in competitive situations involving risk.
 
-\section{A simple model for competition over risk}
+\section{A simple model of competition for risk}
 \label{sec:simplemodel}
 \subsection{Description}
 
-In this section, we introduce a simple model of competition over risk that serves as a backbone for our study. We consider a situation where two actors, denoted as Player 1 and Player 2, engage in competition by taking actions that make them more attractive to customers but also increase their risk of failure. For example, firms may choose to lower their prices to attract more customers but in doing so, they increase the likelihood of not being able to repay their loans. Similarly, insurance companies may lower their premiums to attract more customers but this comes at the cost of a higher risk of failure. Banks may increase their deposit rates to attract more customers but this also increases their vulnerability to liquidity crises.
+In this section, we introduce a simple model of competition for risk that serves as a backbone for our study. We consider a situation where two actors, denoted as Player 1 and Player 2, engage in competition by taking actions that make them more attractive to customers but also increase their risk of failure. For example, firms may choose to lower their prices to attract more customers but in doing so, they increase the likelihood of not being able to repay their loans. Similarly, insurance companies may lower their premiums to attract more customers but this comes at the cost of a higher risk of failure. Banks may increase their deposit rates to attract more customers but this also increases their vulnerability to liquidity crises.
 
 In our model, each player directly sets their failure probability, denoted as $r_p$. While this assumption may not be realistic in practice, we note that in many situations, firms use models that map real-world actions, such as setting prices or premiums, to failure probabilities. This mapping is often a monotonous function that can be inverted to yield real-world actions from failure probabilities, making our model practical.
 Based on the failure probabilities set by each player, the players can randomly ``lose'' the game. In our simple model, this translates into being applied a penalty, denoted as $P$. We assume $P>0$. We assume that the failure events are independent, meaning that each player draws a uniform random variable $f_p$ from the interval $[0,1]$ and fails if $f_p < r_p$. We will later introduce correlations between the variables $f_p$ to model real-life situations where correlations may be positive or negative.
@@ -273,18 +278,18 @@ Figure \ref{fig:reward} shows what the reward function of Player 1 looks like wh
 
 The discontinuity of our game is similar to two games: the War of Attrition game from \cite{smith1974theory} and the visibility game from \cite{Lotker2008-tx}. In the War of Attrition game, each player independently chooses a time to quit the game. The player who stays in the game for the longest time wins a prize. However, both players incur a cost that increases over time while they are still in the game. In the visibility game, the payoff of each player is the difference with the next player, or 1 for the player that plays the largest move. A major difference between our game and those two games is that we model the probability of failure. This means, for example, that the player taking less risk can still win the reward if the first player fails.
 
-However, the structure of our problem and the analytical solution of the Nash equilibrium are similar to \cite{Lotker2008-tx}. We name our game the Competition over Risk game and will write it CoR in the rest of the article.
+However, the structure of our problem and the analytical solution of the Nash equilibrium are similar to \cite{Lotker2008-tx}. We name our game the Competition for Risk game and will write it CfR in the rest of the article.
 
 \subsection{Nash equilibrium}
 
 A Nash equilibrium is a set of strategies, one for each player, such that no player can improve their payoff by unilaterally changing their strategy, given the strategies of the other players. In other words, each player's strategy is the best response to the strategies chosen by the other players. Nash equilibria are important because they provide a way to predict the outcome of a game if each player acts rationally and selfishly. They can also help explain why certain outcomes occur in real-world situations.
 
-In our model of competition over risk, finding Nash equilibria can help us understand how firms, banks, and insurance companies behave when they compete over prices and take different levels of risk. By analyzing the Nash equilibria of our model, we can predict how different players will act and what the resulting outcomes will be. Moreover, we can compare the efficiency of different equilibria and use them as a benchmark to evaluate the performance of different strategies.
+In our model of competition for risk, finding Nash equilibria can help us understand how firms, banks, and insurance companies behave when they compete for prices and take different levels of risk. By analyzing the Nash equilibria of our model, we can predict how different players will act and what the resulting outcomes will be. Moreover, we can compare the efficiency of different equilibria and use them as a benchmark to evaluate the performance of different strategies.
 
 As in the game of \cite{Lotker2008-tx}, we can prove that there is no pure Nash equilibrium, that is, a deterministic optimal strategy.
 
 \begin{theorem}
-The CoR game does not admit any pure Nash equilibrium.
+The CfR game does not admit any pure Nash equilibrium.
 \end{theorem}
 \begin{proof}
 Suppose the existence of an equilibrium $s_1, s_2$. Suppose that $s_1 > s_2$. Then Player 1 can improve their payoff by playing $s_1 - \varepsilon$ since they still get the reward and take less risk. By symmetry, this implies that $s_1 = s_2$. If $s_1 < 1$, then player 1 can improve their situation by playing $s_1 + \varepsilon$ since they get $R$ (or $\frac{R}{2}$ if the reward is shared). If $s_1 = 1$ then the payoff is $-P < 0$ with probability $1$ so it is better to play $0$ which gives payoff $0$ with probability $1$.
@@ -309,11 +314,11 @@ If each player gets payoff $\frac{R - \varepsilon}{2}$then no player can get $\v
 
 However, the $\varepsilon$-Pareto strategy is highly concentrated around $0$, incentivizing players to deviate and increase their chances of winning $R$ without taking on additional risk. Thus, this strategy fails to form a Nash equilibrium.
 
-Fortunately, the CoR game possesses a unique Nash equilibrium, a powerful property that showcases the strength of our approach. Moreover, this equilibrium is symmetric.
+Fortunately, the CfR game possesses a unique Nash equilibrium, a powerful property that showcases the strength of our approach. Moreover, this equilibrium is symmetric.
 
 For finite games, Nash himself proved the existence of mixed Nash equilibria \citep{Nash1950-jp}, while Glicksberg's theorem extended this result to continuous reward functions \citep{Glicksberg1951-wp}. Dasgupta and Maskin \citep{Dasgupta1986-gu} established conditions under which discontinuous games can possess Nash equilibria and symmetric games can admit symmetric equilibria.
 
-The uniqueness of the Nash equilibrium is a highly desirable property, with most models using concave reward functions to ensure it. Therefore, it is noteworthy that the CoR game exhibits a unique Nash equilibrium.
+The uniqueness of the Nash equilibrium is a highly desirable property, with most models using concave reward functions to ensure it. Therefore, it is noteworthy that the CfR game exhibits a unique Nash equilibrium.
 
 We recall Theorem 2.1 from \citet{Lotker2008-tx}:
 
@@ -322,11 +327,11 @@ We recall Theorem 2.1 from \citet{Lotker2008-tx}:
 Let $(f_1, \ldots , f_n)$ be a Nash equilibrium point, with expected payoff $u_i^*$ to Player $i$ at the equilibrium point. Let $u_i(x)$ (as an abuse of notation) denote the expected payoff for Player $i$ when he plays the pure strategy $x$ and all other players play their equilibrium mixed strategy. Then $u_i(x) \leq u_i^*$ for all $x \in [0, 1]$, and furthermore, there exists a set $\mathcal{Z}$ of measure $0$ such that $u_i(x) = u_i^*$ for all $x \in support(f_i) \setminus \mathcal{Z}$.
 \end{theorem}
 
-This theorem means that at the Nash equilibrium, almost any move that is in the support of a player's strategy should give them the same (maximal) payoff. This theorem is crucial to find the equilibrium in the CoR game.
+This theorem means that at the Nash equilibrium, almost any move that is in the support of a player's strategy should give them the same (maximal) payoff. This theorem is crucial to find the equilibrium in the CfR game.
 
 \begin{restatable}{theorem}{nashcor}
 \label{thm:nashcor}
-Up to a set of measure zero, the CoR game admits a unique Nash equilibrium. This equilibrium is symmetric and its distribution is $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $C := \frac{P}{R}$ and $k := \sqrt{(C + 1)^2 + 1}$. The the average move is $\bar r = k - (C+1)$ and the utility of each player is $u^* = R \bar r$.
+Up to a set of measure zero, the CfR game admits a unique Nash equilibrium. This equilibrium is symmetric and its distribution is $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $C := \frac{P}{R}$ and $k := \sqrt{(C + 1)^2 + 1}$. The the average move is $\bar r = k - (C+1)$ and the utility of each player is $u^* = R \bar r$.
 \end{restatable}
 
 \begin{proof}
@@ -366,12 +371,12 @@ The case when $C \rightarrow 0$ is more surprising: the maximal cutoff value at 
 
 \section{Generalization to multiple players}
 
-Quite naturally, we wonder what the Nash equilibrium looks like for multiple players. The visibility game of \citet{Lotker2008-tx} probably does not admit an analytical solution and they instead give an algorithm to produce approximate solutions. We show that the CoR game for multiple players admits a unique symmetric equilibrium and present a new numerical algorithm to compute it. We finally study the asymptotic behavior of the equilibrium. 
+Quite naturally, we wonder what the Nash equilibrium looks like for multiple players. The visibility game of \citet{Lotker2008-tx} probably does not admit an analytical solution and they instead give an algorithm to produce approximate solutions. We show that the CfR game for multiple players admits a unique symmetric equilibrium and present a new numerical algorithm to compute it. We finally study the asymptotic behavior of the equilibrium. 
 
 \subsection{Nash equilibrium}
-Interestingly, our Correlation over Risk game admits an analytical solution even for multiple players. More precisely:
+Interestingly, our Correlation for Risk game admits an analytical solution even for multiple players. More precisely:
 \begin{theorem}\label{thm:multiple}
-    There is a unique symmetric Nash equilibrium for in the CoR game with $n$ players defined by $$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}}$$
+    There is a unique symmetric Nash equilibrium for in the CfR game with $n$ players defined by $$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}}$$
     for some constants $r_{max}$ and $w := \bar r ^ {n-1}$ (the probability of winning when taking no risk) such that 
     \begin{align*}
         \int_0^{r_{max}} f(x) dx &= 1 \\
@@ -463,7 +468,7 @@ We interpret this as an indication that resources, here modeled by the ratio $\f
     \label{fig:efficiency}
 \end{figure}
 
-\section{Extensions of the Competition over Risk Game}
+\section{Extensions of the Competition for Risk Game}
 
 
 \subsection{Market frictions}
@@ -562,7 +567,7 @@ where $\sigma_{-i}$ is the strategy of all players but $i$, and $\Sigma_i$ is th
 
 A game is said to be continuous if the action space $\Sigma_i$ is compact and $u_i$ is continuous. In such games, it is possible to approximate the Nash equilibria using a sequence of games over a reduced finite support, which leads to Glicksberg’s theorem, without relying on Kakutani’s theorem \citep{myerson1997game}. 
 
-In our CoR game, which has a few points of discontinuity, it is also possible to approximate the Nash equilibria using a similar method. However, we do not provide a proof of this here, as the introduction of frictions makes our game continuous anyway. 
+In our CfR game, which has a few points of discontinuity, it is also possible to approximate the Nash equilibria using a similar method. However, we do not provide a proof of this here, as the introduction of frictions makes our game continuous anyway. 
 
 To measure the closeness of a strategy $\sigma$ to a Nash equilibrium, we use the NashConv metric \citep{Lanctot2017-wc}: 
 $$\textsc{NashConv}(\sigma) = \sum_{i=1}^n \max_{s_i \in \Sigma_i} u_i(s_i, \sigma_{-i}) - u_i(\sigma)$$
@@ -572,7 +577,7 @@ The \textsc{NashConv} metric satisfies $\textsc{NashConv}(\sigma) \ge 0$, with e
 
 For a finite action space, $\textsc{NashConv}$ is easy to compute since $\Sigma_i$ is finite. However, for a continuous action space, no such metric is known. Nonetheless, we can approximate $\textsc{NashConv}$ by taking the maximum over a finite sample of points from $\Sigma_i$. This sample can be chosen randomly, or if $\Sigma_i$ is an interval or a product of intervals of $\mathbb{R}$, we can use a grid. 
 
-In our CoR game, the action space is $[0,1]$. Here, we use quasi-random numbers to measure the closeness to a Nash equilibrium, inspired by the literature on hyperparameter sampling \citep{Bousquet2017-kg} and the efficiency of quasi-Monte-Carlo methods \citep{sobol1990quasi}. Specifically, we define the QuasiNashConv metric as: 
+In our CfR game, the action space is $[0,1]$. Here, we use quasi-random numbers to measure the closeness to a Nash equilibrium, inspired by the literature on hyperparameter sampling \citep{Bousquet2017-kg} and the efficiency of quasi-Monte-Carlo methods \citep{sobol1990quasi}. Specifically, we define the QuasiNashConv metric as: 
 $$\textsc{QuasiNashConv}(\sigma, m) = \sum_{i=1}^n \max_{s_i \in \textsc{Sobol}(m)} u_i(s_i, \sigma_{-i}) - u_i(\sigma)$$
 
 where $\textsc{Sobol}(m)$ is a set of $m$ quasi random numbers drawn using Sobol’s method \citep{sobol1967distribution}.
@@ -658,17 +663,17 @@ Finally, we make the following trivial remark:
     A correlated equilibrium $\sigma$ is a Nash equilibrium iff the matrix $(\Pr\nolimits_\sigma(i, j))_{i,j}$ has rank 1.
 \end{proposition}
 
-This gives us another numerical method to check that a correlated equilibrium is a Nash equilibrium: compute the second highest eigenvalue and check that it is $0$. In numerical experiments, we define $\lambda_1$ and $\lambda_2$ as the highest and second highest eigenvalues and report the value $$\lambda := \frac{\lambda_1}{\lambda_2}$$
+This gives us another numerical method to check that a correlated equilibrium is a Nash equilibrium: compute the second highest eigenvalue and check that it is $0$. In numerical experiments, we define $\lambda_1$ and $\lambda_2$ as the highest and second highest eigenvalues and report the value $$\lambda := \frac{\lambda_2}{\lambda_1}$$
 
 
 
 \section{Results}
 
-To approximate the CoR game, we employ a finite grid of actions evenly spaced in the interval $[0, 1]$ for both players. We distinguish between two settings based on a boolean variable, \texttt{shift}. In the first setting (\texttt{shift = false}), both players are offered the same set of actions. In the second setting (\texttt{shift = true}), the two players are offered non-intersecting sets of actions, with each action in the interval $[0, 1]$ alternately attributed to each player.
+To approximate the CfR game, we employ a finite grid of actions evenly spaced in the interval $[0, 1]$ for both players. We distinguish between two settings based on a boolean variable, \texttt{shift}. In the first setting (\texttt{shift = false}), both players are offered the same set of actions. In the second setting (\texttt{shift = true}), the two players are offered non-intersecting sets of actions, with each action in the interval $[0, 1]$ alternately attributed to each player.
 
 We employ a Numba \citep{lam2015numba}  implementation of the numerical method proposed by \citet{genz2004numerical} to compute the bivariate normal probability in the utility function, which is the computational bottleneck in equation \ref{eq:utility}.
 
-Our experiments show that the Nash equilibrium in finite approximations of the CoR game can be obtained by computing a correlated Nash equilibrium. Moreover, we prove that either the correlated equilibrium is unique or the correlated equilibrium maximizing the total reward is a Nash equilibrium.
+Our experiments show that the Nash equilibrium in finite approximations of the CfR game can be obtained by computing a correlated Nash equilibrium. Moreover, we prove that either the correlated equilibrium is unique or the correlated equilibrium maximizing the total reward is a Nash equilibrium.
 
 We present the results of our experiments with different values of $C$, $\tau$, and $\rho$, as well as different numbers of actions, in Figure \ref{fig:linear-shift}, where we plot the maximum distance $d_{max}$ and the parameter $\lambda$ computed according to Section \ref{sec:linear} with \texttt{shift = true}. We also present the results with \texttt{shift = false} in Section \ref{sec:linear-noshift}.
 
@@ -705,7 +710,7 @@ For our experiments on equilibria in various settings, we use 500 actions and 20
     \centering
     \includesvg[width=1.1\linewidth]{regret_matching_methods_quasinashconv}
   \end{minipage}
-  \caption{We evaluate the performance of different algorithms in finding the Nash equilibrium of the CoR game in the standard setting with $P=R=1$, $\tau=0$, and $\rho=0$, without sharing. We reduce the game to a grid of $a=2^{12}$ actions, and evaluate the $\textsc{QuasiNashConv}$ metric on $2^{15}$ points. The algorithms are run for $10^4$ iterations, where an iteration is defined as an update to the strategy. For CFR, an iteration involves updating the regrets based on the counterfactual outcomes of the game, while for regret matching, an iteration is defined as $a$ steps of the sampling, play, and update process. Both CFR and regret matching do $\mathcal{O}(a^2)$ operations per iteration. We do not include the computation of the utility matrix in the computation time.}
+  \caption{We evaluate the performance of different algorithms in finding the Nash equilibrium of the CfR game in the standard setting with $P=R=1$, $\tau=0$, and $\rho=0$, without sharing. We reduce the game to a grid of $a=2^{12}$ actions, and evaluate the $\textsc{QuasiNashConv}$ metric on $2^{15}$ points. The algorithms are run for $10^4$ iterations, where an iteration is defined as an update to the strategy. For CFR, an iteration involves updating the regrets based on the counterfactual outcomes of the game, while for regret matching, an iteration is defined as $a$ steps of the sampling, play, and update process. Both CFR and regret matching do $\mathcal{O}(a^2)$ operations per iteration. We do not include the computation of the utility matrix in the computation time.}
   \label{fig:rm-different}  
 \end{figure}
 
@@ -723,7 +728,7 @@ For our experiments on equilibria in various settings, we use 500 actions and 20
     \centering
     \includesvg[width=1.1\linewidth]{regret_matching_sizes_quasinashconv}
   \end{minipage}
-  \caption{We evaluate the performance of the vanilla regret matching algorithm in finding the Nash equilibrium of the CoR game in the standard setting with $P=R=1$, $\tau=0$, and $\rho=0$, without sharing. The quality of the resulting equilibrium depends mainly on the number of actions $a$. We run the algorithm for $t$ iterations, where the time complexity of the algorithm is $\mathcal{O}(t a^2)$ and the memory complexity is $\mathcal{O}(a^2)$ as it requires computing the reward matrix. We evaluate the $\textsc{QuasiNashConv}$ metric on $8a$ points.}
+  \caption{We evaluate the performance of the vanilla regret matching algorithm in finding the Nash equilibrium of the CfR game in the standard setting with $P=R=1$, $\tau=0$, and $\rho=0$, without sharing. The quality of the resulting equilibrium depends mainly on the number of actions $a$. We run the algorithm for $t$ iterations, where the time complexity of the algorithm is $\mathcal{O}(t a^2)$ and the memory complexity is $\mathcal{O}(a^2)$ as it requires computing the reward matrix. We evaluate the $\textsc{QuasiNashConv}$ metric on $8a$ points.}
   \label{fig:rm-size}  
 \end{figure}
 
@@ -741,7 +746,7 @@ Our results demonstrate that penalties and market frictions have a significant i
     \includesvg[width=1.1\linewidth]{equilibria_rbar_u_C}
   \end{minipage}
   \caption{
-  The two figures depict the relationship between the total reward $u$ and the average risk taken $\bar r$ under different penalty $C$ and market friction $\tau$ settings. The left figure shows constant $C$ level lines, while the right figure shows constant $\tau$ level lines. We observe a linear relationship between $u$ and $\bar r$ when changing $\tau$ at constant $C$. We find that this behavior holds for all values of $\rho$.}
+  The two figures depict the relationship between the total reward $u$ and the average risk taken $\bar r$ under different penalty $C$ and market friction $\tau$ settings. The left figure shows constant $C$ level lines, while the right figure shows constant $\tau$ level lines. We observe a linear relationship between $u$ and $\bar r$ when changing $\tau$ at constant $C$. We find that this behavior holds for all values of $\rho$. Interestingly, there seems to exist a linear relationship between $\bar r$ and $u$ when changing $\tau$ for fixed levels of $C$.}
   \label{fig:result-noise}  
 \end{figure}
 
@@ -771,19 +776,47 @@ Our results demonstrate that penalties and market frictions have a significant i
   \label{fig:result-corr}  
 \end{figure}
 
+
+\section{Economic Policy Implications and Real-World Case Studies}
+
+In this section, we aim to connect the insights gleaned from our model with broader economic literature and real-world policy implications. Drawing on established economic theories, particularly the Diamond-Dybvig model, we offer a new perspective on how financial institutions manage risk and competition. Further, we delve into how our model's findings can inform current policy debates, such as the regulation of financial advisory commissions in the European Union and contract transferability among life insurers in France. Through this discussion, we illustrate the practical applicability and potential impact of our theoretical framework on shaping economic policies and practices.
+
+The Diamond-Dybvig model \citep{diamond1983bank} plays a central role in our understanding of financial intermediaries, especially banks. This seminal model represents a situation where banks provide liquidity transformation services. In a nutshell, it portrays a setting in which depositors need to decide whether to withdraw their money early (impatient depositors) or keep their money in the bank until a later period (patient depositors). Banks offer a contract that allows depositors to withdraw their money early, but at a lower return than if they wait until the end. This can lead to a bank run if too many depositors decide to withdraw their money early.
+
+By allowing financial institutions in our model to ``choose'' a parameter that influences both a utility function and their likelihood of bankruptcy, our approach shares similarities with the Diamond-Dybvig framework. This feature makes our model particularly useful for studying phenomena such as competition among banks over deposit contract interest rates, a scenario that mirrors the dynamic modeled by Diamond and Dybvig.
+
+Despite its parallels with the Diamond-Dybvig framework, our model is distinct, original, and more expansive in scope. It is unconcerned with specific financial metrics or measures, making it more generalizable across different settings. Instead, our model pivots around the broadly applicable concept of ``failure probability''. This fundamental characteristic allows us to abstract away from the complexities of real-world financial instruments and focus on the core strategic interactions of players. By viewing the competition through the lens of failure probability, we can derive insights that are not confined to specific financial instruments or markets, but instead provide a versatile theoretical tool that can be applied across various sectors and scenarios. This innovative feature enhances the relevance and applicability of our model in analyzing strategic risk-taking behavior.
+
+Under certain circumstances, as we show in our study, market frictions, such as customers not optimizing their choice of bank, can increase bank profitability. Although this finding may seem intuitive, our formal model provides a rigorous foundation for this result, focusing not on explicit interest rates but rather on failure probabilities.
+
+Interestingly, our results also shed light on the implications of risk correlation for the equilibrium. In cases where the failure events are negatively correlated, market frictions appear to have little effect on the equilibrium. In contrast, when risks are positively correlated – mirroring the reality of endogenously generated financial risks tied to financial markets – a lack of market friction can spur banks to take on greater risk. This suggests that the optimal situation for both customers and banks arises when the correlation between endogenous risks is zero or negative. Under these conditions, lower frictions can benefit customers without harming banks. On the other hand, if risks are positively correlated, market frictions can harm customers while benefiting banks, creating an incentive for banks to increase these frictions (e.g., by fostering customer loyalty or withholding information).
+
+Moreover, the impact of failure penalties (or the absence of a safety net) can exacerbate this dynamic, suggesting that regulators could mitigate perverse incentives by reducing the penalty parameter in a positively correlated environment, such as through bailouts or other protective measures (e.g., deposit insurance, liquidity provision, and bank resolution mechanisms). This perspective aligns with a strand of literature that extrapolates from the Diamond-Dybvig model to inform policy making \citep{bhattacharya1985preference,ennis2009bank}.
+
+Outside of the banking sector, our framework has implications for other policy debates. In the European Union, for instance, the Financial Services Commissioner, Mairead McGuinness, recently proposed banning ``inducements'' – commissions paid by banks or insurers to financial advisors who sell their products. Proponents argue this would enhance transparency and reduce costs. Critics, however, fear it could inhibit access to financial advice. Within our model, increasing transparency equates to reducing the friction parameter $\tau$, which alters the equilibrium, potentially heightening risk for financial institutions but also augmenting returns for consumers. Our findings indicate that regulators might safeguard consumers and influence prices simply by mandating transparency. However, we caution that the impact of such a policy on market frictions is uncertain, as it could inadvertently limit access to information via advisors.
+
+Furthermore, in France, a legislative proposal by MPs Husson and Montgolfier seeks to enhance the transferability of contracts between life insurers, effectively reducing market frictions. Our framework suggests that, in response, insurers could take on more risk due to increased competition. However, the relationship between risk and interest rates may also change, as performance becomes costlier in terms of risk when the duration of contracts decreases because of enhanced transferability. Consequently, while our model predicts an uptick in the risks assumed by insurers, the ultimate benefit to savers remains ambiguous.
+
+
 \section{Conclusion}
 
-In this paper, we investigated models of competition in which actors choose their level of risk and are rewarded for taking on more risk than competitors.
+In this study, we thoroughly examined competition models where participants strategically choose their risk levels, with those who take on more risk potentially outperforming their competitors. 
 
-We developed and tested several algorithms to solve our game in a discrete version, with vanilla Regret Matching outperforming all other methods. We then used this efficient implementation to explore the effects of penalties, market frictions, and correlation on risk-taking behavior and performance, and to evaluate the effectiveness of various interventions and policies in a competitive environment.
+We devised and tested multiple algorithms to solve our game in its discrete form, with vanilla Regret Matching proving to be the most effective. We utilized this efficient implementation to delve into the impacts of penalties, market frictions, and risk correlations on strategic behavior and overall performance. Additionally, we scrutinized the effectiveness of diverse interventions and policies within this competitive landscape.
 
-We showed that market frictions decrease the average risk taken and increase the total reward, and that increasing failure penalties can improve cooperation and the total reward in inefficient markets. We also demonstrated that negative correlations between failure events encourage risk-taking, while positive correlations discourage it in efficient markets but can become positive in noisy markets.
+Our research revealed that market frictions tend to lower the average risk taken while boosting the total reward. Moreover, we found that enhancing failure penalties can foster cooperation and augment the total reward, particularly in inefficient markets. Our exploration also showed that negative correlations among failure events stimulate risk-taking, while positive correlations may discourage it in efficient markets but potentially encourage it in less predictable, noisy markets.
 
-Our findings have significant implications for economics, finance, and policy-making. Understanding how market frictions and penalties affect competition can help firms and governments make better strategic decisions and promote more efficient markets. Our use of algorithmic solvers for games with continuous action sets also shows the potential for more complex models that do not have closed-form solutions. Overall, this paper provides a rigorous framework for modeling and analyzing strategic interactions in continuous action games, with broad applications for economic research and practice.
+One noteworthy aspect of our study is its parallel with the Diamond-Dybvig framework. Our model, similar to Diamond-Dybvig, examines how financial institutions select parameters influencing their utility functions and likelihood of failure. However, our model is more generalized, focusing on universally applicable notions of failure probabilities, thereby enabling us to study the dynamics of strategic competition in a broader array of scenarios.
+
+We also showcased the adaptability of our model for policy exploration. By imposing policy measures such as transparency requirements or facilitating contract transferability, we demonstrated how policy changes can influence the equilibrium of risk-taking and consequently, the rewards.
+
+Our findings offer substantial insights for economics, finance, and policymaking. By understanding how market frictions and penalties influence competition, firms and governments can make more informed strategic decisions leading to more efficient markets. Moreover, our use of algorithmic solvers for games with continuous action sets illustrates the potential for handling more intricate models lacking closed-form solutions. 
+
+In conclusion, our work provides a robust framework for modeling and analyzing strategic interactions in continuous action games, extending its implications far beyond to enrich economic research and practice.
 
 \section*{Acknowledgement}
 
-We thank \identifier{Aurélie Coursimault}, \identifier{Marc Lanctot}, \identifier{Jules Pondard} and \identifier{Philippe Raimbourg} for helpful discussions and useful comments.
+We thank \identifier{Aurélie Coursimault}, \identifier{Professor Hélyette Geman}, \identifier{Marc Lanctot}, \identifier{Jules Pondard} and \identifier{Professor Philippe Raimbourg} for helpful discussions and useful comments.
 
 \FloatBarrier
 \bibliographystyle{elsarticle-harv} 
