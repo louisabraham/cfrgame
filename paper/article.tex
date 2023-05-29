@@ -717,14 +717,12 @@ We present the results of our experiments with different values of $P$, $\tau$, 
   \label{fig:linear-shift}  
 \end{figure}
 
-To study our game, we employ classical algorithms that find correlated equilibria. Regret matching is a widely used algorithm in game theory for finding correlated equilibria \citep{Hart1997-nk}. At each step of the algorithm, each player chooses a distribution of moves that maximizes their expected utility, given their opponent's past moves. If the algorithm is run for a sufficient number of iterations, the distributions converge to a correlated equilibrium. Counterfactual Regret Minimization (CFR) is a related algorithm that accumulates expected regrets for each action played by a player at each information set \citep{neller2013introduction}. The algorithm then updates the regrets based on the counterfactual outcomes of the game, i.e., what would have happened if a different action had been taken. By iteratively updating these regrets and choosing actions based on the updated regrets, CFR converges to a Nash equilibrium in extensive form games. In our normal form game, we apply CFR as a deterministic version of Regret Matching. Another variant of regret matching is stochastic fictitious play, which involves computing probability distributions using the softmax function \citep{fudenberg1993learning}. We also test this variant with CFR in our experiments to evaluate its performance in approximating the Nash equilibrium of our game.
-
 We implement and evaluate all algorithms to solve a discrete version of our game where the action space is reduced to a grid, with and without a shift. We then report the value of $\textsc{NashConv}$ $\textsc{QuasiNashConv}$ as defined in Section \ref{sec:approx}. We display the solution found by Regret Matching in Figure \ref{fig:rm-sol} and check that it matches the actual solution from Figure \ref{fig:nash}. We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperforms all methods. In general, Regret Matching performs much better than CFR, even when using less actions, using softmax is detrimental, and shifting the action space does not seem to impact performance much. CFR runs faster as it does not involve any random sampling. Therefore, we use vanilla Regret Matching with shifting in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
 
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.8\linewidth]{rm_sol}
-  \caption{Approximate and analytical solutions for $P=1, \rho=0, \tau=0$. Actions were discretized to a grid of $2^{12}$. The approximate solution was computed ]}
+  \caption{Approximate and analytical solutions for $P=1, \rho=0, \tau=0$. Actions were discretized to a grid of $2^{12}$ with \texttt{shift~=~false}. The approximate solution was computed by $10^4$ iterations of regret matching.}
   \label{fig:rm-sol}  
 \end{figure}
 
