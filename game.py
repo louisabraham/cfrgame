@@ -13,7 +13,7 @@ def joint_failure_probability_slow(a, b, cov):
     Player 1 takes risk a, player 2 takes risk b.
     cov is the covariance of the two portfolios.
     """
-    # cov = 2 * torch.sin(torch.pi / 6 * cov)
+    # cov = 2 * sin(pi / 6 * cov)
     if cov == 0:
         return a * b
     args = np.stack((norm.ppf(a), norm.ppf(b)), axis=-1)

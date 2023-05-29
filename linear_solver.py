@@ -1,8 +1,5 @@
 import numpy as np
 import scipy
-import torch
-
-from game import reward, reward_matrix
 
 from scipy.optimize import linprog
 
@@ -88,9 +85,6 @@ def linear_correlated(reward1, reward2, n_iters=10, confidence=0.95):
     return (eq, (utility1, utility2), min(2, e / q), eig[1] / eig[0])
 
 
-#%%
-
-
 if __name__ == "__main__":
     # chicken game <https://en.wikipedia.org/wiki/Correlated_equilibrium#An_example>
     reward1 = np.array([[0.0, 7], [2, 6]])
@@ -99,5 +93,3 @@ if __name__ == "__main__":
         reward1, reward2, n_iters=10, confidence=0.95
     )
     assert sum(utility) == 10.5
-
-# %%
