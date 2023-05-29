@@ -165,18 +165,15 @@
 
 \begin{abstract}
 %% Text of abstract
-In this study, we explore models where participants strategically choose their risk levels and earn rewards in line with their chosen risks, mimicking real-world competition in fields ranging from market-share-seeking firms to banks and insurance companies vying for more customers. 
+In this study, we present models where participants strategically select their risk levels and earn corresponding rewards, mirroring real-world competition across various sectors. 
 
-Our analysis starts with a simple normal form game with two players in a continuous action space. We confirm the existence of a unique Nash equilibrium and provide an analytical solution. We then extend the analysis to multi-player scenarios to explore the Nash equilibrium in more complex settings. Despite challenges, we show that our Competition for Risk (CfR) game model exhibits a unique symmetric equilibrium for multiple players, introducing a new numerical algorithm for its calculation. Additionally, we thoroughly examine the equilibrium's asymptotic behavior. With this foundation, we incorporate additional real-world factors such as market frictions and risk correlations among firms. Our experiments confirm that the Nash equilibrium in our model also serves as a correlated equilibrium. We also introduce the reader to the use of regret matching variants as efficient algorithms for approximating the Nash equilibrium. Our methodology and code are open-source and compatible with any normal form game\footnote{available at \identifier{\url{https://github.com/louisabraham/cfrgame}}}.
+Our analysis starts with a normal form game involving two players in a continuous action space, confirming the existence and uniqueness of a Nash equilibrium and providing an analytical solution. We then extend this analysis to multi-player scenarios, introducing a new numerical algorithm for its calculation. 
 
-Further, we discuss experimental findings on the effects of market frictions and risk correlations on strategic risk-taking. We find that market frictions, like transaction costs and imperfect information, significantly influence player incentives. These frictions typically lower the average risk taken while enhancing the total payoff. In inefficient markets, increasing failure penalties can further optimize payoffs. Additionally, we find that risk correlation significantly affects risk-taking: players take less risk when risks are positively correlated and more risk when negatively correlated.
+A key novelty of our work lies in using regret minimization algorithms to solve continuous games through discretization. This groundbreaking approach enables us to incorporate additional real-world factors like market frictions and risk correlations among firms. We also experimentally validate that the Nash equilibrium in our model also serves as a correlated equilibrium.
 
-Our findings extend beyond strategic risk-taking, offering insights for policy design in various sectors. Notably, our model exhibits ties to the Diamond-Dybvig framework, albeit with broader applicability. Using our model, we explore how policy measures, such as increasing transparency or easing contract transferability, can influence risk-taking and its rewards.
+Our findings illuminate how market frictions and risk correlations affect strategic risk-taking. We also explore how policy measures can impact risk-taking and its associated rewards, with our model providing broader applicability than the Diamond-Dybvig framework. We make our methodology and code open-source\footnote{available at \identifier{\url{https://github.com/louisabraham/cfrgame}}}.
 
-Additionally, we contribute methodologically by advocating for algorithm use in economics. While simplified models traditionally favored in economics allow for analytical solutions, algorithmic solvers can handle more complex models without closed-form solutions or requiring data inputs. Thus, we shift focus from finite games to continuous action set games.
-
-In short, our approach provides a solid framework for analyzing continuous action games' strategic interactions, offering potential applications in economics, finance, and policy-making. The study emphasizes the need to consider market frictions, risk correlations, and policy measures in understanding strategic risk-taking dynamics.
-
+Finally, we contribute methodologically by advocating the use of algorithms in economics, shifting focus from finite games to games with continuous action sets. Our study provides a solid framework for analyzing strategic interactions in continuous action games, emphasizing the importance of market frictions, risk correlations, and policy measures in strategic risk-taking dynamics.
 
 \end{abstract}
 
@@ -213,7 +210,15 @@ Game theory provides a compelling lens for analyzing these situations. It helps 
 
 Nash equilibrium is a key concept for our study. It's a state of stability in the game, where no player sees an advantage in deviating from their chosen strategy. In a normal form game, a Nash equilibrium consists of strategies where each player's strategy is the best response to the strategies of others. This concept is fundamental to game theory and has been widely used in various fields like economics and political science to model strategic behavior \citep{moulin1986game, varoufakis2008game}.
 
-Our exploration starts with a straightforward normal form game featuring two players. We provide solid proof for the existence and uniqueness of a Nash equilibrium, and present an analytical solution. This simple model serves as a basis that we gradually build upon by incorporating more realistic features, such as multiple players, market frictions, and risk correlations among firms. Our experimental validation demonstrates that the Nash equilibria in our model also serve as correlated equilibria, endorsing the use of correlated equilibria to model strategic behavior in our game. We calculate these equilibria using several algorithms from existing literature, including regret matching and counterfactual regret minimization.
+Our exploration starts with a straightforward normal form game involving just two players. For this setup, we provide solid proof for both the existence and uniqueness of a Nash equilibrium, and we go further by presenting an analytical solution. This simple model serves as our fundamental building block, a starting point that offers a solid base of understanding.
+
+Subsequently, we enhance our model to incorporate the complexity of multiple players. This extension allows us to probe deeper into the strategic dynamics in more realistic, multi-actor competitive environments. Even with the additional complexity, we manage to maintain the uniqueness of the Nash equilibrium and solve the game analytically.
+
+The third stage of our investigation introduces two vital real-world components: market frictions and risk correlations among firms. We begin by defining these elements in a two-player context, paving the way for more complex scenarios.
+
+The final phase of our study marks a significant departure from conventional approaches. Given the complexities introduced by market frictions and risk correlations, we adopt a novel technique—using regret minimization algorithms to discretize and solve our game. This innovation, which opens new vistas in the study of strategic interactions, proves especially valuable in the face of the potentially intractable analytical solutions that these intricate scenarios might present. 
+
+Our experimental validation establishes that the Nash equilibria in our model also function as correlated equilibria, endorsing the use of correlated equilibria to model strategic behavior. To compute these equilibria, we employ an array of algorithms, prominently featuring regret matching and counterfactual regret minimization, thus highlighting the expanding potential of algorithmic solutions for tackling complex strategic interactions.
 
 Next, we examine the impact of penalties and market frictions on strategic behavior and results in our continuous model. We find that penalties reduce both the average risk taken by players and their total rewards. Market frictions, on the other hand, lower average risk but increase total rewards. These frictions have a more significant effect on total rewards in high-penalty environments. In especially inefficient markets with high market frictions, raising penalties can promote cooperation and increase total rewards.
 
@@ -701,7 +706,7 @@ We implement and evaluate all algorithms to solve a discrete version of our game
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.8\linewidth]{rm_sol}
-  \caption{Approximate and analytical solutions for $P=1, \rho=0, \tau=0$. Actions were discretized to a grid of $2^{12}$ values. The approximate solution was computed ]}
+  \caption{Approximate and analytical solutions for $P=1, \rho=0, \tau=0$. Actions were discretized to a grid of $2^{12}$. The approximate solution was computed ]}
   \label{fig:rm-sol}  
 \end{figure}
 
