@@ -53,7 +53,7 @@ def plot_nash(c):
     plt.clf()
     x = np.linspace(0, 1, 10000)[1:-1]
     plt.plot(x, opt(x, c))
-    plt.title(f"Nash equilibrium with $C={c}$")
+    plt.title(f"Nash equilibrium with $P={c}$")
     plt.xlabel("$r$")
     plt.ylabel("$f(r)$")
     plt.savefig(f"plots/nash-{c}.svg")
@@ -92,7 +92,7 @@ def plot_solutions_multiple(C):
     x = np.linspace(0, 1, 10000)
     for n in range(2, 6):
         plt.plot(x, solution(n, C, x), label=f"$n={n}$")
-    plt.title(f"Solution for $C={C}$")
+    plt.title(f"Solution for $P={C}$")
     plt.xlabel("$r$")
     plt.ylabel("$f(r)$")
     plt.ylim(0, min(plt.ylim()[1], 10))
@@ -103,7 +103,7 @@ def plot_solutions_multiple(C):
 def plt_asymptotic(C):
     plt.clf()
     all_n = np.unique(np.array(10 ** np.linspace(1, 4, 1000)).astype(int))
-    plt.title(f"Asymptotic behavior for $C = {C}$")
+    plt.title(f"Asymptotic behavior for $P = {C}$")
     all_C = [C for n in all_n]
     all_w = [find_w(n, C) for n, C in zip(all_n, all_C)]
     all_avg = [np.exp(w / (n - 1)) for n, w in zip(all_n, all_w)]
@@ -173,7 +173,7 @@ def efficiency():
     plt.xscale("log")
     plt.yscale("log")
     plt.ylim(1e-2, 1)
-    plt.title("Efficiency with $C=n^{-e}$ for various values of $e$")
+    plt.title("Efficiency with $P=n^{-e}$ for various values of $e$")
     plt.ylabel("Efficiency")
     plt.xlabel("Number of players $n$")
     plt.legend()
@@ -376,7 +376,7 @@ def compute_all_rm():
         json.dump(results, f)
 
 
-#%%
+# %%
 def regret_matching_plots():
     if not Path("plots/regret_matching.json").exists():
         compute_all_rm()
@@ -547,7 +547,7 @@ def equilibria_img():
             plt.xlabel(r"$\rho$")
             plt.yscale("log")
             plt.ylabel(r"$\tau$")
-            plt.title(f"{name} for $C={C}$")
+            plt.title(f"{name} for $P={C}$")
             plt.savefig(f"plots/equilibria_{file}_grid_C={C}.svg")
 
         # now do the same for C and noise
@@ -673,7 +673,7 @@ def equilibria_plots():
             legend.get_frame().set_facecolor((1, 1, 1, 0.6))
             plt.xlabel(r"$\rho$")
             plt.ylabel(r"$u$" if name == "u" else r"$\bar r$")
-            plt.title(f"Equilibrium for different values of $\\tau$ at $C={C}$")
+            plt.title(f"Equilibrium for different values of $\\tau$ at $P={C}$")
             plt.savefig(f"plots/equilibria_{name}_corr_C={C}.svg")
             plt.show()
 
@@ -695,9 +695,9 @@ def equilibria_plots():
 
 equilibria_plots()
 
-#%%
-def main():
 
+# %%
+def main():
     with tqdm() as pbar:
         real_savefig = plt.savefig
 
