@@ -84,6 +84,8 @@
     \newcommand{\identifier}{}
 \fi
 
+%% break url
+\usepackage{xurl}
 
 
 
@@ -230,7 +232,7 @@ In this section, we introduce a simple model of competition for risk that serves
 In our model, each player directly sets their failure probability, denoted as $r_p$. While this assumption may not be realistic in practice, we note that in many situations, firms use models that map real-world actions, such as setting prices or premiums, to failure probabilities. This mapping is often a monotonous function that can be inverted to yield real-world actions from failure probabilities, making our model practical.
 Based on the failure probabilities set by each player, the players can randomly ``lose'' the game. In our simple model, this translates into being applied a penalty, denoted as $P$. We assume $P>0$. We assume that the failure events are independent, meaning that each player draws a uniform random variable $f_p$ from the interval $[0,1]$ and fails if $f_p < r_p$. We will later introduce correlations between the variables $f_p$ to model real-life situations where correlations may be positive or negative.
 
-After the failure events are determined, the players that did not fail compare their risk levels, and the player that played the highest risk level is rewarded with a payoff, denoted as $R$. We assume that $R > 0$. In the case of ties between risk levels, we consider several ways of resolving them, such as none of the players receiving the reward, the reward being shared equally between them, or the reward being randomly given to one of them.
+After the failure events are determined, the players that did not fail compare their risk levels, and the player that played the highest risk level is rewarded with a payoff, denoted as $R$. Since the game is unchanged when scaling both $P$ and $R$, we assume $R = 1$. In the case of ties between risk levels, we consider several ways of resolving them, such as none of the players receiving the reward, the reward being shared equally between them, or the reward being randomly given to one of them.
 
 We note that, as shown later, the optimal strategies in our model are modeled by real distributions, which means that the probability of ties is zero. However, when we use discrete action sets to compute approximate Nash equilibria, the action sets can overlap, and we implement the first two variations of resolving ties (the last two are equivalent in expectation). This simple model serves as a foundation for our study, and we will extend it by introducing correlations between the players' failure probabilities and market frictions in subsequent sections.
 For two players, assuming $r_1 > r_2$, the outcome matrix will be:
@@ -240,19 +242,19 @@ For two players, assuming $r_1 > r_2$, the outcome matrix will be:
 \cline{2-3}
 \multicolumn{1}{c|}{} & $f_1\ge r_1$ & $f_1<r_1$ \\
 \hline
-$f_2\ge r_2$ & $R, 0$ & $-P, R$ \\
+$f_2\ge r_2$ & $R=1, 0$ & $-P, 1$ \\
 \hline
-$f_2<r_2$ & $R, -P$ &  $-P, -P$ \\
+$f_2<r_2$ & $1, -P$ &  $-P, -P$ \\
 \hline
 \end{tabular}
 \end{center}
 
 
-Each cell contains the rewards to each player. For example, in the upper left cell, no failure happens. Since we assumed $r_1 > r_2$, player 1 gets $R$ and player 2 gets $0$.
+Each cell contains the rewards to each player. For example, in the upper left cell, no failure happens. Since we assumed $r_1 > r_2$, player 1 gets $R=1$ and player 2 gets $0$.
 
 \subsection{Equivalence to a normal-form game}
 
-We can represent the game described above in the framework of extensive-form games by modeling the drawing of the random variables $f_p$ using Chance nodes. Since the outcomes are subject to randomness, it is natural to assume that the actors operate under the expected utility hypothesis, which implies that they possess a von Neumann–Morgenstern utility function. Consequently, we can define a normal-form game with payoffs equal to the expected payoffs of the corresponding extensive-form game. By doing so, we can leverage the theory of normal-form games and apply various solution concepts, such as Nash equilibria, to analyze the competition between the actors.
+We can represent the game described above in the framework of extensive-form games\citep{hart1992games} by modeling the drawing of the random variables $f_p$ using Chance nodes. Since the outcomes are subject to randomness, it is natural to assume that the actors operate under the expected utility hypothesis, which implies that they possess a von Neumann–Morgenstern utility function\citep{neumann1944theory}. Consequently, we can define a normal-form game with payoffs equal to the expected payoffs of the corresponding extensive-form game. By doing so, we can leverage the theory of normal-form games and apply various solution concepts, such as Nash equilibria, to analyze the competition between the actors.
 \begin{proposition}
 The expected utilities $u_p$ are computed as follows in the 2-player game:
 \begin{align*}
@@ -316,7 +318,7 @@ However, the $\varepsilon$-Pareto strategy is highly concentrated around $0$, in
 
 Fortunately, the CfR game possesses a unique Nash equilibrium, a powerful property that showcases the strength of our approach. Moreover, this equilibrium is symmetric.
 
-For finite games, Nash himself proved the existence of mixed Nash equilibria \citep{Nash1950-jp}, while Glicksberg's theorem extended this result to continuous reward functions \citep{Glicksberg1951-wp}. Dasgupta and Maskin \citep{Dasgupta1986-gu} established conditions under which discontinuous games can possess Nash equilibria and symmetric games can admit symmetric equilibria.
+For finite games, \citet{Nash1950-jp} proved the existence of mixed Nash equilibria, while Glicksberg's theorem \citep{Glicksberg1951-wp} extended  this result to continuous reward functions. \citet{Dasgupta1986-gu} established conditions under which discontinuous games can possess Nash equilibria and symmetric games can admit symmetric equilibria.
 
 The uniqueness of the Nash equilibrium is a highly desirable property, with most models using concave reward functions to ensure it. Therefore, it is noteworthy that the CfR game exhibits a unique Nash equilibrium.
 
@@ -331,14 +333,14 @@ This theorem means that at the Nash equilibrium, almost any move that is in the 
 
 \begin{restatable}{theorem}{nashcor}
 \label{thm:nashcor}
-Up to a set of measure zero, the CfR game admits a unique Nash equilibrium. This equilibrium is symmetric and its distribution is $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $C := \frac{P}{R}$ and $k := \sqrt{(C + 1)^2 + 1}$. The the average move is $\bar r = k - (C+1)$ and the utility of each player is $u^* = R \bar r$.
+Up to a set of measure zero, the CfR game admits a unique Nash equilibrium. This equilibrium is symmetric and its distribution is $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $k := \sqrt{(P + 1)^2 + 1}$. The the average move is $\bar r = k - (P+1)$ and the utility of each player is $u^* = \bar r$.
 \end{restatable}
 
 \begin{proof}
     See \ref{proof:nashcor} for a full proof. For a less rigorous treatment, refer to the proof of the more general Theorem \ref{thm:multiple}.
 \end{proof}
 
-At $C = 1$, the cutoff value is $1 - \sqrt{\frac{\sqrt{5} - 1}{\sqrt{5} + 1}} = 2 - \phi \approx 0.382$ with $\phi$ the Golden ratio. We plot the distribution in Figure \ref{fig:nash}.
+At $P = 1$, the cutoff value is $1 - \sqrt{\frac{\sqrt{5} - 1}{\sqrt{5} + 1}} = 2 - \phi \approx 0.382$ with $\phi$ the Golden ratio. We plot the distribution in Figure \ref{fig:nash}.
 
 
 \begin{figure}[htbp]
@@ -353,21 +355,21 @@ At $C = 1$, the cutoff value is $1 - \sqrt{\frac{\sqrt{5} - 1}{\sqrt{5} + 1}} = 
     \includesvg[width=1.1\linewidth]{nash-1}
   \end{minipage}
   \caption{Nash equilibrium}
-  \label{fig:nash}  
+  \label{fig:nash}
 \end{figure}
 
 
 \begin{figure}[htbp]
   \centering
   \includesvg[width=0.8\linewidth]{cutoff}
-  \caption{The cutoff goes to zero when $C \rightarrow\infty$.}
+  \caption{The cutoff goes to zero when $P \rightarrow\infty$.}
   \label{fig:cutoff}  
 \end{figure}
 
 
- The behavior of the cutoff ${r_{max}}$ is displayed in Figure \ref{fig:cutoff}. Unsurprisingly, when $C \rightarrow \infty$, the penalty $P$ becomes much larger than the reward $R$ and the players play closer to $0$.
+ The behavior of the cutoff ${r_{max}}$ is displayed in Figure \ref{fig:cutoff}. Unsurprisingly, when $P \rightarrow \infty$, the penalty becomes much larger than the reward and the players play closer to $0$.
 
-The case when $C \rightarrow 0$ is more surprising: the maximal cutoff value at $C=0$ is $h = 1 - \sqrt{\frac{\sqrt{2}}{\sqrt{2} + 2}} \approx 0.356$. This is because even if the penalty is $0$, the players cannot get the reward if they ``lose'', which prevents them from taking too much risk. We plot the distribution in Figure \ref{fig:nash}. 
+The case when $P \rightarrow 0$ is more surprising: the maximal cutoff value at $P=0$ is $h = 1 - \sqrt{\frac{\sqrt{2}}{\sqrt{2} + 2}} \approx 0.356$. This is because even if the penalty is $0$, the players cannot get the reward if they ``lose'', which prevents them from taking too much risk. We plot the distribution in Figure \ref{fig:nash}. 
 
 \section{Generalization to multiple players}
 
@@ -376,7 +378,7 @@ Quite naturally, we wonder what the Nash equilibrium looks like for multiple pla
 \subsection{Nash equilibrium}
 Interestingly, our Correlation for Risk game admits an analytical solution even for multiple players. More precisely:
 \begin{theorem}\label{thm:multiple}
-    There is a unique symmetric Nash equilibrium for in the CfR game with $n$ players defined by $$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}}$$
+    There is a unique symmetric Nash equilibrium for in the CfR game with $n$ players defined by $$f(x) = \frac{P + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (P x + w)^{1 - \frac{1}{n-1}}}$$
     for some constants $r_{max}$ and $w := \bar r ^ {n-1}$ (the probability of winning when taking no risk) such that 
     \begin{align*}
         \int_0^{r_{max}} f(x) dx &= 1 \\
@@ -387,12 +389,12 @@ Interestingly, our Correlation for Risk game admits an analytical solution even 
     
 We adapt the proof of Theorem \ref{thm:nashcor} and start by assuming the existence of a symmetric mixed equilibrium defined by the probability density $f$. First we derive a nice expression for $u(x)$, defined as the utility of one player choosing move $x$ while the others play according to $f$. For all $x \in support(f)$:
 
-$$u(x) = -x P + (1-x) \left( \int_0^x f(y) dy +\int_x^1 y f(y) dy \right)^{n-1} R$$
+$$u(x) = -x P + (1-x) \left( \int_0^x f(y) dy +\int_x^1 y f(y) dy \right)^{n-1}$$
 
 This equation is quite natural: the player loses $P$ with probability $x$. If they survive, with probability $1-x$, they need the $n-1$ other players to either play a lower value or play a higher value and fail. We can suppose as previously that $0$ is in the support to subtract $u(0)$. We write $\bar r$ for the expectation of the action $r$ under $f$.
-$$\left(\frac{\bar r^{n-1} + x C}{1-x} \right)^\frac{1}{n-1} = \int_0^x f(y) dy + \int_x^1 y f(y) dy$$
+$$\left(\frac{\bar r^{n-1} + x P}{1-x} \right)^\frac{1}{n-1} = \int_0^x f(y) dy + \int_x^1 y f(y) dy$$
 We define $w := \bar r ^ {n-1}$ to be the probability of winning when taking no risk, we derivate and divide by $1-x$ to obtain:
-$$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}}$$
+$$f(x) = \frac{P + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (P x + w)^{1 - \frac{1}{n-1}}}$$
 Finally we can solve $\int_0^{r_{max}} f(x) dx= 1$ and $\int_0^{r_{max}} x f(x) dx = \bar r$. We relegate the description of the numerical estimation of ${r_{max}}$ and $w$ to \ref{estimate}.
 \end{proof}
 
@@ -409,16 +411,16 @@ We display the behavior of the solution for multiple players in Figure \ref{fig:
     \centering
     \includesvg[width=1.1\linewidth]{solution-multiple-1}
   \end{minipage}
-  \caption{We observe a clear difference between the cases $C=0$ (no penalty) and $C=1$ (presence of a penalty). In both cases, the cutoff increases. However, the average risk seems to decrease sharply when there is a nonzero penalty with a mode at $r=0$.}
+  \caption{We observe a clear difference between the cases $P=0$ (no penalty) and $P=1$ (presence of a penalty). In both cases, the cutoff increases. However, the average risk seems to decrease sharply when there is a nonzero penalty with a mode at $r=0$.}
   \label{fig:solution-multiple}  
 \end{figure}
 
 \subsection{Asymptotic behavior}
 
-We are interested in studying the equilibrium when the number of players goes to infinity. For fixed $C$, we have the following:
+We are interested in studying the equilibrium when the number of players goes to infinity. For fixed $P$, we have the following:
 
 \begin{proposition}When $n\rightarrow \infty$,
-    $\lim {r_{max}} = \frac{1}{1+C}$ and $\bar r \sim \frac{1}{n C}$
+    $\lim {r_{max}} = \frac{1}{1+P}$ and $\bar r \sim \frac{1}{n P}$
 \end{proposition}
 
 
@@ -427,21 +429,21 @@ We verify experimentally that $r_{max}$ is never close to 0 or 1 and that $\bar 
 Equation \ref{eq:multi1} gives
 
 \begin{align*}
-    \frac{w + n C (1-{r_{max}}) + C {r_{max}}}{n (1-{r_{max}})(C+w)} \sqrt[n-1]{\frac{C{r_{max}}+w}{1-{r_{max}}}} &= 1 + \frac{w + nC}{n(C+w)} \bar r \\
-    \sqrt[n-1]{\frac{C{r_{max}}+w}{1-{r_{max}}}} &\rightarrow 1
+    \frac{w + n P (1-{r_{max}}) + P {r_{max}}}{n (1-{r_{max}})(P+w)} \sqrt[n-1]{\frac{P{r_{max}}+w}{1-{r_{max}}}} &= 1 + \frac{w + nP}{n(P+w)} \bar r \\
+    \sqrt[n-1]{\frac{P{r_{max}}+w}{1-{r_{max}}}} &\rightarrow 1
 \end{align*}
 
 Equation \ref{eq:multi2} gives
 
 \begin{align*}
-    \frac{w - nw(1-{r_{max}})+C{r_{max}}}{n(1-{r_{max}})(C+w)} \sqrt[n-1]{\frac{C{r_{max}}+w}{1-{r_{max}}}} &= \bar r \frac{w + nC}{n(C+w)} \\
-    \frac{w}{C} + \frac{{r_{max}}}{n(1-{r_{max}})} \sim \frac{{r_{max}}}{n(1-{r_{max}})}  &\sim \bar r
+    \frac{w - nw(1-{r_{max}})+P{r_{max}}}{n(1-{r_{max}})(P+w)} \sqrt[n-1]{\frac{P{r_{max}}+w}{1-{r_{max}}}} &= \bar r \frac{w + nP}{n(P+w)} \\
+    \frac{w}{P} + \frac{{r_{max}}}{n(1-{r_{max}})} \sim \frac{{r_{max}}}{n(1-{r_{max}})}  &\sim \bar r
 \end{align*}
 
 
 using $w = \bar r ^{n-1} = o(\bar r)$.
 
-$\sqrt[n-1]{\frac{C{r_{max}}+w}{1-{r_{max}}}} \rightarrow 1$ implies $\frac{{r_{max}}}{1-{r_{max}}} \rightarrow \frac{1}C$ and ${r_{max}} \rightarrow \frac{1}{1+C}$.\\Finally, $\bar r \sim \frac{1}{nC}$.
+$\sqrt[n-1]{\frac{P{r_{max}}+w}{1-{r_{max}}}} \rightarrow 1$ implies $\frac{{r_{max}}}{1-{r_{max}}} \rightarrow \frac{1}P$ and ${r_{max}} \rightarrow \frac{1}{1+P}$.\\Finally, $\bar r \sim \frac{1}{nP}$.
 \end{proof}
 
 We illustrate this behavior in Figure \ref{fig:cutoff-asymptotic}.
@@ -449,7 +451,7 @@ We illustrate this behavior in Figure \ref{fig:cutoff-asymptotic}.
 \begin{figure}[htbp]
     \centering
     \includesvg[width=0.8\linewidth]{cutoff-asymptotic}
-    \caption{The plot of $r_{max}$ to $\log(C)$ is very similar to the function $\frac{1}{1 + \exp(\cdot)}$. This is because $r_{max} \sim \frac{1}{1+C}$.}
+    \caption{The plot of $r_{max}$ to $\log(P)$ is very similar to the function $\frac{1}{1 + \exp(\cdot)}$. This is because $r_{max} \sim \frac{1}{1+P}$.}
     \label{fig:cutoff-asymptotic}
 \end{figure}
 
@@ -458,8 +460,8 @@ We illustrate this behavior in Figure \ref{fig:cutoff-asymptotic}.
 A common concept in game theory is the price of anarchy $PoA$ \citep{koutsoupias1999worst}. The price of anarchy is the ratio between the Pareto optimum and the Nash equilibrium. It is easy to generalize Theorem \ref{thm:pareto} for multiple players and show that the reward can be split almost perfectly to obtain a Pareto optimal utility $\frac{R}{n}$. The utility of our symmetric equilibrium is $R \bar r ^ {n-1} = R \bar r ^ {n-1} = R w$. Hence, $PoA = 1 / n w$. We will instead compute the efficiency $E = \frac{1}{PoA} = n w \in [0,1]$.
 
 
-We observe that when $C = \frac{1}{n^e}$ with $e \ge 0$, the efficiency $E = n w$ of the Nash equilibrium goes to $0$ if $e \le 1$ and it goes to $1$ if $e > 1$. We plot the behavior of $E$ in Figure \ref{fig:efficiency}.
-We interpret this as an indication that resources, here modeled by the ratio $\frac{1}{C} = \frac{R}{P}$ of rewards to penalties, need to scale faster than the number of players for them to adopt an efficient behavior. Scarcity of resources creates an inefficient Nash equilibrium.
+We observe that when $P = \frac{1}{n^e}$ with $e \ge 0$, the efficiency $E = n w$ of the Nash equilibrium goes to $0$ if $e \le 1$ and it goes to $1$ if $e > 1$. We plot the behavior of $E$ in Figure \ref{fig:efficiency}.
+We interpret this as an indication that resources, here modeled by the ratio $\frac{1}{P} = \frac{R}{P}$ of rewards to penalties, need to scale faster than the number of players for them to adopt an efficient behavior. Scarcity of resources creates an inefficient Nash equilibrium.
 
 \begin{figure}[htbp]
     \centering
@@ -541,13 +543,13 @@ In the absence of noise, when $\rho = \pm 1$, it is also possible to calculate t
 \label{thm:nashwithcor}
         For $\rho = 1$, the equilibrium is given by:
 
-    $$p(x) = \frac{1+C}{1-x} \left[x < 1 - \exp\left(-\frac{1}{C+1}\right)\right]$$ 
-    We have $$\bar r = 1 - (C+1)\left(1-\exp\left(-\frac{1}{C+1}\right)\right)$$
+    $$p(x) = \frac{1+P}{1-x} \left[x < 1 - \exp\left(-\frac{1}{P+1}\right)\right]$$ 
+    We have $$\bar r = 1 - (P+1)\left(1-\exp\left(-\frac{1}{P+1}\right)\right)$$
 
     For $\rho = -1$, the equilibrium is given by:
 
-    $$p(x) = \frac{C}{(1-2x)^{3/2}} \left[x < \frac{1}{2} - \frac{C^2}{2(C+1)^2}\right]$$
-    We have  $$\bar r = \frac{1}{2C+2}$$
+    $$p(x) = \frac{P}{(1-2x)^{3/2}} \left[x < \frac{1}{2} - \frac{P^2}{2(P+1)^2}\right]$$
+    We have  $$\bar r = \frac{1}{2P+2}$$
 
     
 \end{restatable}
@@ -675,7 +677,7 @@ We employ a Numba \citep{lam2015numba}  implementation of the numerical method p
 
 Our experiments show that the Nash equilibrium in finite approximations of the CfR game can be obtained by computing a correlated Nash equilibrium. Moreover, we prove that either the correlated equilibrium is unique or the correlated equilibrium maximizing the total reward is a Nash equilibrium.
 
-We present the results of our experiments with different values of $C$, $\tau$, and $\rho$, as well as different numbers of actions, in Figure \ref{fig:linear-shift}, where we plot the maximum distance $d_{max}$ and the parameter $\lambda$ computed according to Section \ref{sec:linear} with \texttt{shift = true}. We also present the results with \texttt{shift = false} in Section \ref{sec:linear-noshift}.
+We present the results of our experiments with different values of $P$, $\tau$, and $\rho$, as well as different numbers of actions, in Figure \ref{fig:linear-shift}, where we plot the maximum distance $d_{max}$ and the parameter $\lambda$ computed according to Section \ref{sec:linear} with \texttt{shift = true}. We also present the results with \texttt{shift = false} in Section \ref{sec:linear-noshift}.
 
 \begin{figure}[htbp]
   \centering
@@ -688,13 +690,22 @@ We present the results of our experiments with different values of $C$, $\tau$, 
     \centering
     \includesvg[width=1.1\linewidth]{linear-lambda-shift}
   \end{minipage}
-  \caption{Our experiments with different values of $C$, $\tau$, and $\rho$, as well as different numbers of actions, for the setting with \texttt{shift = true} show that, for almost all values of the parameters, $d_{max}$ is numerically zero. We cross out cases where the solver failed to find a solution, most probably due to rounding errors which caused the small solution set to disappear. In the few cases where $d_{max}$ was not observed to be zero, $\lambda$ is clearly zero, indicating that the best correlated equilibrium is a Nash equilibrium.}
+  \caption{Our experiments with different values of $P$, $\tau$, and $\rho$, as well as different numbers of actions, for the setting with \texttt{shift = true} show that, for almost all values of the parameters, $d_{max}$ is numerically zero. We cross out cases where the solver failed to find a solution, most probably due to rounding errors which caused the small solution set to disappear. In the few cases where $d_{max}$ was not observed to be zero, $\lambda$ is clearly zero, indicating that the best correlated equilibrium is a Nash equilibrium.}
   \label{fig:linear-shift}  
 \end{figure}
 
 To study our game, we employ classical algorithms that find correlated equilibria. Regret matching is a widely used algorithm in game theory for finding correlated equilibria \citep{Hart1997-nk}. At each step of the algorithm, each player chooses a distribution of moves that maximizes their expected utility, given their opponent's past moves. If the algorithm is run for a sufficient number of iterations, the distributions converge to a correlated equilibrium. Counterfactual Regret Minimization (CFR) is a related algorithm that accumulates expected regrets for each action played by a player at each information set \citep{neller2013introduction}. The algorithm then updates the regrets based on the counterfactual outcomes of the game, i.e., what would have happened if a different action had been taken. By iteratively updating these regrets and choosing actions based on the updated regrets, CFR converges to a Nash equilibrium in extensive form games. In our normal form game, we apply CFR as a deterministic version of Regret Matching. Another variant of regret matching is stochastic fictitious play, which involves computing probability distributions using the softmax function \citep{fudenberg1993learning}. We also test this variant with CFR in our experiments to evaluate its performance in approximating the Nash equilibrium of our game.
 
-We implement and evaluate all algorithms to solve a discrete version of our game where the action space is reduced to a grid, with and without a shift. We then report the value of $\textsc{NashConv}$ $\textsc{QuasiNashConv}$ as defined in Section \ref{sec:approx}. We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperforms all methods. In general, Regret Matching performs much better than CFR, even when using less actions, using softmax is detrimental, and shifting the action space does not seem to impact performance much. CFR runs faster as it does not involve any random sampling. Therefore, we use vanilla Regret Matching with shifting in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
+We implement and evaluate all algorithms to solve a discrete version of our game where the action space is reduced to a grid, with and without a shift. We then report the value of $\textsc{NashConv}$ $\textsc{QuasiNashConv}$ as defined in Section \ref{sec:approx}. We display the solution found by Regret Matching in Figure \ref{fig:rm-sol} and check that it matches the actual solution from Figure \ref{fig:nash}. We observe on Figure \ref{fig:rm-different} that vanilla Regret Matching outperforms all methods. In general, Regret Matching performs much better than CFR, even when using less actions, using softmax is detrimental, and shifting the action space does not seem to impact performance much. CFR runs faster as it does not involve any random sampling. Therefore, we use vanilla Regret Matching with shifting in the rest of the experiments for the sake of simplicity. Figure \ref{fig:rm-size} shows that the number of sampled actions is the main factor that drives the quality of solutions.
+
+\begin{figure}[htbp]
+  \centering
+  \includesvg[width=0.8\linewidth]{rm-sol}
+  \caption{}
+  \label{fig:rm-sol}  
+\end{figure}
+
+
 
 For our experiments on equilibria in various settings, we use 500 actions and 2000 iterations (hence $10^6$ steps) of vanilla Regret Matching with shifting. Our efficient implementation computes the equilibrium in just a few seconds, allowing us to explore the effects of penalties, market frictions, and correlation on risk-taking behavior and performance, as well as to evaluate the effectiveness of various interventions and policies in a competitive environment.
 
@@ -732,7 +743,7 @@ For our experiments on equilibria in various settings, we use 500 actions and 20
   \label{fig:rm-size}  
 \end{figure}
 
-Our results demonstrate that penalties and market frictions have a significant impact on the strategic behavior of actors in competition. Specifically, we find that penalties $C$ decrease both the average risk taken $\bar r$ by the players and their total reward $u$, while market frictions $\tau$ not only decrease the average risk taken but also increase the total reward. We also find that market frictions have a greater impact on the total reward in high-penalty environments. In particular, in particularly inefficient markets with high $\tau$, increasing penalties can improve cooperation and the total reward, as illustrated in Figure \ref{fig:result-noise}.
+Our results demonstrate that penalties and market frictions have a significant impact on the strategic behavior of actors in competition. Specifically, we find that penalties $P$ decrease both the average risk taken $\bar r$ by the players and their total reward $u$, while market frictions $\tau$ not only decrease the average risk taken but also increase the total reward. We also find that market frictions have a greater impact on the total reward in high-penalty environments. In particular, in particularly inefficient markets with high $\tau$, increasing penalties can improve cooperation and the total reward, as illustrated in Figure \ref{fig:result-noise}.
 
 \begin{figure}[htbp]
   \centering
@@ -746,7 +757,7 @@ Our results demonstrate that penalties and market frictions have a significant i
     \includesvg[width=1.1\linewidth]{equilibria_rbar_u_C}
   \end{minipage}
   \caption{
-  The two figures depict the relationship between the total reward $u$ and the average risk taken $\bar r$ under different penalty $C$ and market friction $\tau$ settings. The left figure shows constant $C$ level lines, while the right figure shows constant $\tau$ level lines. We observe a linear relationship between $u$ and $\bar r$ when changing $\tau$ at constant $C$. We find that this behavior holds for all values of $\rho$. Interestingly, there seems to exist a linear relationship between $\bar r$ and $u$ when changing $\tau$ for fixed levels of $C$.}
+  The two figures depict the relationship between the total reward $u$ and the average risk taken $\bar r$ under different penalty $P$ and market friction $\tau$ settings. The left figure shows constant $P$ level lines, while the right figure shows constant $\tau$ level lines. We observe a linear relationship between $u$ and $\bar r$ when changing $\tau$ at constant $P$. We find that this behavior holds for all values of $\rho$. Interestingly, there seems to exist a linear relationship between $\bar r$ and $u$ when changing $\tau$ for fixed levels of $P$.}
   \label{fig:result-noise}  
 \end{figure}
 
@@ -781,6 +792,8 @@ Our results demonstrate that penalties and market frictions have a significant i
 
 In this section, we aim to connect the insights gleaned from our model with broader economic literature and real-world policy implications. Drawing on established economic theories, particularly the Diamond-Dybvig model, we offer a new perspective on how financial institutions manage risk and competition. Further, we delve into how our model's findings can inform current policy debates, such as the regulation of financial advisory commissions in the European Union and contract transferability among life insurers in France. Through this discussion, we illustrate the practical applicability and potential impact of our theoretical framework on shaping economic policies and practices.
 
+\subsection{Ties with the Diamond-Dybvig model}
+
 The Diamond-Dybvig model \citep{diamond1983bank} plays a central role in our understanding of financial intermediaries, especially banks. This seminal model represents a situation where banks provide liquidity transformation services. In a nutshell, it portrays a setting in which depositors need to decide whether to withdraw their money early (impatient depositors) or keep their money in the bank until a later period (patient depositors). Banks offer a contract that allows depositors to withdraw their money early, but at a lower return than if they wait until the end. This can lead to a bank run if too many depositors decide to withdraw their money early.
 
 By allowing financial institutions in our model to ``choose'' a parameter that influences both a utility function and their likelihood of bankruptcy, our approach shares similarities with the Diamond-Dybvig framework. This feature makes our model particularly useful for studying phenomena such as competition among banks over deposit contract interest rates, a scenario that mirrors the dynamic modeled by Diamond and Dybvig.
@@ -791,11 +804,13 @@ Under certain circumstances, as we show in our study, market frictions, such as 
 
 Interestingly, our results also shed light on the implications of risk correlation for the equilibrium. In cases where the failure events are negatively correlated, market frictions appear to have little effect on the equilibrium. In contrast, when risks are positively correlated – mirroring the reality of endogenously generated financial risks tied to financial markets – a lack of market friction can spur banks to take on greater risk. This suggests that the optimal situation for both customers and banks arises when the correlation between endogenous risks is zero or negative. Under these conditions, lower frictions can benefit customers without harming banks. On the other hand, if risks are positively correlated, market frictions can harm customers while benefiting banks, creating an incentive for banks to increase these frictions (e.g., by fostering customer loyalty or withholding information).
 
-Moreover, the impact of failure penalties (or the absence of a safety net) can exacerbate this dynamic, suggesting that regulators could mitigate perverse incentives by reducing the penalty parameter in a positively correlated environment, such as through bailouts or other protective measures (e.g., deposit insurance, liquidity provision, and bank resolution mechanisms). This perspective aligns with a strand of literature that extrapolates from the Diamond-Dybvig model to inform policy making \citep{bhattacharya1985preference,ennis2009bank}.
+Moreover, the impact of failure penalties (or the absence of a safety net) can exacerbate this dynamic, suggesting that regulators could mitigate perverse incentives by reducing the penalty parameter $P$ in a positively correlated environment, such as through bailouts or other protective measures (e.g., deposit insurance, liquidity provision, and bank resolution mechanisms). This perspective aligns with a strand of literature that extrapolates from the Diamond-Dybvig model to inform policy making \citep{bhattacharya1985preference,ennis2009bank}.
 
-Outside of the banking sector, our framework has implications for other policy debates. In the European Union, for instance, the Financial Services Commissioner, Mairead McGuinness, recently proposed banning ``inducements'' – commissions paid by banks or insurers to financial advisors who sell their products. Proponents argue this would enhance transparency and reduce costs. Critics, however, fear it could inhibit access to financial advice. Within our model, increasing transparency equates to reducing the friction parameter $\tau$, which alters the equilibrium, potentially heightening risk for financial institutions but also augmenting returns for consumers. Our findings indicate that regulators might safeguard consumers and influence prices simply by mandating transparency. However, we caution that the impact of such a policy on market frictions is uncertain, as it could inadvertently limit access to information via advisors.
+\subsection{Practical applications in current policy debates}
 
-Furthermore, in France, a legislative proposal by MPs Husson and Montgolfier seeks to enhance the transferability of contracts between life insurers, effectively reducing market frictions. Our framework suggests that, in response, insurers could take on more risk due to increased competition. However, the relationship between risk and interest rates may also change, as performance becomes costlier in terms of risk when the duration of contracts decreases because of enhanced transferability. Consequently, while our model predicts an uptick in the risks assumed by insurers, the ultimate benefit to savers remains ambiguous.
+Outside of the banking sector, our framework has implications for other policy debates. In the European Union, for instance, the Financial Services Commissioner, Mairead McGuinness, recently proposed banning ``inducements'' – commissions paid by banks or insurers to financial advisors who sell their products \citep{Jones2023}. Proponents argue this would enhance transparency and reduce costs. Critics, however, fear it could inhibit access to financial advice. Within our model, increasing transparency equates to reducing the friction parameter $\tau$, which alters the equilibrium, potentially heightening risk for financial institutions but also augmenting returns for consumers. Our findings indicate that regulators might safeguard consumers and influence prices simply by mandating transparency. However, we caution that the impact of such a policy on market frictions is uncertain, as it could inadvertently limit access to information via advisors.
+
+Furthermore, in France, a legislative proposal by MPs Husson and Montgolfier \citep{senat2023} seeks to enhance the transferability of contracts between life insurers, effectively reducing market frictions. Our framework suggests that, in response, insurers could take on more risk due to increased competition. However, the relationship between risk and interest rates may also change, as performance becomes costlier in terms of risk when the duration of contracts decreases because of enhanced transferability. Consequently, while our model predicts an uptick in the risks assumed by insurers, the ultimate benefit to savers remains ambiguous.
 
 
 \section{Conclusion}
@@ -891,28 +906,28 @@ h := \sup S  \text{ such that } \int_0^h f(x) dx = 1\\
 \bar b = \int_0^h x f(x) dx
 \end{array} \right.
 $$
-We define $C := \frac{P}{R}$.\\
-$$\int_0^h f(x) dx = \frac{\bar b + C}{2} \left(\frac{1}{(h-1)^2}-1\right) = 1$$\\
-$$\int_0^h x f(x) dx = \bar b = \frac{\bar b + C}{2} \frac{h^2}{(h-1)^2}$$
+We define $P := \frac{P}{R}$.\\
+$$\int_0^h f(x) dx = \frac{\bar b + P}{2} \left(\frac{1}{(h-1)^2}-1\right) = 1$$\\
+$$\int_0^h x f(x) dx = \bar b = \frac{\bar b + P}{2} \frac{h^2}{(h-1)^2}$$
 
 We get
 $$\bar b = \frac{h^2}{1-(h-1)^2}$$
-$$2 \frac{(h-1)^2}{1 - (h-1)^2} - C = \frac{h^2}{1 - (h-1)^2}$$
-$$2(h-1)^2 - C + C (h-1)^2 - h^2 = 0$$
-$$(C + 1) h^2 - (2 C + 4) h + 2 = 0$$
-Hence, $h = \frac{2 + C \pm \sqrt{C^2 + 2 C + 2}}{1 + C}$\\
+$$2 \frac{(h-1)^2}{1 - (h-1)^2} - P = \frac{h^2}{1 - (h-1)^2}$$
+$$2(h-1)^2 - P + P(h-1)^2 - h^2 = 0$$
+$$(P+ 1) h^2 - (2 P+ 4) h + 2 = 0$$
+Hence, $h = \frac{2 + P\pm \sqrt{P^2 + 2 P+ 2}}{1 + P}$\\
 Since $h<1$, we get
 \begin{align*}
-    h &= \frac{2 + C - \sqrt{C^2 + 2 C + 2}}{1 + C}\\
-      &= 1 - \frac{\sqrt{(C + 1)^2 + 1} - 1}{1+C}
+    h &= \frac{2 + P- \sqrt{P^2 + 2 P+ 2}}{1 + P}\\
+      &= 1 - \frac{\sqrt{(P+ 1)^2 + 1} - 1}{1+P}
 \end{align*}
-We remark that $(\sqrt{(C + 1)^2 + 1} + 1)( \sqrt{(C + 1)^2 + 1} - 1) = (C+1)^2$\\
-Hence $h = 1 - \sqrt{\frac{\sqrt{(C + 1)^2 + 1} - 1}{\sqrt{(C + 1)^2 + 1} + 1}}$
-\begin{align*}\bar b + C &=\frac{2}{\frac{1}{(h-1)^2} - 1}\\
-&= \frac{2}{\frac{\sqrt{(C + 1)^2 + 1} + 1}{\sqrt{(C + 1)^2 + 1} - 1} - 1}\\
-&= \sqrt{(C + 1)^2 + 1} - 1\end{align*}
-Finally, $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $k := \sqrt{(C + 1)^2 + 1}$\\
-From the expressions above, we get $\bar b = k - 1 - C$ and $u^* = R \bar b$.
+We remark that $(\sqrt{(P+ 1)^2 + 1} + 1)( \sqrt{(P+ 1)^2 + 1} - 1) = (P+1)^2$\\
+Hence $h = 1 - \sqrt{\frac{\sqrt{(P+ 1)^2 + 1} - 1}{\sqrt{(P+ 1)^2 + 1} + 1}}$
+\begin{align*}\bar b + P&=\frac{2}{\frac{1}{(h-1)^2} - 1}\\
+&= \frac{2}{\frac{\sqrt{(P+ 1)^2 + 1} + 1}{\sqrt{(P+ 1)^2 + 1} - 1} - 1}\\
+&= \sqrt{(P+ 1)^2 + 1} - 1\end{align*}
+Finally, $f(x) = \left[x < 1 - \sqrt{\frac{k - 1}{k + 1}}\right] \frac{ k - 1}{(1-x)^3}$ with $k := \sqrt{(P+ 1)^2 + 1}$\\
+From the expressions above, we get $\bar b = k - 1 - P$ and $u^* = R \bar b$.
 \end{proof}
 
 
@@ -921,7 +936,7 @@ From the expressions above, we get $\bar b = k - 1 - C$ and $u^* = R \bar b$.
 
 We recall the equations:
 
-$$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}}$$
+$$f(x) = \frac{P+ w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (Px + w)^{1 - \frac{1}{n-1}}}$$
 \begin{align*}
         \int_0^{r_{max}} f(x) dx &= 1 \\
         \int_0^{r_{max}} x f(x) dx &= \bar r 
@@ -929,17 +944,17 @@ $$f(x) = \frac{C + w}{(n-1)(1-x)^{2+\frac{1}{n-1}} (C x + w)^{1 - \frac{1}{n-1}}
 with $$w := \bar r ^ {n-1}$$
 
 We could estimate the integrals by numerical integration. However $\bar r$ becomes smaller when increasing $n$, which causes $f$ to have a peak at $0$ and renders the integral estimates unreliable.
-Computations \footnote{We used Wolfram Alpha with \texttt{ReplaceAll[Integrate[(1/(1 - x)) D[((w + x C)/(1 - x))\^{}(1/(n - 1)), x], x], {n -> 42}]} for various values of $n$, found a pattern and checked that the derivatives match.} give us 
-$$\int f(x) = \frac{w + nC(1-x) + Cx}{n (1 - x)(C+w)} \sqrt[n-1]{\frac{Cx + w}{1-x}}$$
-$$\int x f(x) = \frac{w - n w  (1-x) + Cx}{n (1-x)(C+w)}\sqrt[n-1]{\frac{Cx+w}{1-x}}$$
+Computations \footnote{We used Wolfram Alpha with \texttt{ReplaceAll[Integrate[(1/(1 - x)) D[((w + x P)/(1 - x))\^{}(1/(n - 1)), x], x], {n -> 42}]} for various values of $n$, found a pattern and checked that the derivatives match.} give us 
+$$\int f(x) = \frac{w + nP(1-x) + Cx}{n (1 - x)(P+w)} \sqrt[n-1]{\frac{Cx + w}{1-x}}$$
+$$\int x f(x) = \frac{w - n w  (1-x) + Cx}{n (1-x)(P+w)}\sqrt[n-1]{\frac{Cx+w}{1-x}}$$
 Hence
 \begin{equation}
 \label{eq:multi1}
-\frac{w + nC(1-{r_{max}}) + C{r_{max}}}{n (1 - {r_{max}})(C+w)} \sqrt[n-1]{\frac{C{r_{max}} + w}{1-{r_{max}}}} -  \frac{w + nC}{n (C+w)} \sqrt[n-1]{w} = 1
+\frac{w + nP(1-{r_{max}}) + P{r_{max}}}{n (1 - {r_{max}})(P+w)} \sqrt[n-1]{\frac{P{r_{max}} + w}{1-{r_{max}}}} -  \frac{w + nP}{n (P+w)} \sqrt[n-1]{w} = 1
 \end{equation}
 \begin{equation}
 \label{eq:multi2}
-\frac{w - n w  (1-{r_{max}}) + C{r_{max}}}{n (1-{r_{max}})(C+w)}\sqrt[n-1]{\frac{C{r_{max}}+w}{1-{r_{max}}}} - \frac{w - n w}{n (C+w)}\sqrt[n-1]{w} = \sqrt[n-1]{w}
+\frac{w - n w  (1-{r_{max}}) + P{r_{max}}}{n (1-{r_{max}})(P+w)}\sqrt[n-1]{\frac{P{r_{max}}+w}{1-{r_{max}}}} - \frac{w - n w}{n (P+w)}\sqrt[n-1]{w} = \sqrt[n-1]{w}
 \end{equation}
 
 The value of integrals are increasing in ${r_{max}}$ since $f(x)$ is positive, hence for any value of $w$ we can find the corresponding value of ${r_{max}}$ by binary search using \eqref{eq:multi1}. Then we are left with finding the value of $w$ using \eqref{eq:multi2} . We observe experimentally that the function $w \rightarrow \int_0^{{r_{max}}(w)}xf(x)dx - \sqrt[n-1]{w}$ seems to have only one root and that it is positive before that root and negative after that root. We therefore use binary search.
@@ -959,47 +974,47 @@ Finally, we apply the Log-Sum-Exp Trick to compute the value of the integral in 
 \begin{proof}
         We reuse the proof of \ref{proof:nashcor}, only modifying the calculations.
     We note $a$ and $b$ the actions of the players, aka their individual probability of failure noted $r_1$ and $r_2$ above and note $c$ their joint probability of failure noted $\tilde r$ above. $c$ is a function $c(a,b,\rho)$. We note $p$ the probability distribution corresponding to the Nash equilibrium.
-    In both cases, we have the equality $$\int_0^1 p(b) c~db + a C = \int_0^a p(b)(1-a-b+c)~db$$
+    In both cases, we have the equality $$\int_0^1 p(b) c~db + a P= \int_0^a p(b)(1-a-b+c)~db$$
 
     When $\rho = 1$, $c = \min(a, b)$
 
-    $$\int_0^a p(b) b~db + a \int_a^1 p(b)~db + a C = \int_0^a p(b)(1-a)~db$$
+    $$\int_0^a p(b) b~db + a \int_a^1 p(b)~db + a P= \int_0^a p(b)(1-a)~db$$
 
     We derivate wrt $a$:
 
-    $$a p(a) + \int_a^1 p(b)~db - ap(a) + C = p(a)(1-a) - \int_0^a p(b)~db$$
+    $$a p(a) + \int_a^1 p(b)~db - ap(a) + P= p(a)(1-a) - \int_0^a p(b)~db$$
 
-    $$p(x) = \frac{1+C}{1-x}$$
+    $$p(x) = \frac{1+P}{1-x}$$
 
-    We solve $\int_0^{r_{max}} p(x)~dx=1$ as $\log(1-r_{max}) = -\frac{1}{C+1}$, thus
-    $$r_{max} = 1 - \exp\left(-\frac{1}{C+1}\right)$$
-    Finally, a simple computation gives $$\bar r = 1 - (C+1)\left(1-\exp\left(-\frac{1}{C+1}\right)\right)$$
+    We solve $\int_0^{r_{max}} p(x)~dx=1$ as $\log(1-r_{max}) = -\frac{1}{P+1}$, thus
+    $$r_{max} = 1 - \exp\left(-\frac{1}{P+1}\right)$$
+    Finally, a simple computation gives $$\bar r = 1 - (P+1)\left(1-\exp\left(-\frac{1}{P+1}\right)\right)$$
     
     
 
     When $\rho = -1$, $c = \max(0, a+b-1)$. In other terms, $c=0$ if $b<1-a$ and $c=a+b-1$ if $b>1-a$.
 
     We first treat $a>\frac{1}{2}$, aka $a>1-a$, to show by contradiction that $p(a) = 0$.
-    $$\int_{1-a}^1 p(b)(a+b-1)~db+ aC = \int_0^{1-a} p(b)(1-a-b)~db$$
-    $$aC = \int_0^1 p(b)(1-a-b)~db = 1 - \bar r - a$$
+    $$\int_{1-a}^1 p(b)(a+b-1)~db+ aP= \int_0^{1-a} p(b)(1-a-b)~db$$
+    $$aP= \int_0^1 p(b)(1-a-b)~db = 1 - \bar r - a$$
     This is impossible, thus $p(a) = 0$ for $a> 1/2$.
 
     We now suppose $a < 1-a$:
 
-    $$\int_{1-a}^1 p(b)(a+b-1)~db + aC = \int_0^a p(b) (1-a-b)~db$$
+    $$\int_{1-a}^1 p(b)(a+b-1)~db + aP= \int_0^a p(b) (1-a-b)~db$$
 
     $\int_{1-a}^1 p(b)(a+b-1)~db = 0$ since $1-a >  \frac12$.
     We derivate twice to get:
 
-    $$(1-2a)p(a) = \int_0^a p(b)~db + C$$
+    $$(1-2a)p(a) = \int_0^a p(b)~db + P$$
     $$1-2a) p'(a) - 3p(a) = 0$$
 
-    The first equation gives $p(0) = C$. Combined with the second differential equation, we get:
+    The first equation gives $p(0) = P$. Combined with the second differential equation, we get:
 
-    $$p(x) =\frac{C}{(1-2x)^{3/2}}$$
+    $$p(x) =\frac{P}{(1-2x)^{3/2}}$$
 
-    Similarly, we solve  $$r_{max} = \frac{1}{2} - \frac{C^2}{2(C+1)^2}$$
-    $$\bar r = \frac{1}{2C+2}$$
+    Similarly, we solve  $$r_{max} = \frac{1}{2} - \frac{P^2}{2(P+1)^2}$$
+    $$\bar r = \frac{1}{2P+2}$$
 \end{proof}
 %% If you have bibdatabase file and want bibtex to generate the
 %% bibitems, please use
@@ -1027,7 +1042,7 @@ $\sum_i^K z_i^2$ follows a $\chi^2$ distribution with $K$ degrees of freedom. Wi
 $$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i \cdot x)^2 < \varepsilon \right] \le F_{\chi^2}\left(\frac{\varepsilon}{d}, K\right)$$
 \end{proof}
 
-\section{Linear equilibrium in finite approximations with \\ \texttt{shift~=~false}}
+\section{Linear equilibrium in finite approximations with \texttt{shift~=~false}}
 \label{sec:linear-noshift}
 
 \begin{figure}[H]
