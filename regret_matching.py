@@ -208,3 +208,18 @@ def regret_matching(*args, generator=False, **kwargs):
     for *ans, t in it:
         total_time += t
     return *ans, total_time
+
+
+if __name__ == "__main__":
+    log_actions = 12
+    game_params = dict(corr=0.0, noise=0, R=1, Z=0, P=1)
+    it, (a1, p1), (a2, p2), r1, r2, t = regret_matching(
+        game_params,
+        actions=2**log_actions,
+        iters=100,
+        cfr=False,
+        sm=False,
+        shift=False,
+        generator=False,
+    )
+    print(it)
