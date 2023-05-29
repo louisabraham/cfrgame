@@ -69,7 +69,7 @@ def plot_cutoff():
     c = np.linspace(0, 10, 1000)
     plt.plot(c, cutoff(c))
     plt.title("Cutoff value ${r_{max}}$")
-    plt.xlabel("$C$")
+    plt.xlabel("$P$")
     plt.ylabel("${r_{max}}$")
     plt.savefig("plots/cutoff.svg")
 
@@ -128,7 +128,7 @@ def cutoff_asymptotic():
     plt.xscale("log")
     plt.plot(all_C, all_cutoff)
     plt.title(f"Cutoff $r_{{max}}$ with $n = {n}$")
-    plt.xlabel("$C$")
+    plt.xlabel("$P$")
     plt.ylabel("${r_{max}}$")
     plt.savefig("plots/cutoff-asymptotic.svg")
 
@@ -296,7 +296,7 @@ def linear_exp_plots():
                 if i % len(corr) == (len(corr) + 1) // 2:
                     plt.text(-4, i, label, ha="center", va="center")
             plt.title(title)
-            plt.xlabel(r"$C$, $\tau$", labelpad=25)
+            plt.xlabel(r"$P$, $\tau$", labelpad=25)
             plt.ylabel(r"actions, $\rho$", labelpad=25)
             plt.colorbar()
             # scatter plot crosses where there is nan
@@ -578,7 +578,7 @@ def equilibria_img():
             )
             plt.colorbar()
             plt.xscale("log")
-            plt.xlabel("$C$")
+            plt.xlabel("$P$")
             plt.yscale("log")
             plt.ylabel(r"$\tau$")
             plt.title(f"{name} for $\\rho={corr}$")
@@ -608,7 +608,7 @@ def equilibria_img():
         )
         plt.colorbar()
         plt.xlabel(r"$\rho$")
-        plt.ylabel("$C$")
+        plt.ylabel("$P$")
         plt.yscale("log")
         plt.title(f"{name} for $\\tau={noise}$")
         plt.savefig(f"plots/equilibria_{file}_grid_noise={noise}.svg")
@@ -635,7 +635,7 @@ def equilibria_plots():
     for C in all_C:
         rbar = [results_dict[corr, noise, C]["rbar"] for noise in all_noise]
         u = [results_dict[corr, noise, C]["u"] for noise in all_noise]
-        label = f"$\log_{{10}} C={np.log10(C)}$"
+        label = f"$\log_{{10}} P={np.log10(C)}$"
         plt.plot(rbar, u, label=label)
 
     plt.xlabel(r"$\bar r$")
@@ -658,7 +658,7 @@ def equilibria_plots():
     legend = plt.legend(loc="lower right", prop={"size": 7})
     legend.get_frame().set_alpha(None)
     legend.get_frame().set_facecolor((1, 1, 1, 0.6))
-    plt.title("Equilibrium for different values of $C$ at $\\rho=0$")
+    plt.title("Equilibrium for different values of $P$ at $\\rho=0$")
     plt.savefig("plots/equilibria_rbar_u_C.svg")
 
     for name in ["rbar", "u"]:
@@ -681,14 +681,14 @@ def equilibria_plots():
     noise = 0
     for C in all_C:
         u = [results_dict[corr, noise, C]["u"] for corr in all_corr]
-        label = f"$\\log_{{10}}C={np.log10(C)}$"
+        label = f"$\\log_{{10}}P={np.log10(C)}$"
         plt.plot(all_corr, u, label=label)
     legend = plt.legend(loc="lower left", prop={"size": 7})
     legend.get_frame().set_alpha(None)
     legend.get_frame().set_facecolor((1, 1, 1, 0.6))
     plt.xlabel(r"$\rho$")
     plt.ylabel(r"$u$")
-    plt.title("Equilibrium for different values of $C$ at $\\tau=0$")
+    plt.title("Equilibrium for different values of $P$ at $\\tau=0$")
     plt.savefig("plots/equilibria_u_corr_C.svg")
     plt.clf()
 
