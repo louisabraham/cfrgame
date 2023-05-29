@@ -309,6 +309,48 @@ def linear_exp_plots():
             plt.savefig(f"plots/{filename}.svg")
 
 
+# simple run of regret matching
+
+
+def solution_rm():
+    log_actions = 12
+    game_params = dict(corr=0.0, noise=0, R=1, Z=0, P=1)
+    it, (a1, p1), (a2, p2), r1, r2, t = regret_matching(
+        game_params,
+        actions=2**log_actions,
+        iters=10,
+        cfr=False,
+        sm=False,
+        shift=False,
+        generator=False,
+    )
+    return {
+        "it": it,
+        "a1": a1.tolist(),
+        "p1": p1.tolist(),
+        "a2": a2.tolist(),
+        "p2": p2.tolist(),
+        "t": t,
+    }
+
+
+def rm_solution_plot():
+    if not Path("plots/rm_sol.json").exists():
+        with open("plots/rm_sol.json", "w") as f:
+            json.dump(solution_rm(), f)
+    with open("plots/rm_sol.json") as f:
+        sol = json.load(f)
+    actions = np.array(sol["a1"])
+    true_p = solution(n=2, C=1, x=actions)
+    true_p /= true_p.sum()
+    plt.clf()
+    plt.plot(actions, true_p)
+    plt.bar(actions, sol["p1"], width=1 / len(sol["a1"]), align="edge")
+    plt.xlabel("action")
+    plt.ylabel("probability")
+    plt.savefig("plots/rm_sol.svg")
+
+
 def compute_rm(cfr, sm, shift, log_actions, log_quasi):
     game_params = dict(corr=0.0, noise=0, R=1, Z=0, P=1)
     its = []
@@ -675,7 +717,6 @@ def equilibria_plots():
             plt.ylabel(r"$u$" if name == "u" else r"$\bar r$")
             plt.title(f"Equilibrium for different values of $\\tau$ at $P={C}$")
             plt.savefig(f"plots/equilibria_{name}_corr_C={C}.svg")
-            plt.show()
 
     plt.clf()
     noise = 0
@@ -720,6 +761,7 @@ def main():
             cutoff_asymptotic()
             efficiency()
             linear_exp_plots()
+            rm_solution_plot()
             regret_matching_plots()
             equilibria_plots()
 
