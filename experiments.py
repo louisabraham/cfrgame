@@ -318,7 +318,7 @@ def solution_rm():
         iters=10000,
         cfr=False,
         sm=False,
-        shift=False,
+        shift=True,
         generator=False,
     )
     return {
@@ -333,8 +333,9 @@ def solution_rm():
 
 def rm_solution_plot():
     if not Path("plots/rm_sol.json").exists():
+        sol = solution_rm()
         with open("plots/rm_sol.json", "w") as f:
-            json.dump(solution_rm(), f)
+            json.dump(sol, f)
     with open("plots/rm_sol.json") as f:
         sol = json.load(f)
     actions = np.array(sol["a1"])
