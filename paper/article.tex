@@ -672,11 +672,33 @@ Finally, we make the following trivial remark:
 
 This gives us another numerical method to check that a correlated equilibrium is a Nash equilibrium: compute the second highest eigenvalue and check that it is $0$. In numerical experiments, we define $\lambda_1$ and $\lambda_2$ as the highest and second highest eigenvalues and report the value $$\lambda := \frac{\lambda_2}{\lambda_1}$$
 
+\subsection{Related works solving continuous games}
+
+Our exploration of regret-minimization algorithms in the context of continuous games has led us to a wide range of approaches. From these, a few distinct groups emerge, each characterized by their unique methods, assumptions, and requirements.
+
+One group includes the work of \citet{perkins2014stochastic}, \citet{ganzfried2021algorithm}, and \citet{kroupa2023multiple}. \citet{perkins2014stochastic} extended stochastic fictitious play to the continuous action space framework, showing convergence to an equilibrium point in two-player zero-sum games. However, this method assumes specific linear or quadratic utility functions, which limits its applicability to a narrow set of games. Similarly, \citet{ganzfried2021algorithm} proposed a novel algorithm for approximating Nash equilibria in continuous games, yet the scalability of their method is a concern due to the storage of all previous moves and the use of mixed integer linear programs for best response computation. Lastly, \citet{kroupa2023multiple} presented an iterative strategy generation technique for finding mixed strategy equilibria in multiplayer general-sum continuous games, but this method requires an oracle for best response computation, a requirement that may not be met in all practical scenarios.
+
+Another group consists of \citet{raghunathan2019game} and \citet{dou2019finding}. \citet{raghunathan2019game} introduced the Gradient-based Nikaido-Isoda function, a merit function providing error bounds to a stationary Nash point. They showed that gradient descent converges sublinearly to a first-order stationary point of this function, making it a potential method for steady convergence towards equilibrium. Extending this work, \citet{dou2019finding} offered a deep learning-based approach for approximating Nash equilibria in continuous games, allowing the finding of mixed equilibria. They utilized the pushforward measure technique to represent mixed strategies in continuous spaces and applied gradient descent for convergence to a stationary Nash equilibrium. However, we found this method to be slow and unable to converge in our game.
+
+The third group encompasses the works of \citet{bichler2021learning} and \citet{martin2022finding}. \citet{bichler2021learning} proposed using artificial neural networks to learn equilibria in symmetric auction games through gradient dynamics in self-play. This work was later extended by \citet{martin2022finding}, who used the same pushforward trick as \citet{dou2019finding}, adding random noise as input. They applied zeroth-order optimization techniques to compute approximate Nash equilibria in continuous-action games without access to gradients. However, we found that the success of this method is very sensitive to hyperparameters, and its dynamics can be unstable.
 
 
-\section{Results}
 
-To approximate the CfR game, we employ a finite grid of actions evenly spaced in the interval $[0, 1]$ for both players. We distinguish between two settings based on a boolean variable, \texttt{shift}. In the first setting (\texttt{shift = false}), both players are offered the same set of actions. In the second setting (\texttt{shift = true}), the two players are offered non-intersecting sets of actions, with each action in the interval $[0, 1]$ alternately attributed to each player.
+\subsection{Applying regret-minimization algorithms to continuous games}
+
+Our study delves into the application of regret-minimization algorithms to continuous games, a distinct approach given that it does not demand any differentiability assumptions on the reward function. This approach pivots around algorithms known for identifying correlated equilibria, such as regret matching \citep{Hart1997-nk}, Counterfactual Regret Minimization (CFR) \citep{neller2013introduction}, and stochastic fictitious play \citep{fudenberg1993learning}.
+
+Regret matching is a notable algorithm in the realm of game theory for finding correlated equilibria. It operates by having each player select a distribution of moves at each step of the algorithm, wherein this selection is geared towards maximizing their expected utility, given the past moves of their opponent. When run for an ample number of iterations, the distributions arrive at a convergence, forming a correlated equilibrium.
+
+Building on this, we bring into play the CFR algorithm. This algorithm accumulates the expected regrets of each action played by a player at every information set. It then updates the regrets based on the counterfactual outcomes of the game - that is, what the result would have been if a different action had been taken. As these regrets are iteratively updated and actions chosen based on these revised regrets, CFR converges to a Nash equilibrium in extensive form games. In our normal form game, we incorporate CFR as a deterministic variant of Regret Matching.
+
+Further enriching our methodology is stochastic fictitious play, another variant of regret matching. It involves the computation of probability distributions using the softmax function. We also test this variant along with CFR in our experiments, thereby evaluating their performance in approximating the Nash equilibrium of our game.
+
+To approximate the CfR game, we resort to a finite grid of actions, which are evenly distributed within the interval $[0, 1]$ for both players. In doing so, we differentiate between two settings, governed by a boolean variable, \texttt{shift}. When \texttt{shift = false}, both players are offered the same set of actions. However, when \texttt{shift = true}, the two players are presented with non-intersecting sets of actions, with each action in the interval $[0, 1]$ alternately attributed to each player.
+
+Despite the fact that the action set of the resulting approximate Nash equilibrium is necessarily a subset of a predefined finite action set, our method brings a fresh perspective to the field, with its emphasis on regret minimization for both players and the removal of any differentiability assumption on the reward function. Through this research, we hope to enrich our understanding of the behavior of continuous games and lay a sturdy foundation for future exploration and improvements in this domain.
+
+\section{Experimental results}
 
 We employ a Numba \citep{lam2015numba}  implementation of the numerical method proposed by \citet{genz2004numerical} to compute the bivariate normal probability in the utility function, which is the computational bottleneck in equation \ref{eq:utility}.
 
