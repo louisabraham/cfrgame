@@ -1,6 +1,6 @@
-#%%
+# %%
 import numpy as np
-from numba import njit, float64
+from numba import njit
 from tqdm.auto import tqdm
 import time
 
@@ -57,7 +57,6 @@ def _rm(
     iters,
     sm=False,
 ):
-
     for _ in range(iters):
         if sm:
             strategy1 = softmax(total_regret1)
@@ -184,9 +183,28 @@ def regret_matching(*args, generator=False, **kwargs):
         Return generator, by default False.
     progress : bool, optional
         Show progress bar, by default True.
+
+    Returns (generator=False) or Yields (generator=True)
+    ----------------------------------------------------
+    iters : int
+        Number of iterations
+    strategy1 : tuple of (array, array)
+        Actions and strategy for player 1
+    strategy2 : tuple of (array, array)
+        Actions and strategy for player 2
+    reward1 : matrix
+        Reward matrix for player 1 (constant)
+    reward2 : matrix
+        Reward matrix for player 2 (constant)
+    time : float
+        Time taken excluding callback
+        for all iterations (with generator=False)
+        or last iteration (with generator=True)
     """
+    it = _regret_matching_gen(*args, **kwargs)
     if generator:
-        return _regret_matching_gen(*args, **kwargs)
-    for ans in _regret_matching_gen(*args, **kwargs):
-        pass
-    return ans
+        return it
+    total_time = 0
+    for *ans, t in it:
+        total_time += t
+    return *ans, total_time
