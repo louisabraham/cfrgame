@@ -17,6 +17,7 @@
 %% 
 %% Template article for Elsevier's document class `elsarticle'
 %% with harvard style bibliographic references
+%% add doubleblind option for double blind
 
 \documentclass[preprint,12pt,authoryear]{elsarticle}
 %% Use the option review to obtain double line spacing
@@ -120,7 +121,7 @@
 %%            country={}}
 %% \fntext[label3]{}
 
-\title{A game of Competition for Risk}
+\title{A Game of Competition for Risk}
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{}
@@ -255,7 +256,7 @@ Each cell contains the rewards to each player. For example, in the upper left ce
 
 \subsection{Equivalence to a normal-form game}
 
-We can represent the game described above in the framework of extensive-form games\citep{hart1992games} by modeling the drawing of the random variables $f_p$ using Chance nodes. Since the outcomes are subject to randomness, it is natural to assume that the actors operate under the expected utility hypothesis, which implies that they possess a von Neumann–Morgenstern utility function\citep{neumann1944theory}. Consequently, we can define a normal-form game with payoffs equal to the expected payoffs of the corresponding extensive-form game. By doing so, we can leverage the theory of normal-form games and apply various solution concepts, such as Nash equilibria, to analyze the competition between the actors.
+We can represent the game described above in the framework of extensive-form games \citep{hart1992games} by modeling the drawing of the random variables $f_p$ using Chance nodes. Since the outcomes are subject to randomness, it is natural to assume that the actors operate under the expected utility hypothesis, which implies that they possess a von Neumann–Morgenstern utility function \citep{neumann1944theory}. Consequently, we can define a normal-form game with payoffs equal to the expected payoffs of the corresponding extensive-form game. By doing so, we can leverage the theory of normal-form games and apply various solution concepts, such as Nash equilibria, to analyze the competition between the actors.
 \begin{proposition}
 The expected utilities $u_p$ are computed as follows in the 2-player game:
 \begin{align*}
@@ -682,7 +683,7 @@ The third group encompasses the works of \citet{bichler2021learning} and \citet{
 
 \subsection{Applying regret-minimization algorithms to continuous games}
 
-Our study delves into the application of regret-minimization algorithms to continuous games, a distinct approach given that it does not demand any differentiability assumptions on the reward function. This approach pivots around algorithms known for identifying correlated equilibria, such as regret matching \citep{Hart1997-nk}, Counterfactual Regret Minimization (CFR) \citep{neller2013introduction}, and stochastic fictitious play \citep{fudenberg1993learning}.
+Our study delves into the application of regret-minimization algorithms to continuous games, a distinct approach given that it does not demand any differentiability assumptions on the reward function. This approach pivots around algorithms known for identifying correlated equilibria, such as regret matching \citep{Hart1997-nk,hart2001reinforcement, hart2001reinforcementcorrection}, Counterfactual Regret Minimization (CFR) \citep{neller2013introduction}, and stochastic fictitious play \citep{fudenberg1993learning}.
 
 Regret matching is a notable algorithm in the realm of game theory for finding correlated equilibria. It operates by having each player select a distribution of moves at each step of the algorithm, wherein this selection is geared towards maximizing their expected utility, given the past moves of their opponent. When run for an ample number of iterations, the distributions arrive at a convergence, forming a correlated equilibrium.
 
