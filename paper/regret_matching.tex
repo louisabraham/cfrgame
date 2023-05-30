@@ -1,7 +1,7 @@
 \section{Description of Regret Matching}
 \label{sec:regret}
 
-Regret matching was introduced by \citet{Hart1997-nk} as a strategy such that if each player applies it, the observed sequence of plays can converge to a correlated equilibrium. The idea behind regret matching is to adjust the probabilities of playing each action based on the accumulated regrets for each action. We describe the version that was originally named Unconditional Regret Matching.
+Regret matching was introduced by \citet{Hart1997-nk} as a strategy such that if each player applies it, the observed sequence of plays can converge to a correlated equilibrium. The idea behind regret matching is to adjust the probabilities of playing each action based on the accumulated regrets for each action. We describe the version that was originally named Unconditional Regret Matching and that was further studied in subsequent papers \citep{hart2001reinforcement, hart2001reinforcementcorrection}.
 
 Regret is defined as the difference between the payoff received from a particular action and the actual historical payoff. The intuition behind regret is that a player may regret not having played a different action that would have resulted in a better payoff.
 In regret matching, a player starts by assigning equal probability to each possible action. After playing the game and receiving a payoff, the player computes the regret for each action based on the difference between the payoff received and the maximum payoff that could have been obtained by playing a different action. The player then updates the probabilities of each action proportional to their positive regrets.
