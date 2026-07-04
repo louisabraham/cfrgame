@@ -82,7 +82,7 @@ def linear_correlated(reward1, reward2, n_iters=10, confidence=0.95):
     eig = np.linalg.svd(eq, compute_uv=False)
     utility1 = flat @ reward1.flatten()
     utility2 = flat @ reward2.T.flatten()
-    return (eq, (utility1, utility2), min(2, e / q), eig[1] / eig[0])
+    return (eq, (utility1, utility2), min(2, np.sqrt(e / q)), eig[1] / eig[0])
 
 
 if __name__ == "__main__":

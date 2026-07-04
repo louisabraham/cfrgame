@@ -628,7 +628,7 @@ It is also possible to check that the correlated equilibrium is unique and is a 
 \label{thm:pvalue}
 Given a polytope $P$ defined by constraints $c_1, \ldots, c_m$
  $$
-        \Pr\left[\textsc{SumDiamSquared}(K, c_1, \ldots, c_m) < \varepsilon\right] \le F_{\chi^2}\left(\frac{\varepsilon}{diam(P)}, K\right)
+        \Pr\left[\textsc{SumDiamSquared}(K, c_1, \ldots, c_m) < \varepsilon\right] \le F_{\chi^2}\left(\frac{\varepsilon}{diam(P)^2}, K\right)
    $$
 
    with $F_{\chi^2}(\cdot, K)$ the cumulative distribution function of the $\chi^2$ distribution with $K$ degrees of freedom.
@@ -653,13 +653,13 @@ Given a polytope $P$ defined by constraints $c_1, \ldots, c_m$
 \Function{MaxDiameter}{$p, K, c_1, \ldots, c_m$}
 \State $\varepsilon \gets$ \Call{SumDiamSquared}{$K, c_1, \ldots, c_m$}
 \State $q \gets$ \Call{Chi2.ppf}{$p, K$}
-\State $d \gets \varepsilon / q$
+\State $d \gets \sqrt{\varepsilon / q}$
 \State \Return $d$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
 
-We used the HiGHS solver \citep{huangfu2018parallelizing} to solve the linear optimization subproblems (calls to \textsc{LinProg}). In numerical experiments, we use $K=5$, confidence $p=0.95$, and report $$d_{max} :=  \textsc{MaxDiameter}(p, K, c_1, \ldots, c_m) = \frac{\textsc{SumDiamSquared}(K, c_1, \ldots, c_m)} {Q_{\chi^2}\left(1-p, K\right)}$$ where $Q_{\chi^2}(\cdot, K)$ is the quantile function of the $\chi^2$ distribution with $K$ degrees of freedom. When the polytope describe probability distributions, we have the bound $d_{max} \leq 2$.
+We used the HiGHS solver \citep{huangfu2018parallelizing} to solve the linear optimization subproblems (calls to \textsc{LinProg}). In numerical experiments, we use $K=5$, confidence $p=0.95$, and report $$d_{max} :=  \textsc{MaxDiameter}(1-p, K, c_1, \ldots, c_m) = \sqrt{\frac{\textsc{SumDiamSquared}(K, c_1, \ldots, c_m)} {Q_{\chi^2}\left(1-p, K\right)}}$$ where $Q_{\chi^2}(\cdot, K)$ is the quantile function of the $\chi^2$ distribution with $K$ degrees of freedom. When the polytope describe probability distributions, we have the bound $d_{max} \leq 2$.
 
 Finally, we make the following trivial remark:
 
@@ -1053,15 +1053,15 @@ Hence, $$\Pr\left[ \max \limits_{x\in P}v \cdot x - \min \limits_{x\in P}v \cdot
 
 
 If $v$ is a vector of iid standard Gaussian variables, $v \cdot a \sim \mathcal{N}(0, 1)$ and $(v \cdot a)^2$ follows a $\chi^2$ distribution with 1 degree of freedom.
-The sum of multiple iterations will follow:
+Squaring the previous inequality, $\left(\max \limits_{x\in P}v \cdot x - \min \limits_{x\in P}v \cdot x\right)^2 \ge d^2 (v \cdot a)^2$, and summing over the $K$ iterations:
 
-$$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i \cdot x)^2 < \varepsilon \right] \le \Pr\left[ \sum_i^K z_i^2 < \frac{\varepsilon}{d} \right]$$
+$$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i \cdot x)^2 < \varepsilon \right] \le \Pr\left[ \sum_i^K z_i^2 < \frac{\varepsilon}{d^2} \right]$$
 
 where $z_i \sim \mathcal{N}(0, 1)$ are independent normal variables.
 
 $\sum_i^K z_i^2$ follows a $\chi^2$ distribution with $K$ degrees of freedom. With $F_{\chi^2}(x, K)$ the cumulative distribution function, we get:
 
-$$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i \cdot x)^2 < \varepsilon \right] \le F_{\chi^2}\left(\frac{\varepsilon}{d}, K\right)$$
+$$\Pr\left[\sum_i^K (\max \limits_{x\in P}v_i \cdot x - \min \limits_{x\in P}v_i \cdot x)^2 < \varepsilon \right] \le F_{\chi^2}\left(\frac{\varepsilon}{d^2}, K\right)$$
 \end{proof}
 
 \section{Linear equilibrium in finite approximations with \texttt{shift~=~false}}
