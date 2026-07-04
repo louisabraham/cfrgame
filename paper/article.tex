@@ -643,7 +643,7 @@ Given a polytope $P$ defined by constraints $c_1, \ldots, c_m$
 \For{$i\gets 1,\ldots,K$}
     \State Sample $v_j \sim \mathcal{N}(0, 1)$ for $j=1,\ldots,n$
     \State $a_i \gets \textsc{LinProg}(v, c)$ \Comment{$\min \limits_{x\in P}v \cdot x$}
-    \State $b_i \gets \textsc{LinProg}(-v, c)$ \Comment{$\max \limits_{x\in P}v \cdot x$}
+    \State $b_i \gets -\textsc{LinProg}(-v, c)$ \Comment{$\max \limits_{x\in P}v \cdot x$}
     \State $d_i \gets b_i - a_i$
 \EndFor
 \State \Return $\sum_i d_i^2$
