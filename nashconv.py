@@ -35,6 +35,7 @@ def quasinashconv(
     progress=True,
     matrix1=None,
     matrix2=None,
+    seed=0,
 ):
     if matrix1 is None:
         matrix1 = reward_matrix(actions1, actions2, **game_parameters)
@@ -42,8 +43,9 @@ def quasinashconv(
         matrix2 = reward_matrix(actions2, actions1, **game_parameters)
     avg1 = prob1 @ matrix1 @ prob2
     avg2 = prob2 @ matrix2 @ prob1
-    rand_actions1 = stats.qmc.Sobol(d=1).random_base2(log_num_points)
-    rand_actions2 = stats.qmc.Sobol(d=1).random_base2(log_num_points)
+    # Seeded scrambling makes the Sobol draws (hence the figures) reproducible.
+    rand_actions1 = stats.qmc.Sobol(d=1, seed=seed).random_base2(log_num_points)
+    rand_actions2 = stats.qmc.Sobol(d=1, seed=seed + 1).random_base2(log_num_points)
     max1 = max(
         [
             reward(action1, actions2, **game_parameters) @ prob2

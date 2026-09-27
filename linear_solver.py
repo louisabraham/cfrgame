@@ -33,7 +33,7 @@ def _gen_constraints(reward1, reward2):
     return {"A_ub": A_ub, "b_ub": b_ub, "A_eq": A_eq, "b_eq": b_eq, "bounds": bounds}
 
 
-def linear_correlated(reward1, reward2, n_iters=10, confidence=0.95):
+def linear_correlated(reward1, reward2, n_iters=10, confidence=0.95, seed=0):
     """Linear program to
     - find a correlated equilibirum of maximum total utility
     - check the diameter of the set of correlated equilibria
@@ -61,6 +61,8 @@ def linear_correlated(reward1, reward2, n_iters=10, confidence=0.95):
     """
     n_actions1 = len(reward1)
     n_actions2 = len(reward2)
+    if seed is not None:
+        np.random.seed(seed)
     constraints = _gen_constraints(reward1, reward2)
     d = np.empty(n_iters)
     for i in range(n_iters):

@@ -1,9 +1,16 @@
 """
 CDF of the bivariate normal distribution, but FASSST.
 """
-from numba import vectorize, float64
-from scipy.special import erfinv
+import ctypes
 import math
+
+from numba import vectorize, float64
+from numba.extending import get_cython_function_address
+
+# Bind scipy's exact ndtri (inverse normal CDF) so it is callable from numba
+# nopython code without depending on the unmaintained numba-scipy package.
+_ndtri_addr = get_cython_function_address("scipy.special.cython_special", "ndtri")
+_ndtri = ctypes.CFUNCTYPE(ctypes.c_double, ctypes.c_double)(_ndtri_addr)
 
 
 @vectorize([float64(float64)], nopython=True)
@@ -17,7 +24,7 @@ def norm_cdf(X):
 
 @vectorize([float64(float64)], nopython=True)
 def norm_ppf(x):
-    return math.sqrt(2) * erfinv(2 * x - 1)
+    return _ndtri(x)
 
 
 @vectorize([float64(float64, float64, float64)], nopython=True, cache=True)
