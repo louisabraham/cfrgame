@@ -1,1 +1,21 @@
-numba-scipy
+# Versions épinglées pour la reproductibilité (révision pré-jury).
+# numba-scipy n'est plus nécessaire : bivariate_normal.py lie directement
+# scipy.special.cython_special.ndtri via numba.extending.
+numpy==2.0.2
+scipy==1.17.1
+numba==0.60.0
+matplotlib==3.9.2
+tqdm==4.66.5
+joblib==1.4.2
+tqdm_joblib
+# Estimation par normalizing flows (annexe)
+torch==2.4.1
+nflows==0.14
+# Benchmark against other equilibrium solvers (benchmark.py)
+pygambit==16.7.0
+gurobipy==13.0.3
+PySCIPOpt==6.2.1
+cyipopt==1.6.1
+nashopt==1.3.9
+qpsolvers==4.13.0
+jax==0.8.2

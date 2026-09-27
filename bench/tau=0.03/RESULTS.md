@@ -1,0 +1,77 @@
+# Benchmark results, P=1, tau=0.03, rho=0.5
+
+Cell: best QuasiNashConv reachable within the time budget (payoff matrix + solve),
+over all grid sizes n and iteration counts, with the n and iterations that reach it.
+Iterations: CFR, multiplicative weights, replicator, extragradient: iterations;
+RM and fictitious play: rounds of n updates (one round costs O(n^2) like a CFR
+iteration).
+
+| method | <= 0.01 s | <= 0.1 s | <= 1 s | <= 10 s | <= 100 s | whole run |
+|---|---|---|---|---|---|---|
+| RM (ours) | 5.1e-03 (n=32, 512 it) | 3.0e-03 (n=64, 2048 it) | 1.2e-03 (n=128, 8192 it) | 1.0e-03 (n=128, 32768 it) | 7.4e-04 (n=512, 8192 it) | 7.4e-04 (n=512, 8192 it) |
+| CFR (ours) | 3.1e-03 (n=64, 2048 it) | 8.1e-04 (n=128, 16384 it) | 2.1e-04 (n=128, 262144 it) | 5.1e-05 (n=256, 1048576 it) | 2.2e-05 (n=512, 2097152 it) | 2.2e-05 (n=512, 2097152 it) |
+| RM (ours), shifted grids | 5.9e-03 (n=64, 128 it) | 3.5e-03 (n=64, 1024 it) | 1.6e-03 (n=512, 256 it) | 1.0e-03 (n=256, 8192 it) | 9.1e-04 (n=2048, 4096 it) | 6.2e-04 (n=256, 262144 it) |
+| CFR (ours), shifted grids | 6.5e-03 (n=32, 4096 it) | 3.8e-03 (n=64, 32768 it) | 1.4e-03 (n=128, 262144 it) | 8.5e-04 (n=128, 2097152 it) | 8.5e-04 (n=128, 2097152 it) | 8.5e-04 (n=128, 2097152 it) |
+| Lemke-Howson (Gambit) | 2.6e-02 (n=16) | 7.8e-04 (n=64) | 7.8e-04 (n=64) | 7.8e-04 (n=64) | 7.8e-04 (n=64) | 7.8e-04 (n=64) |
+| Lemke-Howson (numpy tableau) | 7.8e-04 (n=64) | 3.6e-05 (n=256) | 9.3e-06 (n=512) | 1.7e-06 (n=1024) | 9.0e-08 (n=2048) | 9.0e-08 (n=2048) |
+| Logit QRE path (Gambit) |  | 2.6e-02 (n=16) | 7.8e-04 (n=64) | 1.6e-04 (n=128) | 3.6e-05 (n=256) | 3.6e-05 (n=256) |
+| Mangasarian-Stone QP (Gurobi) |  | 3.1e-03 (n=32) | 3.1e-03 (n=32) | 7.8e-04 (n=64) | 7.8e-04 (n=64) | 1.0e-05 (n=512) |
+| Nash-gap QP, 2n bilinear (Gurobi) |  | 7.8e-04 (n=64) | 7.8e-04 (n=64) | 7.8e-04 (n=64) | 7.8e-04 (n=64) | 3.7e-06 (n=1024) |
+| Nash-gap QP, 2n bilinear (SCIP) |  | 7.8e-04 (n=64) | 7.8e-04 (n=64) | 9.2e-06 (n=512) | 9.2e-06 (n=512) | 5.2e-06 (n=1024) |
+| FB-NCP Newton, symmetric | 7.8e-04 (n=64) | 3.6e-05 (n=256) | 9.3e-06 (n=512) | 9.0e-08 (n=2048) | 9.0e-08 (n=2048) | 9.0e-08 (n=2048) |
+| Double Oracle, grid BR | 3.1e-03 (n=32) | 3.6e-05 (n=256) | 1.7e-06 (n=1024) | 9.0e-08 (n=2048) | 9.0e-08 (n=2048) | 9.0e-08 (n=2048) |
+| Double Oracle, continuous BR |  |  | 7.2e-11 (n=256) | 2.9e-11 (n=512) | 2.9e-11 (n=512) | 2.9e-11 (n=512) |
+| Double Oracle + Newton on atoms |  |  | 3.2e-15 (n=64) | 6.7e-16 (n=1024) | 6.7e-16 (n=1024) | 6.7e-16 (n=1024) |
+| Ipopt multi-start |  | 7.8e-04 (n=64) | 1.6e-04 (n=128) | 3.5e-05 (n=256) | 4.7e-06 (n=1024) | 4.7e-06 (n=1024) |
+| Fictitious play | 3.9e-04 (n=128, 64 it) | 5.0e-05 (n=256, 512 it) | 9.5e-06 (n=512, 1024 it) | 1.3e-06 (n=2048, 1024 it) | 1.1e-07 (n=2048, 16384 it) | 1.1e-07 (n=2048, 16384 it) |
+| Multiplicative weights | 1.8e-02 (n=32, 512 it) | 6.3e-03 (n=128, 4096 it) | 2.6e-03 (n=128, 32768 it) | 8.0e-04 (n=128, 524288 it) | 2.8e-04 (n=256, 4194304 it) | 2.8e-04 (n=256, 4194304 it) |
+| Replicator dynamics | 3.8e-02 (n=16, 2048 it) | 6.1e-03 (n=32, 8192 it) | 1.5e-04 (n=128, 65536 it) | 1.5e-05 (n=512, 524288 it) | 8.8e-06 (n=512, 2097152 it) | 8.8e-06 (n=512, 2097152 it) |
+| nashopt MILP (HiGHS) |  | 2.6e-02 (n=16) | 3.1e-03 (n=32) | 3.1e-03 (n=32) | 3.1e-03 (n=32) | 7.8e-04 (n=64) |
+| nashopt MILP (Gurobi) |  | 2.6e-02 (n=16) | 3.1e-03 (n=32) | 3.1e-03 (n=32) | 7.5e-04 (n=64) | 7.5e-04 (n=64) |
+| nashopt Lemke | 3.1e-03 (n=32) | 1.6e-04 (n=128) | 3.6e-05 (n=256) | 9.3e-06 (n=512) | 1.7e-06 (n=1024) | 1.7e-06 (n=1024) |
+| nashopt GNEP (FB least squares) |  |  | 3.1e-03 (n=32) | 3.1e-03 (n=32) | 3.1e-03 (n=32) | 3.1e-03 (n=32) |
+| nashopt extragradient | 3.3e-02 (n=32, 100 it) | 2.2e-02 (n=16, 400 it) | 2.9e-03 (n=64, 1600 it) | 9.5e-04 (n=64, 6400 it) | 3.1e-04 (n=128, 25600 it) | 3.1e-04 (n=128, 25600 it) |
+| nashopt DR-DAQP | 2.6e-02 (n=16) | 2.6e-02 (n=16) | 2.6e-02 (n=16) | 2.6e-02 (n=16) | 2.6e-02 (n=16) | 2.6e-02 (n=16) |
+
+First failing grid size per method:
+
+- nashopt MILP (HiGHS): n=128 (no solution in time limit)
+- nashopt MILP (Gurobi): n=128 (no solution in time limit)
+- nashopt DR-DAQP: n=256 (NaN output)
+- Logit QRE path (Gambit): n=512 (timeout)
+- nashopt GNEP (FB least squares): n=512 (timeout)
+- Lemke-Howson (Gambit): n=2048 (timeout)
+- nashopt Lemke: n=2048 (timeout)
+- Nash-gap QP, 2n bilinear (SCIP): n=2048 (no solution in time limit)
+- nashopt extragradient: n=2048 (timeout)
+- Nash-gap QP, 2n bilinear (Gurobi): n=2048 (no solution in time limit)
+- Mangasarian-Stone QP (Gurobi): n=2048 (no solution in time limit)
+
+Analytical equilibrium (atoms): QuasiNashConv 1.1e-16.
+
+## Lower envelope of each method
+
+- RM (ours): 1.7e-01 at 0.000156 s (n=16, 1 it), 1.4e-01 at 0.000162 s (n=16, 2 it), 1.2e-01 at 0.000171 s (n=16, 4 it), 6.2e-02 at 0.00019 s (n=16, 8 it), 3.7e-02 at 0.000229 s (n=16, 16 it), 2.8e-02 at 0.000303 s (n=16, 32 it), 2.7e-02 at 0.000593 s (n=32, 8 it), 2.4e-02 at 0.000708 s (n=32, 16 it), 1.2e-02 at 0.000938 s (n=32, 32 it), 9.9e-03 at 0.00231 s (n=32, 128 it), 6.5e-03 at 0.00416 s (n=32, 256 it), 5.1e-03 at 0.00804 s (n=32, 512 it), 3.3e-03 at 0.0119 s (n=64, 256 it), 3.2e-03 at 0.0412 s (n=64, 1024 it), 3.0e-03 at 0.0804 s (n=64, 2048 it), 2.5e-03 at 0.122 s (n=128, 1024 it), 1.8e-03 at 0.159 s (n=64, 4096 it), 1.7e-03 at 0.485 s (n=128, 4096 it), 1.5e-03 at 0.861 s (n=256, 2048 it), 1.2e-03 at 0.939 s (n=128, 8192 it), 1.0e-03 at 3.66 s (n=128, 32768 it), 7.4e-04 at 11.5 s (n=512, 8192 it)
+- CFR (ours): 1.4e+00 at 0.000153 s (n=16, 1 it), 6.3e-01 at 0.000155 s (n=16, 2 it), 3.2e-01 at 0.000157 s (n=16, 4 it), 2.0e-01 at 0.000159 s (n=16, 8 it), 1.3e-01 at 0.000164 s (n=16, 16 it), 5.5e-02 at 0.000173 s (n=16, 32 it), 4.6e-02 at 0.000191 s (n=16, 64 it), 2.4e-02 at 0.000225 s (n=16, 128 it), 1.9e-02 at 0.000294 s (n=16, 256 it), 1.8e-02 at 0.000688 s (n=32, 128 it), 1.1e-02 at 0.000893 s (n=32, 256 it), 7.6e-03 at 0.0013 s (n=32, 512 it), 6.3e-03 at 0.00211 s (n=32, 1024 it), 4.3e-03 at 0.00374 s (n=32, 2048 it), 3.1e-03 at 0.00595 s (n=64, 2048 it), 2.2e-03 at 0.01 s (n=64, 4096 it), 1.5e-03 at 0.0182 s (n=64, 8192 it), 1.1e-03 at 0.035 s (n=64, 16384 it), 8.1e-04 at 0.0617 s (n=128, 16384 it), 5.3e-04 at 0.113 s (n=128, 32768 it), 3.5e-04 at 0.214 s (n=128, 65536 it), 2.5e-04 at 0.416 s (n=128, 131072 it), 2.1e-04 at 0.823 s (n=128, 262144 it), 1.8e-04 at 1.02 s (n=256, 131072 it), 1.8e-04 at 1.65 s (n=128, 524288 it), 1.1e-04 at 2 s (n=256, 262144 it), 6.8e-05 at 4.02 s (n=256, 524288 it), 5.1e-05 at 7.96 s (n=256, 1048576 it), 4.3e-05 at 15.6 s (n=256, 2097152 it), 3.7e-05 at 24.5 s (n=512, 1048576 it), 2.2e-05 at 65.8 s (n=512, 2097152 it)
+- RM (ours), shifted grids: 1.9e-01 at 0.000243 s (n=16, 1 it), 1.3e-01 at 0.000249 s (n=16, 2 it), 1.0e-01 at 0.000258 s (n=16, 4 it), 5.2e-02 at 0.000277 s (n=16, 8 it), 5.1e-02 at 0.000315 s (n=16, 16 it), 3.9e-02 at 0.000389 s (n=16, 32 it), 2.2e-02 at 0.000537 s (n=16, 64 it), 2.0e-02 at 0.000834 s (n=16, 128 it), 2.0e-02 at 0.00162 s (n=32, 32 it), 1.6e-02 at 0.00206 s (n=32, 64 it), 1.3e-02 at 0.00292 s (n=32, 128 it), 9.1e-03 at 0.00477 s (n=32, 256 it), 9.1e-03 at 0.00603 s (n=64, 32 it), 6.6e-03 at 0.00726 s (n=64, 64 it), 5.9e-03 at 0.00973 s (n=64, 128 it), 5.7e-03 at 0.0155 s (n=32, 1024 it), 3.6e-03 at 0.0247 s (n=64, 512 it), 3.5e-03 at 0.0447 s (n=64, 1024 it), 2.7e-03 at 0.127 s (n=256, 128 it), 2.5e-03 at 0.139 s (n=128, 1024 it), 2.2e-03 at 0.278 s (n=256, 512 it), 1.9e-03 at 0.479 s (n=128, 4096 it), 1.6e-03 at 0.64 s (n=512, 256 it), 1.6e-03 at 1.01 s (n=512, 512 it), 1.6e-03 at 1.7 s (n=256, 4096 it), 1.0e-03 at 1.78 s (n=512, 1024 it), 1.0e-03 at 3.34 s (n=256, 8192 it), 9.1e-04 at 88.2 s (n=2048, 4096 it), 6.2e-04 at 102 s (n=256, 262144 it)
+- CFR (ours), shifted grids: 1.3e+00 at 0.00025 s (n=16, 1 it), 6.2e-01 at 0.000251 s (n=16, 2 it), 3.1e-01 at 0.000253 s (n=16, 4 it), 1.9e-01 at 0.000256 s (n=16, 8 it), 1.2e-01 at 0.000261 s (n=16, 16 it), 6.4e-02 at 0.00027 s (n=16, 32 it), 5.5e-02 at 0.000289 s (n=16, 64 it), 4.0e-02 at 0.000325 s (n=16, 128 it), 2.9e-02 at 0.000396 s (n=16, 256 it), 1.7e-02 at 0.000537 s (n=16, 512 it), 9.6e-03 at 0.00156 s (n=32, 256 it), 8.5e-03 at 0.00274 s (n=32, 1024 it), 8.1e-03 at 0.00432 s (n=32, 2048 it), 6.5e-03 at 0.00747 s (n=32, 4096 it), 4.5e-03 at 0.0397 s (n=64, 16384 it), 4.0e-03 at 0.07 s (n=128, 16384 it), 3.8e-03 at 0.0748 s (n=64, 32768 it), 3.4e-03 at 0.123 s (n=128, 32768 it), 2.2e-03 at 0.228 s (n=128, 65536 it), 2.2e-03 at 0.431 s (n=128, 131072 it), 1.4e-03 at 0.856 s (n=128, 262144 it), 8.5e-04 at 6.68 s (n=128, 2097152 it)
+- Lemke-Howson (Gambit): 2.6e-02 at 0.0035 s (n=16), 3.1e-03 at 0.0141 s (n=32), 7.8e-04 at 0.0568 s (n=64)
+- Lemke-Howson (numpy tableau): 2.6e-02 at 0.000298 s (n=16), 3.1e-03 at 0.001 s (n=32), 7.8e-04 at 0.00352 s (n=64), 1.6e-04 at 0.0153 s (n=128), 3.6e-05 at 0.0772 s (n=256), 9.3e-06 at 0.459 s (n=512), 1.7e-06 at 3.52 s (n=1024), 9.0e-08 at 34 s (n=2048)
+- Logit QRE path (Gambit): 2.6e-02 at 0.0342 s (n=16), 3.1e-03 at 0.138 s (n=32), 7.8e-04 at 0.772 s (n=64), 1.6e-04 at 6.28 s (n=128), 3.6e-05 at 73.9 s (n=256)
+- Mangasarian-Stone QP (Gurobi): 2.6e-02 at 0.0129 s (n=16), 3.1e-03 at 0.0131 s (n=32), 7.8e-04 at 6.3 s (n=64), 1.0e-05 at 120 s (n=512)
+- Nash-gap QP, 2n bilinear (Gurobi): 2.6e-02 at 0.0136 s (n=16), 3.1e-03 at 0.014 s (n=32), 7.8e-04 at 0.04 s (n=64), 1.0e-05 at 120 s (n=512), 3.7e-06 at 121 s (n=1024)
+- Nash-gap QP, 2n bilinear (SCIP): 3.1e-03 at 0.0204 s (n=32), 7.8e-04 at 0.0494 s (n=64), 1.6e-04 at 2.39 s (n=128), 9.2e-06 at 9.52 s (n=512), 5.2e-06 at 124 s (n=1024)
+- FB-NCP Newton, symmetric: 2.6e-02 at 0.000618 s (n=16), 3.1e-03 at 0.00145 s (n=32), 7.8e-04 at 0.00539 s (n=64), 1.6e-04 at 0.0149 s (n=128), 3.6e-05 at 0.0657 s (n=256), 9.3e-06 at 0.287 s (n=512), 1.7e-06 at 1.64 s (n=1024), 9.0e-08 at 9.77 s (n=2048)
+- Double Oracle, grid BR: 2.6e-02 at 0.00356 s (n=16), 3.1e-03 at 0.00764 s (n=32), 7.8e-04 at 0.016 s (n=64), 1.6e-04 at 0.0471 s (n=128), 3.6e-05 at 0.0839 s (n=256), 9.3e-06 at 0.235 s (n=512), 1.7e-06 at 0.739 s (n=1024), 9.0e-08 at 2.48 s (n=2048)
+- Double Oracle, continuous BR: 5.1e-04 at 0.28 s (n=16), 8.9e-11 at 0.608 s (n=32), 7.2e-11 at 0.847 s (n=256), 2.9e-11 at 2.53 s (n=512)
+- Double Oracle + Newton on atoms: 6.2e-14 at 0.415 s (n=16), 1.8e-14 at 0.7 s (n=32), 3.2e-15 at 0.78 s (n=64), 1.6e-15 at 2.48 s (n=512), 6.7e-16 at 2.85 s (n=1024)
+- Ipopt multi-start: 2.6e-02 at 0.0156 s (n=16), 3.1e-03 at 0.0372 s (n=32), 7.8e-04 at 0.1 s (n=64), 1.6e-04 at 0.399 s (n=128), 3.5e-05 at 2.02 s (n=256), 7.9e-06 at 12 s (n=512), 4.7e-06 at 96.8 s (n=1024)
+- Fictitious play: 7.3e-02 at 0.000153 s (n=16, 1 it), 5.8e-02 at 0.000154 s (n=16, 2 it), 4.0e-02 at 0.000155 s (n=16, 4 it), 3.1e-02 at 0.000157 s (n=16, 8 it), 1.6e-02 at 0.000161 s (n=16, 16 it), 7.3e-03 at 0.000506 s (n=32, 16 it), 2.7e-03 at 0.000534 s (n=32, 32 it), 1.6e-03 at 0.00201 s (n=64, 32 it), 7.0e-04 at 0.00219 s (n=64, 64 it), 6.8e-04 at 0.00812 s (n=128, 32 it), 3.9e-04 at 0.00889 s (n=128, 64 it), 3.4e-04 at 0.0104 s (n=128, 128 it), 1.7e-04 at 0.0135 s (n=128, 256 it), 1.3e-04 at 0.0431 s (n=256, 128 it), 6.0e-05 at 0.0557 s (n=256, 256 it), 5.0e-05 at 0.0809 s (n=256, 512 it), 4.9e-05 at 0.131 s (n=256, 1024 it), 4.0e-05 at 0.169 s (n=512, 128 it), 2.9e-05 at 0.215 s (n=512, 256 it), 1.7e-05 at 0.31 s (n=512, 512 it), 9.5e-06 at 0.501 s (n=512, 1024 it), 7.2e-06 at 1.16 s (n=1024, 512 it), 3.3e-06 at 1.84 s (n=1024, 1024 it), 2.5e-06 at 3.19 s (n=1024, 2048 it), 2.0e-06 at 5.85 s (n=1024, 4096 it), 1.3e-06 at 7.43 s (n=2048, 1024 it), 7.9e-07 at 12.8 s (n=2048, 2048 it), 3.6e-07 at 23.6 s (n=2048, 4096 it), 1.7e-07 at 45.1 s (n=2048, 8192 it), 1.1e-07 at 88.2 s (n=2048, 16384 it)
+- Multiplicative weights: 1.4e+00 at 0.000167 s (n=16, 1 it), 6.9e-01 at 0.000176 s (n=16, 2 it), 3.7e-01 at 0.000192 s (n=16, 4 it), 2.2e-01 at 0.000223 s (n=16, 8 it), 1.5e-01 at 0.000281 s (n=16, 16 it), 9.5e-02 at 0.000399 s (n=16, 32 it), 5.5e-02 at 0.000631 s (n=16, 64 it), 3.7e-02 at 0.00109 s (n=16, 128 it), 3.3e-02 at 0.00201 s (n=16, 256 it), 2.8e-02 at 0.00384 s (n=16, 512 it), 2.3e-02 at 0.00467 s (n=32, 256 it), 2.1e-02 at 0.00631 s (n=64, 256 it), 1.8e-02 at 0.00877 s (n=32, 512 it), 1.6e-02 at 0.0107 s (n=64, 512 it), 1.5e-02 at 0.0167 s (n=128, 512 it), 1.2e-02 at 0.017 s (n=32, 1024 it), 1.2e-02 at 0.0194 s (n=64, 1024 it), 1.1e-02 at 0.0259 s (n=128, 1024 it), 9.3e-03 at 0.0333 s (n=32, 2048 it), 8.9e-03 at 0.0367 s (n=64, 2048 it), 8.3e-03 at 0.0443 s (n=128, 2048 it), 7.4e-03 at 0.0659 s (n=32, 4096 it), 6.7e-03 at 0.0712 s (n=64, 4096 it), 6.3e-03 at 0.0812 s (n=128, 4096 it), 6.0e-03 at 0.12 s (n=256, 4096 it), 5.9e-03 at 0.131 s (n=32, 8192 it), 5.2e-03 at 0.14 s (n=64, 8192 it), 4.8e-03 at 0.154 s (n=128, 8192 it), 3.8e-03 at 0.28 s (n=64, 16384 it), 3.5e-03 at 0.302 s (n=128, 16384 it), 2.8e-03 at 0.561 s (n=64, 32768 it), 2.6e-03 at 0.603 s (n=128, 32768 it), 2.1e-03 at 1.12 s (n=64, 65536 it), 1.9e-03 at 1.2 s (n=128, 65536 it), 1.7e-03 at 2.24 s (n=64, 131072 it), 1.5e-03 at 2.38 s (n=128, 131072 it), 1.4e-03 at 4.45 s (n=64, 262144 it), 1.1e-03 at 4.77 s (n=128, 262144 it), 1.1e-03 at 5.73 s (n=256, 262144 it), 8.0e-04 at 9.51 s (n=128, 524288 it), 7.4e-04 at 11.5 s (n=256, 524288 it), 5.9e-04 at 19 s (n=128, 1048576 it), 5.3e-04 at 22.8 s (n=256, 1048576 it), 4.4e-04 at 37.9 s (n=128, 2097152 it), 3.8e-04 at 45.5 s (n=256, 2097152 it), 3.3e-04 at 75.6 s (n=128, 4194304 it), 2.8e-04 at 90.8 s (n=256, 4194304 it)
+- Replicator dynamics: 1.2e+00 at 0.000177 s (n=16, 1 it), 1.0e+00 at 0.000189 s (n=16, 2 it), 7.6e-01 at 0.000206 s (n=16, 4 it), 3.9e-01 at 0.000238 s (n=16, 8 it), 1.8e-01 at 0.000298 s (n=16, 16 it), 1.2e-01 at 0.000417 s (n=16, 32 it), 1.1e-01 at 0.000651 s (n=16, 64 it), 1.1e-01 at 0.000925 s (n=32, 64 it), 1.0e-01 at 0.00135 s (n=32, 128 it), 1.0e-01 at 0.00273 s (n=64, 128 it), 9.5e-02 at 0.00279 s (n=16, 512 it), 7.9e-02 at 0.00431 s (n=16, 1024 it), 7.8e-02 at 0.00716 s (n=32, 1024 it), 3.8e-02 at 0.00738 s (n=16, 2048 it), 2.7e-02 at 0.0138 s (n=32, 2048 it), 2.2e-02 at 0.0139 s (n=16, 4096 it), 1.1e-02 at 0.0275 s (n=32, 4096 it), 6.1e-03 at 0.0556 s (n=32, 8192 it), 2.1e-03 at 0.111 s (n=64, 16384 it), 1.5e-03 at 0.129 s (n=128, 16384 it), 1.4e-03 at 0.171 s (n=256, 16384 it), 7.5e-04 at 0.219 s (n=64, 32768 it), 7.0e-04 at 0.439 s (n=64, 65536 it), 1.5e-04 at 0.502 s (n=128, 65536 it), 5.9e-05 at 2.39 s (n=256, 262144 it), 4.2e-05 at 4.72 s (n=256, 524288 it), 1.5e-05 at 8.92 s (n=512, 524288 it), 9.0e-06 at 19.8 s (n=512, 1048576 it), 8.8e-06 at 35.1 s (n=512, 2097152 it)
+- nashopt MILP (HiGHS): 2.6e-02 at 0.0195 s (n=16), 3.1e-03 at 0.634 s (n=32), 7.8e-04 at 117 s (n=64)
+- nashopt MILP (Gurobi): 2.6e-02 at 0.03 s (n=16), 3.1e-03 at 0.185 s (n=32), 7.5e-04 at 13.5 s (n=64)
+- nashopt Lemke: 2.6e-02 at 0.000654 s (n=16), 3.1e-03 at 0.00189 s (n=32), 7.8e-04 at 0.0121 s (n=64), 1.6e-04 at 0.0856 s (n=128), 3.6e-05 at 0.667 s (n=256), 9.3e-06 at 5.16 s (n=512), 1.7e-06 at 46 s (n=1024)
+- nashopt GNEP (FB least squares): 2.6e-02 at 0.371 s (n=16), 3.1e-03 at 0.933 s (n=32)
+- nashopt extragradient: 3.7e-02 at 0.00441 s (n=16, 100 it), 3.3e-02 at 0.0088 s (n=32, 100 it), 2.2e-02 at 0.0163 s (n=16, 400 it), 5.8e-03 at 0.136 s (n=32, 1600 it), 2.9e-03 at 0.527 s (n=64, 1600 it), 9.5e-04 at 2.31 s (n=64, 6400 it), 7.3e-04 at 10.5 s (n=64, 25600 it), 3.1e-04 at 73.5 s (n=128, 25600 it)
+- nashopt DR-DAQP: 2.6e-02 at 0.000881 s (n=16)

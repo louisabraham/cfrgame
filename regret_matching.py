@@ -47,6 +47,13 @@ def multinomial(prob):
 
 
 @njit
+def _seed_numba(seed):
+    # np.random.seed inside an njit function seeds numba's internal RNG,
+    # which is the one used by `multinomial` above.
+    np.random.seed(seed)
+
+
+@njit
 def _rm(
     reward1,
     reward2,
@@ -111,11 +118,19 @@ def _regret_matching_gen(
     sm=False,
     batch_size=100,
     progress=True,
+    seed=0,
+    matrices=None,
 ):
+    if seed is not None:
+        _seed_numba(seed)
     actions1, actions2 = gen_actions(actions, shift)
 
-    reward1 = reward_matrix(actions1, actions2, **game_parameters)
-    reward2 = reward_matrix(actions2, actions1, **game_parameters)
+    if matrices is None:
+        reward1 = reward_matrix(actions1, actions2, **game_parameters)
+        reward2 = reward_matrix(actions2, actions1, **game_parameters)
+    else:
+        # precomputed (reward1, reward2), copied because RM reorders them
+        reward1, reward2 = (np.array(m, dtype=np.float64) for m in matrices)
     total_regret1 = np.zeros(actions)
     total_regret2 = np.zeros(actions)
 
@@ -183,6 +198,8 @@ def regret_matching(*args, generator=False, **kwargs):
         Return generator, by default False.
     progress : bool, optional
         Show progress bar, by default True.
+    matrices : tuple of (array, array), optional
+        Precomputed (reward1, reward2) for the grids of `gen_actions`.
 
     Returns (generator=False) or Yields (generator=True)
     ----------------------------------------------------

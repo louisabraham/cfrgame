@@ -1,3 +1,12 @@
 __pycache__/*
 .hypothesis/*
 .DS_Store
+bench/*/matrices/
+bench/*/runs/
+bench/*/*.log
+bench/report/*.aux
+bench/report/*.log
+bench/report/*.fls
+bench/report/*.fdb_latexmk
+bench/report/*.out
+bench/scripts/*.out
